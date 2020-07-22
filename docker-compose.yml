@@ -7,4 +7,17 @@ services:
     volumes:
       - "./frontend:/frontend"
       - "/frontend/node_modules"
+    depends_on:
+      - backend
+    networks:
+      - matcha
     stdin_open: true
+  backend:
+    build: backend
+    ports:
+      - "8080:8080"
+    networks:
+      - matcha
+networks:
+  matcha:
+    driver: bridge
