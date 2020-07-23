@@ -1,25 +1,51 @@
-# Use a lighter version of OpenJDK as a parent image
-FROM openjdk:8-jdk-alpine as build
-# Set the working directory to /backend
-WORKDIR /backend
-# Copy maven utility into the container
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-COPY src src
-# Run maven utility to build app
-RUN ./mvnw install -DskipTests
-# Extract jar files into target/dependency folder
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+FROM adoptopenjdk:8-jdk-hotspot
 
-# Docker Multi-Stage Build
-FROM openjdk:8-jdk-alpine
-VOLUME /tmp
-ARG DEPENDENCY=/backend/target/dependency
+CMD ["gradle"]
 
-COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+ENV GRADLE_HOME /opt/gradle
 
-# Run app
-ENTRYPOINT ["java","-cp","app:app/lib/*","ru.matcha.backend.BackendApplication"]
+RUN set -o errexit -o nounset \
+  && echo "Adding gradle user and group" \
+  && groupadd --system --gid 1000 gradle \
+  && useradd --system --gid gradle --uid 1000 --shell /bin/bash --create-home gradle \
+  && mkdir /home/gradle/.gradle \
+  && chown --recursive gradle:gradle /home/gradle \
+  \
+  && echo "Symlinking root Gradle cache to gradle Gradle cache" \
+  && ln -s /home/gradle/.gradle /root/.gradle
+
+VOLUME /home/gradle/.gradle
+
+WORKDIR /home/gradle
+
+RUN apt-get update \
+  && apt-get install --yes --no-install-recommends \
+  fontconfig \
+  unzip \
+  wget \
+  \
+  bzr \
+  git \
+  git-lfs \
+  mercurial \
+  openssh-client \
+  subversion \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV GRADLE_VERSION 6.5.1
+ARG GRADLE_DOWNLOAD_SHA256=50a7d30529fa939721fe9268a0205142f3f2302bcac5fb45b27a3902e58db54a
+RUN set -o errexit -o nounset \
+  && echo "Downloading Gradle" \
+  && wget --no-verbose --output-document=gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
+  \
+  && echo "Checking download hash" \
+  && echo "${GRADLE_DOWNLOAD_SHA256} *gradle.zip" | sha256sum --check - \
+  \
+  && echo "Installing Gradle" \
+  && unzip gradle.zip \
+  && rm gradle.zip \
+  && mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
+  && ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle \
+  \
+  && echo "Testing Gradle installation" \
+  && gradle --version

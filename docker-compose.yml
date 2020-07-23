@@ -14,8 +14,12 @@ services:
     stdin_open: true
   backend:
     build: backend
+    volumes:
+      - "./backend:/backend"
     ports:
       - "8080:8080"
+    working_dir: /backend
+    command: sh run.sh
     networks:
       - matcha
 networks:
