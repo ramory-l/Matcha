@@ -8,7 +8,8 @@ function ProfileSettings() {
         <legend>Я ищу:</legend>
         <input type="checkbox" /> девушку
         <input type="checkbox" /> парня <br />
-        от <input type="text" /> до <input type="text" /> <br />
+        от <input type="text" size={1} /> до <input type="text" size={1} />{" "}
+        <br />
         <input type="checkbox" /> для дружбы и общения <br />
         <input type="checkbox" /> для любви и отношений <br />
         <input type="checkbox" /> для секса и свободных отношений <br />
