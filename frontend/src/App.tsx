@@ -1,35 +1,23 @@
-import React, { useState, FC, useEffect } from "react";
+import React from "react";
 import "./App.css";
-import NavigationBar from "./components/NavigationBar";
-import api from "./api/api";
-import { ApiResponse } from "apisauce";
-
-interface HelloWorld {
-  id: number;
-  content: string;
-}
+import Nav from "./components/Nav";
+import Profile from "./pages/Profile";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Home from "./pages/Home";
 
 const App = () => {
-  const [helloWorld, setHelloWorld] = useState<HelloWorld | unknown>({
-    id: 0,
-    content: "",
-  });
-
-  useEffect(() => {
-    api
-      .get("/greeting")
-      .then((res) => res.data)
-      .then((res: HelloWorld | unknown) => setHelloWorld(res));
-  }, []);
-
   return (
-    <React.Fragment>
-      <NavigationBar title="Это навигацияяяя" />
-      <h1>
-        id: {(helloWorld as HelloWorld).id} content:{" "}
-        {(helloWorld as HelloWorld).content}
-      </h1>
-    </React.Fragment>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <Nav />
+        </header>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/profile" component={Profile} />
+        </Switch>
+      </div>
+    </Router>
   );
 };
 
