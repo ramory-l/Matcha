@@ -1,7 +1,6 @@
 package ru.school.matcha.dto;
 
 import lombok.Data;
-import ru.school.matcha.enums.Gender;
 
 import java.util.Date;
 
