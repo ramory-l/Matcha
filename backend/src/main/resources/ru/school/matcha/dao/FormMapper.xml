@@ -1,0 +1,107 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.school.matcha.dao.FormMapper">
+
+    <resultMap id="Form" type="ru.school.matcha.domain.Form">
+        <id property="id" column="id"/>
+        <result property="man" column="man"/>
+        <result property="woman" column="woman"/>
+        <result property="friendship" column="friendship"/>
+        <result property="love" column="love"/>
+        <result property="sex" column="sex"/>
+        <result property="flirt" column="flirt"/>
+    </resultMap>
+
+    <insert id="createForm">
+        INSERT INTO form (man,
+                          woman,
+                          friendship,
+                          love,
+                          sex,
+                          flirt)
+        VALUES (#{man},
+                #{woman},
+                #{friendship},
+                #{love},
+                #{sex},
+                #{flirt})
+    </insert>
+
+    <update id="updateForm">
+        UPDATE form SET
+        <if test="man != null">
+            man = #{man},
+        </if>
+        <if test="woman != null">
+            woman = #{woman},
+        </if>
+        <if test="friendship != null">
+            friendship = #{friendship},
+        </if>
+        <if test="love != null">
+            love = #{love},
+        </if>
+        <if test="sex != null">
+            sex = #{sex},
+        </if>
+        <if test="flirt != null">
+            flirt = #{flirt}
+        </if>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteFormById">
+        <if test="id">
+            DELETE FROM form
+            WHERE id = #{id}
+        </if>
+    </delete>
+
+    <delete id="deleteFormByUserId">
+        <if test="id">
+            DELETE FROM form
+            WHERE id = (SELECT form_id FROM "user" WHERE id = #{id})
+        </if>
+    </delete>
+
+    <select id="getAllForms" resultMap="Form">
+        SELECT id,
+               man,
+               woman,
+               friendship,
+               love,
+               sex,
+               flirt
+        FROM form
+    </select>
+
+    <select id="getFormById" resultMap="Form">
+        <if test="id">
+            SELECT
+            id,
+            man,
+            woman,
+            friendship,
+            love,
+            sex,
+            flirt
+            FROM form
+            WHERE id = #{id}
+        </if>
+    </select>
+
+    <select id="getFormByUserId" resultMap="Form">
+        <if test="id">
+            SELECT
+            id,
+            man,
+            woman,
+            friendship,
+            love,
+            sex,
+            flirt
+            FROM form
+            WHERE id = (SELECT form_id FROM "user" WHERE id = #{id})
+        </if>
+    </select>
+
+</mapper>
