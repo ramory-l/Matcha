@@ -1,0 +1,31 @@
+localhost:8080/api/form - анкеты
+Получение всех анкет
+GET localhost:8080/api/form/all
+Получение анкеты по идентификатору
+GET localhost:8080/api/form/{id}
+Получение анкеты по идентификатору юзера
+GET localhost:8080/api/form/user/{id}
+Добавление анкеты
+POST localhost:8080/api/form
+Обновление анкеты
+PUT localhost:8080/api/form
+Удаление анкеты по идентификатору
+DELETE localhost:8080/api/form/{id}
+Удаление анкеты по идентификатору пользователя
+DELETE localhost:8080/api/form/user/{id}
+
+localhost:8080/api/form/user - юзеры
+Получение всех юзеров
+GET localhost:8080/api/form/user/all
+Получение юзера по идентификатору
+GET localhost:8080/api/form/user/{id}
+Получение юзера по юзернейму
+GET localhost:8080/api/form/user/{username}
+Создание юзера
+POST localhost:8080/api/form/user
+Обновление юзера
+PUT localhost:8080/api/form/user
+Удаление юзера по идентификатору
+DELETE localhost:8080/api/form/user/{id}
+Удаление юзера по юзернейму
+DELETE localhost:8080/api/form/user/{username}
