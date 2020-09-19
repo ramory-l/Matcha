@@ -1,0 +1,21 @@
+.Home {
+  display: flex;
+  justify-content: center;
+}
+
+.Home-Figure {
+  text-align: center;
+  margin: 20px;
+}
+
+.Figure-Avatar {
+  width: 350px;
+  height: 350px;
+  border-radius: 8px;
+}
+
+.Figure-Figcaption {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}

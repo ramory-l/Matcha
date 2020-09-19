@@ -13,4 +13,10 @@
   justify-content: space-around;
   align-items: center;
   list-style: none;
+  list-style-type: none;
+}
+
+.Nav-Ul li {
+  color: white;
+  text-decoration: none;
 }

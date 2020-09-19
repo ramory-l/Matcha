@@ -5,8 +5,11 @@ import { Link } from "react-router-dom";
 function Nav() {
   return (
     <nav className="Nav">
-      <h3>Logo</h3>
+      <h3>Matcha</h3>
       <ul className="Nav-Ul">
+        <Link to="/">
+          <li>Home</li>
+        </Link>
         <Link to="/profile">
           <li>Profile</li>
         </Link>
