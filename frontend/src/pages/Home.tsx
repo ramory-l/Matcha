@@ -2,7 +2,7 @@ import React from "react";
 import MatchButton from "../components/MatchButton";
 import "./styles/Home.css";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <div className="Home">
       <figure className="Home-Figure">
@@ -17,4 +17,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

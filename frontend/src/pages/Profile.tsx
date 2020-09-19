@@ -3,7 +3,7 @@ import ProfileInfo from "../components/ProfileInfo";
 import ProfileSettings from "../components/ProfileSettings";
 import "./styles/Profile.css";
 
-const Profile = () => {
+const ProfilePage = () => {
   return (
     <div className="Profile">
       <ProfileInfo />
@@ -12,4 +12,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfilePage;

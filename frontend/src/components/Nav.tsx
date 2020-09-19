@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles/Nav.css";
 import { Link } from "react-router-dom";
 
-function Nav() {
+interface INavProps {
+  isAuthenticated: boolean;
+}
+
+const Nav: React.FC<INavProps> = ({ isAuthenticated }) => {
   return (
     <nav className="Nav">
       <h3>Matcha</h3>
@@ -10,12 +14,16 @@ function Nav() {
         <Link to="/">
           <li>Home</li>
         </Link>
-        <Link to="/profile">
-          <li>Profile</li>
-        </Link>
+        {isAuthenticated ? (
+          <Link to="/profile">
+            <li>Profile</li>
+          </Link>
+        ) : (
+          ""
+        )}
       </ul>
     </nav>
   );
-}
+};
 
 export default Nav;
