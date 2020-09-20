@@ -9,7 +9,7 @@ interface INavProps {
 const Nav: React.FC<INavProps> = ({ isAuthenticated }) => {
   return (
     <nav className="Nav">
-      <span>Matcha</span>
+      <span className="Nav-Title">Matcha</span>
       <ul className="Nav-Ul">
         <Link to="/">
           <li>Home</li>
