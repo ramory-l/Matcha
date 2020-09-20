@@ -15,36 +15,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5vw;
+  font-size: 2vw;
   width: 40vw;
   height: 7vh;
   background-color: white;
   position: absolute;
   top: -25px;
   border-radius: 15px;
-  font-family: "Caesar Dressing", cursive;
-  border: 2px dashed black;
+  font-family: "Cinzel Decorative", cursive;
+  font-weight: bold;
 }
 
 .Login-Form {
-  font-family: "Caesar Dressing", cursive;
+  font-family: "Cinzel Decorative", cursive;
   text-align: center;
   color: white;
 }
 
 .Login-Form input {
-  font-family: "Caesar Dressing", cursive;
+  font-family: "Cinzel Decorative", cursive;
   border: none;
-  border-radius: 5px;
+  border-radius: 2px;
   height: 20px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .Form-LoginButton {
+  height: 100px;
+  width: 100px;
   margin: 30px;
+  color: black;
+  background-color: white;
+  font-weight: bold;
 }
 
 .Form-RegisterButton {
   background: transparent;
   margin: 30px;
+  color: white;
+  width: 100px;
 }
