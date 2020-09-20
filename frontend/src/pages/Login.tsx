@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { fakeAuth } from "../App";
+import "./styles/Login.css";
 
 function LoginPage() {
   let history = useHistory();
@@ -14,9 +15,27 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <p>You must log in to view the page at {from.pathname}</p>
-      <button onClick={login}>Log in</button>
+    <div className="Login">
+      <span>Find Your Match. On Matcha.</span>
+      <form className="Login-Form" action="">
+        <label htmlFor="username">Username:</label>
+        <br />
+        <input type="text" name="username" />
+        <br />
+        <br />
+        <label htmlFor="password">Password:</label>
+        <br />
+        <input type="text" name="password" />
+        <br />
+        <br />
+        <input
+          className="Form-LoginButton"
+          onClick={login}
+          type="button"
+          value="Log in"
+        />
+        <input className="Form-RegisterButton" type="button" value="Register" />
+      </form>
     </div>
   );
 }

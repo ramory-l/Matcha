@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./styles/Nav.css";
 import { Link } from "react-router-dom";
 
@@ -9,18 +9,14 @@ interface INavProps {
 const Nav: React.FC<INavProps> = ({ isAuthenticated }) => {
   return (
     <nav className="Nav">
-      <h3>Matcha</h3>
+      <span>Matcha</span>
       <ul className="Nav-Ul">
         <Link to="/">
           <li>Home</li>
         </Link>
-        {isAuthenticated ? (
-          <Link to="/profile">
-            <li>Profile</li>
-          </Link>
-        ) : (
-          ""
-        )}
+        <Link to="/profile">
+          <li>Profile</li>
+        </Link>
       </ul>
     </nav>
   );
