@@ -1,6 +1,7 @@
 .App {
   width: 100vw;
   min-height: 100vh;
-  background-image: linear-gradient(to left, #4568dc, #b06ab3),
-    url("/background-image.jpg");
+  background: url("/background-image.png"),
+    linear-gradient(to left, #4568dc, #b06ab3);
+  background-size: 116vw, auto;
 }
