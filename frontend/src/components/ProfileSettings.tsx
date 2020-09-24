@@ -3,7 +3,7 @@ import "./styles/ProfileSettings.css";
 
 function ProfileSettings() {
   return (
-    <form>
+    <form className="ProfileSettings">
       <fieldset>
         <legend>Я ищу:</legend>
         <input type="checkbox" /> девушку

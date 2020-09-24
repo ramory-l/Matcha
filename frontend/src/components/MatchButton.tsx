@@ -3,6 +3,7 @@ import "./styles/MatchButton.css";
 
 interface MatchButtonProps {
   backgroundColor: string;
+  innerText: string;
 }
 
 function MatchButton(props: MatchButtonProps) {
@@ -10,7 +11,9 @@ function MatchButton(props: MatchButtonProps) {
     <div
       style={{ backgroundColor: props.backgroundColor }}
       className="MatchButton"
-    ></div>
+    >
+      {props.innerText}
+    </div>
   );
 }
 

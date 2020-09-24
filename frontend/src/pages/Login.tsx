@@ -16,7 +16,7 @@ function LoginPage() {
 
   return (
     <div className="Login">
-      <span>Find Your Match. On Matcha.</span>
+      <span className="Login-Title">Find Your Match. On Matcha.</span>
       <form className="Login-Form" action="">
         <label htmlFor="username">Username:</label>
         <br />

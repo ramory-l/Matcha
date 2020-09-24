@@ -11,7 +11,7 @@
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
 }
 
-.Login span {
+.Login-Title {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,6 +38,15 @@
   border-radius: 2px;
   height: 20px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.Login-Form input:hover {
+  box-shadow: 0 0 30px white;
+}
+
+.Login-Form input:focus {
+  box-shadow: 0 0 30px white;
+  outline: none;
 }
 
 .Form-LoginButton {
