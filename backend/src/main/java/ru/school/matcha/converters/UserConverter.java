@@ -1,6 +1,8 @@
 package ru.school.matcha.converters;
 
+import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
+import ru.school.matcha.dto.FormDto;
 import ru.school.matcha.dto.UserDto;
 
 import static java.util.Objects.isNull;
@@ -23,6 +25,8 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setGender(source.getGender());
         result.setBirthday(source.getBirthday());
         result.setDescription(source.getDescription());
+        Converter<FormDto, Form> formConverter = new FormConverter();
+        result.setForm(formConverter.convertFromEntity(source.getForm()));
         return result;
     }
 

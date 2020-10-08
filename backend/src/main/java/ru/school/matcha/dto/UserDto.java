@@ -1,6 +1,7 @@
 package ru.school.matcha.dto;
 
 import lombok.Data;
+import ru.school.matcha.domain.Form;
 
 import java.util.Date;
 
@@ -13,4 +14,5 @@ public class UserDto {
     private String gender;
     private Date birthday;
     private String description;
+    private FormDto form;
 }

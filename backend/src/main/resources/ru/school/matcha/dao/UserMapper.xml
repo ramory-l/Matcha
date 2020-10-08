@@ -19,15 +19,12 @@
     </resultMap>
 
     <insert id="createUser">
-        INSERT INTO user (username,
-                          email,
-                          is_active,
-                          form_id,
-                          create_ts)
-        VALUES (#{username},
-                #{email},
+        INSERT INTO "user"(username, email, password, is_active, form_id, create_ts)
+        VALUES (#{credentials.username},
+                #{credentials.email},
+                #{credentials.password},
                 true,
-                #{form.id},
+                #{formId},
                 now())
     </insert>
 
@@ -119,10 +116,7 @@
             birthday,
             description,
             is_active,
-            form_id,
-            create_ts,
-            update_ts,
-            delete_ts
+            form_id
             FROM "user"
             WHERE username ILIKE #{username}
         </if>

@@ -1,76 +1,149 @@
+*****************************************************
 address:8080/api/form - анкеты
-
+*****************************************************
 Добавление анкеты
-POST address:8080/api/form
-{
-  "man": true/false,
-  "woman": true/false,
-  "friendship": true/false,
-  "love": true/false,
-  "sex": true/false,
-  "flirt": true/false
-}
+    POST address:8080/api/form
+    {
+        "man": true/false,
+        "woman": true/false,
+        "friendship": true/false,
+        "love": true/false,
+        "sex": true/false,
+        "flirt": true/false
+    }
+example request:
 
+example response:
+
+-----------------------------------------------------
 Получение всех анкет
-GET address:8080/api/form/all
+    GET address:8080/api/form/all
+example request:
 
+example response:
+
+-----------------------------------------------------
 Получение анкеты по идентификатору
-GET address:8080/api/form/{id}
+    GET address:8080/api/form/{id}
+example request:
 
+example response:
+
+-----------------------------------------------------
 Получение анкеты по идентификатору юзера
-GET address:8080/api/form/user/{id}
+    GET address:8080/api/form/user/{id}
+example request:
 
+example response:
+
+-----------------------------------------------------
 Обновление анкеты
-PUT address:8080/api/form/{userId}
-{
-  "man": true/false,
-  "woman": true/false,
-  "friendship": true/false,
-  "love": true/false,
-  "sex": true/false,
-  "flirt": true/false
-}
+    PUT address:8080/api/form/{userId}
+    {
+        "man": true/false,
+        "woman": true/false,
+        "friendship": true/false,
+        "love": true/false,
+        "sex": true/false,
+        "flirt": true/false
+    }
+example request:
 
+example response:
+
+-----------------------------------------------------
 Удаление анкеты по идентификатору
-DELETE address:8080/api/form/{id}
+    DELETE address:8080/api/form/{id}
+example request:
 
+example response:
+
+-----------------------------------------------------
 Удаление анкеты по идентификатору пользователя
-DELETE address:8080/api/form/user/{id}
+    DELETE address:8080/api/form/user/{id}
+example request:
 
+example response:
 
+*****************************************************
 address:8080/api/user/ - юзеры
-
+*****************************************************
 Создание юзера
-POST address:8080/api/form/user
-{
-    "username": "test",
-    "email": "test@testov.ru",
-    "password": "1234"
-}
+    POST address:8080/api/form/user
+body:
+    {
+        "username": "test",
+        "email": "test@testov.ru",
+        "password": "1234"
+    }
+example request:
 
+example response:
+    1 [идентификатор юзера]
+-----------------------------------------------------
 Получение всех юзеров
-GET address:8080/api/user/all
+    GET address:8080/api/user/all
+example request:
 
+example response:
+
+-----------------------------------------------------
 Получение юзера по идентификатору
-GET address:8080/api/user/{id}
+    GET address:8080/api/user/{id}
+example request:
 
+example response:
+
+-----------------------------------------------------
 Получение юзера по юзернейму
-GET address:8080/api/user/{username}
-
+    GET address:8080/api/user/username/{username}
+example request:
+    http://localhost:8080/api/user/username/test
+example response:
+    {
+        "username": "test",
+        "firstName": "",
+        "lastName": "",
+        "email": "test@testov.ru",
+        "gender": null,
+        "birthday": null,
+        "description": "",
+        "form": {
+            "man": false,
+            "woman": false,
+            "friendship": false,
+            "love": false,
+            "sex": false,
+            "flirt": false
+        }
+    }
+-----------------------------------------------------
 Обновление юзера
-PUT address:8080/api/user
-{
-  "username": "test",
-  "firstName": "test",
-  "lastName": "test",
-  "email": "test",
-  "gender": "m/w",
-  "birthday": date,
-  "description": "test"
-}
+    PUT address:8080/api/user
+body:
+    {
+        "username": "test",
+        "firstName": "test",
+        "lastName": "test",
+        "email": "test",
+        "gender": "m/w",
+        "birthday": date,
+        "description": "test"
+    }
+example request:
 
+example response:
+
+-----------------------------------------------------
 Удаление юзера по идентификатору
-DELETE address:8080/api/form/user/{id}
+    DELETE address:8080/api/form/user/{id}
+example request:
 
+example response:
+
+-----------------------------------------------------
 Удаление юзера по юзернейму
-DELETE address:8080/api/user/{username}
+    DELETE address:8080/api/user/{username}
+example request:
+
+example response:
