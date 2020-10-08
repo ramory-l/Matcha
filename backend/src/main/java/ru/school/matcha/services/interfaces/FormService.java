@@ -13,7 +13,7 @@ public interface FormService {
 
     Optional<Form> getFormByUserId(Long id);
 
-    void createForm(Form form);
+    Long createForm(Form form);
 
     void updateForm(Form form, Long userId);
 

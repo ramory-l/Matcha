@@ -15,6 +15,7 @@ create table "user"
     username    varchar(255)                              not null,
     first_name  varchar(255)                default ''    not null,
     last_name   varchar(255)                default ''    not null,
+    password    text                        default ''    not null,
     email       varchar(255)                              not null,
     gender      varchar(255)                              not null,
     birthday    timestamp without time zone               not null,

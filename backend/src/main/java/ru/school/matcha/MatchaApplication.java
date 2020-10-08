@@ -39,9 +39,9 @@ public class MatchaApplication {
                         Serializer<CredentialsDto> serializer = new Serializer<>();
                         CredentialsDto credentialsDto = serializer.deserialize(req.body(), CredentialsDto.class);
                         Credentials credentials = credentialsConverter.convertFromDto(credentialsDto);
-                        userService.createUser(credentials);
+                        Long userId = userService.createUser(credentials);
                         res.status(200);
-                        res.body("User creation was successful");
+                        return userId;
                     } catch (MatchaException ex) {
                         logger.error("Failed to create user", ex);
                         res.status(400);

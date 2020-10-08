@@ -1,6 +1,7 @@
 package ru.school.matcha.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.User;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface UserMapper {
 
     Optional<User> getUserByUsername(String username);
 
-    void createUser(User user);
+    Long createUser(Credentials credentials);
 
     void updateUser(User user);
 

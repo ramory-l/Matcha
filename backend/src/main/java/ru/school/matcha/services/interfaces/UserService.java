@@ -14,7 +14,7 @@ public interface UserService {
 
     Optional<User> getUserByUsername(String username);
 
-    void createUser(Credentials credentials);
+    Long createUser(Credentials credentials);
 
     void updateUser(User user);
 

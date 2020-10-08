@@ -20,22 +20,12 @@
 
     <insert id="createUser">
         INSERT INTO user (username,
-                          first_name,
-                          last_name,
                           email,
-                          gender,
-                          birthday,
-                          description,
                           is_active,
                           form_id,
                           create_ts)
         VALUES (#{username},
-                #{firstName},
-                #{lastName},
                 #{email},
-                #{gender},
-                #{birthday},
-                #{description},
                 true,
                 #{form.id},
                 now())
