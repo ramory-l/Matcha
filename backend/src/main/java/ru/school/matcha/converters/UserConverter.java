@@ -23,8 +23,6 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setGender(source.getGender());
         result.setBirthday(source.getBirthday());
         result.setDescription(source.getDescription());
-        result.setIsActive(source.getIsActive());
-        result.setForm(new FormConverter().convertFromEntity(source.getForm()));
         return result;
     }
 
@@ -40,8 +38,6 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setGender(source.getGender());
         result.setBirthday(source.getBirthday());
         result.setDescription(source.getDescription());
-        result.setIsActive(source.getIsActive());
-        result.setForm(new FormConverter().convertFromDto(source.getForm()));
         return result;
     }
 

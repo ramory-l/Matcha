@@ -1,31 +1,76 @@
-localhost:8080/api/form - анкеты
-Получение всех анкет
-GET localhost:8080/api/form/all
-Получение анкеты по идентификатору
-GET localhost:8080/api/form/{id}
-Получение анкеты по идентификатору юзера
-GET localhost:8080/api/form/user/{id}
-Добавление анкеты
-POST localhost:8080/api/form
-Обновление анкеты
-PUT localhost:8080/api/form
-Удаление анкеты по идентификатору
-DELETE localhost:8080/api/form/{id}
-Удаление анкеты по идентификатору пользователя
-DELETE localhost:8080/api/form/user/{id}
+address:8080/api/form - анкеты
 
-localhost:8080/api/form/user - юзеры
-Получение всех юзеров
-GET localhost:8080/api/form/user/all
-Получение юзера по идентификатору
-GET localhost:8080/api/form/user/{id}
-Получение юзера по юзернейму
-GET localhost:8080/api/form/user/{username}
+Добавление анкеты
+POST address:8080/api/form
+{
+  "man": true/false,
+  "woman": true/false,
+  "friendship": true/false,
+  "love": true/false,
+  "sex": true/false,
+  "flirt": true/false
+}
+
+Получение всех анкет
+GET address:8080/api/form/all
+
+Получение анкеты по идентификатору
+GET address:8080/api/form/{id}
+
+Получение анкеты по идентификатору юзера
+GET address:8080/api/form/user/{id}
+
+Обновление анкеты
+PUT address:8080/api/form/{userId}
+{
+  "man": true/false,
+  "woman": true/false,
+  "friendship": true/false,
+  "love": true/false,
+  "sex": true/false,
+  "flirt": true/false
+}
+
+Удаление анкеты по идентификатору
+DELETE address:8080/api/form/{id}
+
+Удаление анкеты по идентификатору пользователя
+DELETE address:8080/api/form/user/{id}
+
+
+address:8080/api/user/ - юзеры
+
 Создание юзера
-POST localhost:8080/api/form/user
+POST address:8080/api/form/user
+{
+    "username": "test",
+    "email": "test@testov.ru",
+    "password": "1234"
+}
+
+Получение всех юзеров
+GET address:8080/api/user/all
+
+Получение юзера по идентификатору
+GET address:8080/api/user/{id}
+
+Получение юзера по юзернейму
+GET address:8080/api/user/{username}
+
 Обновление юзера
-PUT localhost:8080/api/form/user
+PUT address:8080/api/user
+{
+  "username": "test",
+  "firstName": "test",
+  "lastName": "test",
+  "email": "test",
+  "gender": "m/w",
+  "birthday": date,
+  "description": "test"
+}
+
 Удаление юзера по идентификатору
-DELETE localhost:8080/api/form/user/{id}
+DELETE address:8080/api/form/user/{id}
+
 Удаление юзера по юзернейму
-DELETE localhost:8080/api/form/user/{username}
+DELETE address:8080/api/user/{username}

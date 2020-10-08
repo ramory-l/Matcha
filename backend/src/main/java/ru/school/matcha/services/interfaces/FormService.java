@@ -15,7 +15,7 @@ public interface FormService {
 
     void createForm(Form form);
 
-    void updateForm(Form form);
+    void updateForm(Form form, Long userId);
 
     void deleteFormById(Long id);
 

@@ -13,6 +13,4 @@ public class UserDto {
     private String gender;
     private Date birthday;
     private String description;
-    private Boolean isActive;
-    private FormDto form;
 }

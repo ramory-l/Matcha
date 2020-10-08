@@ -237,12 +237,13 @@ public class MatchaApplication {
                     }
                     return res.body();
                 }, new JsonTransformer());
-                put("/", "application/json", (req, res) -> {
+                put("/{userId}", "application/json", (req, res) -> {
+                    Long userId = parseLong(req.params("userId"));
                     try {
                         Serializer<FormDto> serializer = new Serializer<>();
                         FormDto formDto = serializer.deserialize(req.body(), FormDto.class);
                         Form form = formConverter.convertFromDto(formDto);
-                        formService.updateForm(form);
+                        formService.updateForm(form, userId);
                         res.status(200);
                         res.body("Form update was successful");
                     } catch (MatchaException ex) {
