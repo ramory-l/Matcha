@@ -203,7 +203,7 @@ public class MatchaApplication {
                     Long id = parseLong(req.params("id"));
                     try {
                         Form form = formService.getFormById(id)
-                                .orElseThrow(() -> new MatchaException(String.format("Form with id: {} doesn't exist", id)));
+                                .orElseThrow(() -> new MatchaException(String.format("Form with id: %s doesn't exist", id)));
                         FormDto result = formConverter.convertFromEntity(form);
                         res.status(200);
                         return result;
