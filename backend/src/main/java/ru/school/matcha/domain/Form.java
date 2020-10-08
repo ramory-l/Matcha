@@ -1,8 +1,10 @@
 package ru.school.matcha.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
 
 @Data
+@JsonAutoDetect
 public class Form {
     private Long id;
     private boolean man;

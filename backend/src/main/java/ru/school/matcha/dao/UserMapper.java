@@ -1,14 +1,12 @@
 package ru.school.matcha.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 import ru.school.matcha.domain.User;
 
 import java.util.List;
 import java.util.Optional;
 
 @Mapper
-@Repository
 public interface UserMapper {
 
     List<User> getAllUsers();

@@ -1,5 +1,6 @@
 package ru.school.matcha.services.interfaces;
 
+import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.User;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface UserService {
 
     Optional<User> getUserByUsername(String username);
 
-    void createUser(User user);
+    void createUser(Credentials credentials);
 
     void updateUser(User user);
 
