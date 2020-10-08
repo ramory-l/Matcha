@@ -46,10 +46,10 @@
             birthday = #{birthday},
         </if>
         <if test="description != null">
-            description = #{descrition},
+            description = #{description},
         </if>
         update_ts = now()
-        WHERE id = #{id}
+        WHERE username = #{username}
     </update>
 
     <delete id="deleteUserById">

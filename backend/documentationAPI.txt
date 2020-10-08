@@ -77,7 +77,13 @@ body:
         "password": "1234"
     }
 example request:
-
+    curl --location --request POST 'http://localhost:8080/api/user/' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "username": "test",
+        "email": "test@testov.ru",
+        "password": "1234"
+    }'
 example response:
     1 [идентификатор юзера]
 -----------------------------------------------------
@@ -98,7 +104,7 @@ example response:
 Получение юзера по юзернейму
     GET address:8080/api/user/username/{username}
 example request:
-    http://localhost:8080/api/user/username/test
+    curl --location --request GET 'http://localhost:8080/api/user/username/test'
 example response:
     {
         "username": "test",
@@ -131,9 +137,18 @@ body:
         "description": "test"
     }
 example request:
-
+    curl --location --request PUT 'http://localhost:8080/api/user/' \
+    --header 'Content-Type: application/json' \
+    --data-raw '    {
+            "username": "test",
+            "firstName": "Abraham",
+            "lastName": "Abram",
+            "email": "test@test.ru",
+            "description": "Я очень интересный человек",
+            "gender": "m"
+        }'
 example response:
-
+    "User with username: test updated"
 -----------------------------------------------------
 Удаление юзера по идентификатору
     DELETE address:8080/api/form/user/{id}

@@ -115,7 +115,7 @@ public class MatchaApplication {
                         User user = userConverter.convertFromDto(userDto);
                         userService.updateUser(user);
                         res.status(200);
-                        res.body("User update was successful");
+                        res.body(String.format("User with username: %s updated", user.getUsername()));
                     } catch (MatchaException ex) {
                         logger.error("Failed to update user", ex);
                         res.status(400);
