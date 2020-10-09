@@ -24,6 +24,7 @@
                 #{love},
                 #{sex},
                 #{flirt})
+        RETURNING id
     </insert>
 
     <update id="updateForm">

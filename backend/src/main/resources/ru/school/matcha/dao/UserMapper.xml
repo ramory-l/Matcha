@@ -26,6 +26,7 @@
                 true,
                 #{formId},
                 now())
+        RETURNING id
     </insert>
 
     <update id="updateUser">
