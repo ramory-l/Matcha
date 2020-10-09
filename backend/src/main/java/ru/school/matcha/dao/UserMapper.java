@@ -17,7 +17,7 @@ public interface UserMapper {
 
     Optional<User> getUserByUsername(String username);
 
-    Long createUser(@Param("credentials") Credentials credentials, @Param("formId") Long formId);
+    void createUser(@Param("credentials") Credentials credentials, @Param("formId") Long formId, @Param("user") User user);
 
     void updateUser(User user);
 

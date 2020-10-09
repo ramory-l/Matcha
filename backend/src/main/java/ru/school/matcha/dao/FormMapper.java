@@ -15,7 +15,7 @@ public interface FormMapper {
 
     Optional<Form> getFormByUserId(Long id);
 
-    Long createForm(Form form);
+    void createForm(Form form);
 
     void updateForm(Form form);
 

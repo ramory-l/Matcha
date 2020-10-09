@@ -39,9 +39,9 @@ public class FormServiceImpl implements FormService {
     public Long createForm(Form form) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
-            Long formId = formMapper.createForm(form);
+            formMapper.createForm(form);
             sqlSession.commit();
-            return formId;
+            return form.getId();
         }
     }
 

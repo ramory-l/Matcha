@@ -54,10 +54,11 @@ public class UserServiceImpl implements UserService {
                 defaultForm.setLove(false);
                 defaultForm.setSex(false);
                 defaultForm.setFlirt(false);
+                User user = new User();
                 defaultForm.setId(formService.createForm(defaultForm));
-                Long userId = userMapper.createUser(credentials, defaultForm.getId());
+                userMapper.createUser(credentials, defaultForm.getId(), user);
                 sqlSession.commit();
-                return userId;
+                return user.getId();
             }
         } else {
             throw new MatchaException(String.format("User with username %s already exist", username));

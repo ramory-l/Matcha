@@ -11,7 +11,7 @@
         <result property="flirt" column="flirt"/>
     </resultMap>
 
-    <insert id="createForm">
+    <insert id="createForm" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO form (man,
                           woman,
                           friendship,
@@ -24,7 +24,6 @@
                 #{love},
                 #{sex},
                 #{flirt})
-        RETURNING id
     </insert>
 
     <update id="updateForm">
