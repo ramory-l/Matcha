@@ -115,6 +115,7 @@ public class MatchaApplication {
                         User user = userConverter.convertFromDto(userDto);
                         userService.updateUser(user);
                         res.status(200);
+//                        условие в зависимости от параметра
                         res.body(String.format("User with username: %s updated", user.getUsername()));
                     } catch (MatchaException ex) {
                         logger.error("Failed to update user", ex);
@@ -168,9 +169,9 @@ public class MatchaApplication {
                         Serializer<FormDto> serializer = new Serializer<>();
                         FormDto formDto = serializer.deserialize(req.body(), FormDto.class);
                         Form form = formConverter.convertFromDto(formDto);
-                        formService.createForm(form);
+                        Long formId = formService.createForm(form);
                         res.status(200);
-                        res.body("Form creation was successful");
+                        return formId;
                     } catch (MatchaException ex) {
                         logger.error("Failed to create form", ex);
                         res.status(400);

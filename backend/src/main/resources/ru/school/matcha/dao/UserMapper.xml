@@ -28,28 +28,62 @@
                 now())
     </insert>
 
-    <update id="updateUser">
-        UPDATE "user" SET
-        <if test="firstName != null">
-            first_name = #{firstName},
+    <update id="updateUserByUsername">
+        <if test="username">
+            UPDATE "user" SET
+            <if test="firstName != null">
+                first_name = #{firstName},
+            </if>
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="form != null and form.id != null">
+                form_id = #{form.id},
+            </if>
+            update_ts = now()
+            WHERE username = #{username}
         </if>
-        <if test="lastName != null">
-            last_name = #{lastName},
+    </update>
+
+    <update id="updateUserById">
+        <if test="id">
+            UPDATE "user" SET
+            <if test="firstName != null">
+                first_name = #{firstName},
+            </if>
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="form != null and form.id != null">
+                form_id = #{form.id},
+            </if>
+            update_ts = now()
+            WHERE id = #{id}
         </if>
-        <if test="email != null">
-            email = #{email},
-        </if>
-        <if test="gender != null">
-            gender = #{gender},
-        </if>
-        <if test="birthday != null">
-            birthday = #{birthday},
-        </if>
-        <if test="description != null">
-            description = #{description},
-        </if>
-        update_ts = now()
-        WHERE username = #{username}
     </update>
 
     <delete id="deleteUserById">

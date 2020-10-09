@@ -1,12 +1,14 @@
 package ru.school.matcha.dto;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
-import ru.school.matcha.domain.Form;
 
 import java.util.Date;
 
 @Data
+@JsonAutoDetect
 public class UserDto {
+    private Long id;
     private String username;
     private String firstName;
     private String lastName;

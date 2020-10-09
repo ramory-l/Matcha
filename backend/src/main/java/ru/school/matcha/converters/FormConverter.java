@@ -16,6 +16,7 @@ public class FormConverter extends Converter<FormDto, Form> {
             return null;
         }
         FormDto result = new FormDto();
+        result.setId(source.getId());
         result.setFlirt(source.isFlirt());
         result.setFriendship(source.isFriendship());
         result.setLove(source.isLove());
@@ -30,6 +31,7 @@ public class FormConverter extends Converter<FormDto, Form> {
             return null;
         }
         Form result = new Form();
+        result.setId(source.getId());
         result.setFlirt(source.isFlirt());
         result.setFriendship(source.isFriendship());
         result.setLove(source.isLove());

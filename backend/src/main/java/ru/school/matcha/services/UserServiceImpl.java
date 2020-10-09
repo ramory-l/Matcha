@@ -13,6 +13,8 @@ import ru.school.matcha.services.interfaces.UserService;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.nonNull;
+
 public class UserServiceImpl implements UserService {
 
     @Override
@@ -69,7 +71,11 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            userMapper.updateUser(user);
+            if (nonNull(user.getId())) {
+                userMapper.updateUserById(user);
+            } else {
+                userMapper.updateUserByUsername(user);
+            }
             sqlSession.commit();
         }
     }
