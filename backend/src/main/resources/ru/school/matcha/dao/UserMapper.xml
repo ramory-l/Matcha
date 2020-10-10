@@ -155,4 +155,10 @@
             WHERE username ILIKE #{username}
         </if>
     </select>
+
+    <select id="getUserEncryptPasswordById" resultType="java.lang.String">
+        <if test="id != null">
+            SELECT password FROM "user" WHERE id = #{id}
+        </if>
+    </select>
 </mapper>

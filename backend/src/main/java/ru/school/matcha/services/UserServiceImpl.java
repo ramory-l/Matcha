@@ -7,6 +7,7 @@ import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
@@ -46,6 +47,11 @@ public class UserServiceImpl implements UserService {
         String username = credentials.getUsername();
         Optional<User> optionalUser = getUserByUsername(username);
         if (!optionalUser.isPresent()) {
+            try {
+                credentials.setPassword(PasswordCipher.generateStrongPasswordHash(credentials.getPassword()));
+            } catch (Exception ex) {
+                throw new MatchaException("Encrypt password error");
+            }
             try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
                 UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
                 FormService formService = new FormServiceImpl();
@@ -95,6 +101,14 @@ public class UserServiceImpl implements UserService {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             userMapper.deleteUserByUsername(username);
             sqlSession.commit();
+        }
+    }
+
+    @Override
+    public String getUserEncryptPasswordById(Long id) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.getUserEncryptPasswordById(id);
         }
     }
 }

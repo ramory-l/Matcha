@@ -12,6 +12,7 @@ import ru.school.matcha.dto.CredentialsDto;
 import ru.school.matcha.dto.FormDto;
 import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.AuthenticationServiceImpl;
@@ -48,6 +49,10 @@ public class MatchaApplication {
                 try {
                     User user = userService.getUserByUsername(username)
                             .orElseThrow(() -> new AuthenticationException(String.format("User with username: %s not found", username)));
+                    String encryptedPassword = userService.getUserEncryptPasswordById(user.getId());
+                    if (!PasswordCipher.validatePassword(authDto.getPassword(), encryptedPassword)) {
+                        throw new AuthenticationException("Users password is wrong");
+                    }
                     authenticationService.authenticate(user.getUsername(), authDto.getPassword());
                     String token = jwtTokenProvider.createToken(user.getUsername());
                     return ImmutableMap.<String, String>builder()

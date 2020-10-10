@@ -26,4 +26,6 @@ public interface UserMapper {
     void deleteUserById(Long id);
 
     void deleteUserByUsername(String username);
+
+    String getUserEncryptPasswordById(Long id);
 }
