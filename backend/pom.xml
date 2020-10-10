@@ -16,6 +16,17 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <sparkcore.version>2.9.2</sparkcore.version>
+        <jacksondatabind.version>2.11.3</jacksondatabind.version>
+        <guava.version>29.0-jre</guava.version>
+        <junit.version>4.13</junit.version>
+        <slf4japi.version>1.7.5</slf4japi.version>
+        <slf4jsimple.version>1.6.4</slf4jsimple.version>
+        <mybatis.version>3.5.5</mybatis.version>
+        <flywaymavenplugin.version>6.5.5</flywaymavenplugin.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <jakartaxml.version>2.3.2</jakartaxml.version>
+        <jaxbruntime.version>2.3.2</jaxbruntime.version>
     </properties>
 
     <dependencies>
@@ -23,13 +34,13 @@
         <dependency>
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-core</artifactId>
-            <version>2.9.2</version>
+            <version>${sparkcore.version}</version>
         </dependency>
         <!-- Сериализация и десериализация JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.11.3</version>
+            <version>${jacksondatabind.version}</version>
         </dependency>
         <!-- Библиотека для генерации геттеров и сеттеров -->
         <dependency>
@@ -41,31 +52,31 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>29.0-jre</version>
+            <version>${guava.version}</version>
         </dependency>
         <!-- Тестирование -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- Логирование -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
+            <version>${slf4japi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
+            <version>${slf4jsimple.version}</version>
         </dependency>
         <!-- Управление базами данных -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.5.5</version>
+            <version>${mybatis.version}</version>
         </dependency>
         <!-- База данных -->
         <dependency>
@@ -82,7 +93,25 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-maven-plugin</artifactId>
-            <version>6.5.5</version>
+            <version>${flywaymavenplugin.version}</version>
+        </dependency>
+        <!-- JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <!-- JAXB API, маршализация и демаршализация XML -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jakartaxml.version}</version>
+        </dependency>
+        <!-- JAXB Runtime, маршализация и демаршализация XML -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxbruntime.version}</version>
         </dependency>
     </dependencies>
 
@@ -91,7 +120,7 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>6.5.5</version>
+                <version>${flywaymavenplugin.version}</version>
             </plugin>
         </plugins>
     </build>

@@ -1,21 +1,27 @@
 package ru.school.matcha;
 
+import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.school.matcha.converters.*;
 import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
+import ru.school.matcha.dto.AuthDto;
 import ru.school.matcha.dto.CredentialsDto;
 import ru.school.matcha.dto.FormDto;
 import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.serializators.Serializer;
+import ru.school.matcha.services.AuthenticationServiceImpl;
 import ru.school.matcha.services.FormServiceImpl;
 import ru.school.matcha.services.UserServiceImpl;
+import ru.school.matcha.services.interfaces.AuthenticationService;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 
 import static spark.Spark.*;
@@ -32,7 +38,37 @@ public class MatchaApplication {
         Converter<CredentialsDto, Credentials> credentialsConverter = new CredentialsConverter();
         UserService userService = new UserServiceImpl();
         FormService formService = new FormServiceImpl();
+        AuthenticationService authenticationService = new AuthenticationServiceImpl();
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
         path("/api", () -> {
+            path("/auth", () -> post("/login", "application/json", (req, res) -> {
+                Serializer<AuthDto> serializer = new Serializer<>();
+                AuthDto authDto = serializer.deserialize(req.body(), AuthDto.class);
+                String username = authDto.getUsername();
+                try {
+                    User user = userService.getUserByUsername(username)
+                            .orElseThrow(() -> new AuthenticationException(String.format("User with username: %s not found", username)));
+                    authenticationService.authenticate(user.getUsername(), authDto.getPassword());
+                    String token = jwtTokenProvider.createToken(user.getUsername());
+                    return ImmutableMap.<String, String>builder()
+                            .put("username", username)
+                            .put("token", token)
+                            .build();
+                } catch (AuthenticationException ex) {
+                    logger.error("Failed to login", ex);
+                    res.status(403);
+                    res.body(String.format("Authentication failed. %s", ex.getMessage()));
+                } catch (MatchaException ex) {
+                    logger.error("Failed to login", ex);
+                    res.status(400);
+                    res.body(String.format("Failed to login. %s", ex.getMessage()));
+                } catch (Exception ex) {
+                    logger.error("An unexpected error occurred while trying to login", ex);
+                    res.status(500);
+                    res.body(String.format("An unexpected error occurred while trying to login. %s", ex.getMessage()));
+                }
+                return res.body();
+            }, new JsonTransformer()));
             path("/user", () -> {
                 post("/", "application/json", (req, res) -> {
                     try {
