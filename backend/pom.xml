@@ -131,6 +131,7 @@
                             <addClasspath>true</addClasspath>
                             <mainClass>ru.school.matcha.MatchaApplication</mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
+                            <classpathLayoutType>repository</classpathLayoutType>
                         </manifest>
                     </archive>
                 </configuration>
