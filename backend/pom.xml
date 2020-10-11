@@ -130,8 +130,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>ru.school.matcha.MatchaApplication</mainClass>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <classpathLayoutType>repository</classpathLayoutType>
+                            <classpathPrefix>dependency/</classpathPrefix>
                         </manifest>
                     </archive>
                 </configuration>
