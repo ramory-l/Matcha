@@ -24,6 +24,7 @@
         <projectlombok.version>1.18.16</projectlombok.version>
         <postgres.version>42.2.18</postgres.version>
         <flywaycore.version>7.0.3</flywaycore.version>
+        <mavenassemblyplugin.version>3.3.0</mavenassemblyplugin.version>
     </properties>
 
     <dependencies>
@@ -131,6 +132,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>${mavenassemblyplugin.version}</version>
                 <configuration>
                     <finalName>Matcha</finalName>
                     <archive>
