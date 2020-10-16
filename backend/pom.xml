@@ -130,16 +130,18 @@
                 <version>${flywaymavenplugin.version}</version>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <finalName>Matcha</finalName>
                     <archive>
                         <manifest>
-                            <addClasspath>true</addClasspath>
                             <mainClass>ru.school.matcha.MatchaApplication</mainClass>
-                            <classpathPrefix>dependency/</classpathPrefix>
                         </manifest>
                     </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
             </plugin>
         </plugins>
