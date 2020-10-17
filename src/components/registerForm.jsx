@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Form from "./common/form";
 import Joi from "joi";
-import "./styles/registerForm.scss";
+import "./styles/authForm.scss";
 
 class RegisterForm extends Form {
   state = {

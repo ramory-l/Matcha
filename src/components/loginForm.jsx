@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Form from "./common/form";
 import Joi from "joi";
-import "./styles/loginForm.scss";
+import "./styles/authForm.scss";
 
 class LoginForm extends Form {
   state = {
@@ -31,6 +31,9 @@ class LoginForm extends Form {
         {this.renderCheckbox("rememberme", "Remember me")}
         <div className="LoginForm-Buttons">
           {this.renderButton("Login")}
+          <Link to="/auth/register">
+            <button className="btn btn-warning">Forgot password</button>
+          </Link>
           <Link to="/auth/register">
             <button className="btn btn-warning">Not a member yet?</button>
           </Link>
