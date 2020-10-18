@@ -1,8 +1,13 @@
 package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.*;
+import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,11 +29,28 @@ public class Main {
         ObjectMapper objectMapper = new ObjectMapper();
         StringWriter stringWriter = new StringWriter();
         try {
-            objectMapper.writeValue(cleanWriter(stringWriter), users);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(cleanWriter(stringWriter), users);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        System.out.println(stringWriter.toString());
+        String request = stringWriter.toString();
+        writeToFile(request);
+        sendRequest(request);
+    }
+
+    private static void sendRequest(String json) {
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost("http://localhost:8080/api/user/batch");
+            StringEntity entity = new StringEntity(json);
+            httpPost.setEntity(entity);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            client.execute(httpPost);
+            client.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static List<String> getFile(String filename) {
@@ -40,6 +62,23 @@ public class Main {
             System.exit(-1);
         }
         return null;
+    }
+
+    private static void writeToFile(String text) {
+        String filePath = "users.txt";
+        Path path = Paths.get(filePath);
+        boolean doesFileExist = Files.exists(path, LinkOption.NOFOLLOW_LINKS);
+        try {
+            if (!doesFileExist) {
+                File file = new File(filePath);
+                if (file.createNewFile()) {
+                    throw new IOException();
+                }
+            }
+            Files.write(Paths.get(filePath), text.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static StringWriter cleanWriter(StringWriter stringWriter) {

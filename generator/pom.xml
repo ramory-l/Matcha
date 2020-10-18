@@ -41,6 +41,7 @@
         <jacksondatabind.version>2.11.3</jacksondatabind.version>
         <projectlombok.version>1.18.16</projectlombok.version>
         <mavenassemblyplugin.version>3.3.0</mavenassemblyplugin.version>
+        <httpclient.version>4.5.13</httpclient.version>
     </properties>
 
     <dependencies>
@@ -54,6 +55,11 @@
             <artifactId>lombok</artifactId>
             <version>${projectlombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
         </dependency>
     </dependencies>
 
