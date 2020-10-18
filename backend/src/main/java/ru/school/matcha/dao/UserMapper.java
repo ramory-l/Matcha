@@ -19,6 +19,8 @@ public interface UserMapper {
 
     void createUser(@Param("credentials") Credentials credentials, @Param("formId") Long formId, @Param("user") User user);
 
+    void createFullUser(User users);
+
     void updateUserByUsername(User user);
 
     void updateUserById(User user);

@@ -16,6 +16,8 @@ public interface UserService {
 
     Long createUser(Credentials credentials);
 
+    void batchCreateUsers(List<User> users);
+
     void updateUser(User user);
 
     void deleteUserById(Long id);

@@ -1,5 +1,6 @@
 package ru.school.matcha.services;
 
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.configs.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
@@ -11,6 +12,8 @@ import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +73,26 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             throw new MatchaException(String.format("User with username %s already exist", username));
+        }
+    }
+
+    @Override
+    public void batchCreateUsers(List<User> users) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession(ExecutorType.BATCH)) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            FormService formService = new FormServiceImpl();
+            users.forEach(user -> {
+                user.getForm().setId(formService.createForm(user.getForm()));
+                try {
+                    user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
+                } catch (Exception ex) {
+                    throw new MatchaException(ex.getMessage());
+                }
+                userMapper.createFullUser(user);
+            });
+            sqlSession.commit();
+        } catch (Exception ex) {
+            throw new MatchaException("Failed to batchCreateUsers");
         }
     }
 

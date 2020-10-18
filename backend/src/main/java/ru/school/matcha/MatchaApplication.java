@@ -7,10 +7,7 @@ import ru.school.matcha.converters.*;
 import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
-import ru.school.matcha.dto.AuthDto;
-import ru.school.matcha.dto.CredentialsDto;
-import ru.school.matcha.dto.FormDto;
-import ru.school.matcha.dto.UserDto;
+import ru.school.matcha.dto.*;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
@@ -37,6 +34,7 @@ public class MatchaApplication {
         Converter<UserDto, User> userConverter = new UserConverter();
         Converter<FormDto, Form> formConverter = new FormConverter();
         Converter<CredentialsDto, Credentials> credentialsConverter = new CredentialsConverter();
+        Converter<UserFullDto, User> userFullConverter = new UserFullConverter();
         UserService userService = new UserServiceImpl();
         FormService formService = new FormServiceImpl();
         AuthenticationService authenticationService = new AuthenticationServiceImpl();
@@ -91,6 +89,24 @@ public class MatchaApplication {
                         logger.error("An unexpected error occurred while trying to create user", ex);
                         res.status(500);
                         res.body(String.format("An unexpected error occurred while trying to create user. %s", ex.getMessage()));
+                    }
+                    return res.body();
+                }, new JsonTransformer());
+                post("/batch", "application/json", (req, res) -> {
+                    try {
+                        Serializer<UserFullDto> serializer = new Serializer<>();
+                        List<UserFullDto> userFullDtoList = serializer.deserializeList(req.body(), UserFullDto.class);
+                        List<User> users = userFullConverter.createFromDtos(userFullDtoList);
+                        userService.batchCreateUsers(users);
+                        res.status(204);
+                    } catch (MatchaException ex) {
+                        logger.error("Failed to batch create users", ex);
+                        res.status(400);
+                        res.body(String.format("Failed to batch create users. %s", ex.getMessage()));
+                    } catch (Exception ex) {
+                        logger.error("An unexpected error occurred while trying to batch create users", ex);
+                        res.status(500);
+                        res.body(String.format("An unexpected error occurred while trying to batch create users. %s", ex.getMessage()));
                     }
                     return res.body();
                 }, new JsonTransformer());

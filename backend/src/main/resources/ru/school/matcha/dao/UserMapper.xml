@@ -28,6 +28,20 @@
                 now())
     </insert>
 
+    <insert id="createFullUser">
+        INSERT INTO "user"(username, first_name, last_name, password, email, gender, birthday, description, form_id)
+        VALUES (#{username},
+                #{firstName},
+                #{lastName},
+                #{password},
+                #{email},
+                #{gender},
+                #{birthday},
+                #{desctiption},
+                #{form.id})
+        ON CONFLICT DO NOTHING
+    </insert>
+
     <update id="updateUserByUsername">
         <if test="username">
             UPDATE "user" SET

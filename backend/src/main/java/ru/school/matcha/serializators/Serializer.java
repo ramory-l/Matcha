@@ -1,10 +1,13 @@
 package ru.school.matcha.serializators;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.List;
 
 public class Serializer<T>  {
 
@@ -23,5 +26,10 @@ public class Serializer<T>  {
     public T deserialize(String json, Class<T> valueType) throws IOException {
         StringReader reader = new StringReader(json);
         return mapper.readValue(reader, valueType);
+    }
+
+    public List<T> deserializeList(String json, Class<T> valueType) throws IOException {
+        CollectionType javaType = mapper.getTypeFactory().constructCollectionType(List.class, valueType);
+        return mapper.readValue(json, javaType);
     }
 }
