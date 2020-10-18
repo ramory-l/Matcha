@@ -30,3 +30,4 @@ backend/HELP.md
 .idea
 backend/target
 generator/target
+*.iml
