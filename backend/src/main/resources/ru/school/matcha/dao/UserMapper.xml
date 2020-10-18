@@ -37,7 +37,7 @@
                 #{email},
                 #{gender},
                 #{birthday},
-                #{desctiption},
+                #{description},
                 #{form.id})
         ON CONFLICT DO NOTHING
     </insert>
