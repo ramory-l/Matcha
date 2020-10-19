@@ -19,6 +19,7 @@ import ru.school.matcha.services.interfaces.AuthenticationService;
 import ru.school.matcha.services.interfaces.AuthorizationService;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
+import spark.HaltException;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
@@ -78,6 +79,8 @@ public class MatchaApplication {
                         Long userId = userService.createUser(credentials);
                         res.status(200);
                         return userId;
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to create user", ex);
                         res.status(400);
@@ -96,6 +99,8 @@ public class MatchaApplication {
                         List<User> users = userFullConverter.createFromDtos(userFullDtoList);
                         userService.batchCreateUsers(users);
                         res.status(204);
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to batch create users", ex);
                         res.status(400);
@@ -113,6 +118,8 @@ public class MatchaApplication {
                         List<UserDto> result = userConverter.createFromEntities(users);
                         res.status(200);
                         return result;
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to get all users", ex);
                         res.status(400);
@@ -132,6 +139,8 @@ public class MatchaApplication {
                         UserDto result = userConverter.convertFromEntity(user);
                         res.status(200);
                         return result;
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to get user by id: {}", id, ex);
                         res.status(400);
@@ -151,6 +160,8 @@ public class MatchaApplication {
                         UserDto result = userConverter.convertFromEntity(user);
                         res.status(200);
                         return result;
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to get user by username: {}", username, ex);
                         res.status(400);
@@ -171,6 +182,8 @@ public class MatchaApplication {
                         res.status(200);
 //                        условие в зависимости от параметра
                         res.body(String.format("User with username: %s updated", user.getUsername()));
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to update user", ex);
                         res.status(400);
@@ -188,6 +201,8 @@ public class MatchaApplication {
                         userService.deleteUserById(id);
                         res.status(200);
                         res.body(String.format("Removing user with id %d was successful", id));
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to delete user by id: {}", id, ex);
                         res.status(400);
@@ -205,6 +220,8 @@ public class MatchaApplication {
                         userService.deleteUserByUsername(username);
                         res.status(200);
                         res.body(String.format("Removing user with username %s was successful", username));
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to delete user by username: {}", username, ex);
                         res.status(400);
@@ -218,6 +235,11 @@ public class MatchaApplication {
                 }, new JsonTransformer());
             });
             path("/form", () -> {
+                before("/*", (request, response) -> {
+                    if (!authorizationService.authorize(request.headers("token"))) {
+                        halt(401, "Credentials are invalid");
+                    }
+                });
                 post("/", "application/json", (req, res) -> {
                     try {
                         Serializer<FormDto> serializer = new Serializer<>();
@@ -226,6 +248,8 @@ public class MatchaApplication {
                         Long formId = formService.createForm(form);
                         res.status(200);
                         return formId;
+                    } catch (HaltException ex) {
+                       logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to create form", ex);
                         res.status(400);
@@ -243,6 +267,8 @@ public class MatchaApplication {
                         List<FormDto> result = formConverter.createFromEntities(forms);
                         res.status(200);
                         return result;
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to get all forms", ex);
                         res.status(400);
@@ -262,6 +288,8 @@ public class MatchaApplication {
                         FormDto result = formConverter.convertFromEntity(form);
                         res.status(200);
                         return result;
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to get form by id: {}", id, ex);
                         res.status(400);
@@ -281,6 +309,8 @@ public class MatchaApplication {
                         FormDto result = formConverter.convertFromEntity(form);
                         res.status(200);
                         return result;
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to get form by user id: {}", userId, ex);
                         res.status(400);
@@ -301,6 +331,8 @@ public class MatchaApplication {
                         formService.updateForm(form, userId);
                         res.status(200);
                         res.body("Form update was successful");
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to update form", ex);
                         res.status(400);
@@ -318,6 +350,8 @@ public class MatchaApplication {
                         formService.deleteFormById(id);
                         res.status(200);
                         res.body(String.format("Removing form with id %s was successful", id));
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to delete form by id: {}", id, ex);
                         res.status(400);
@@ -335,6 +369,8 @@ public class MatchaApplication {
                         formService.deleteFormByUserId(userId);
                         res.status(200);
                         res.body(String.format("Removing form by user with user id %d was successful", userId));
+                    } catch (HaltException ex) {
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to delete form by user id: {}", userId, ex);
                         res.status(400);
