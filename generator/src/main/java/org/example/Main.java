@@ -19,6 +19,7 @@ public class Main {
     private final static Random random = new Random();
 
     public static void main(String[] args) {
+        random.setSeed(5);
         int count = Integer.parseInt(args[0]);
         List<String> randomWords = getFile(RANDOM_WORDS);
         List<String> names = getFile(NAMES);
