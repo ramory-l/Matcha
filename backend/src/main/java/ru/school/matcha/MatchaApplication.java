@@ -9,6 +9,7 @@ import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.*;
+import ru.school.matcha.exceptions.JwtAuthenticationException;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.AuthenticationServiceImpl;
@@ -67,7 +68,13 @@ public class MatchaApplication {
             }, new JsonTransformer()));
             path("/user", () -> {
                 before("/*", (request, response) -> {
-                    if (!authorizationService.authorize(request.headers("token"))) {
+                    boolean authorization = false;
+                    try {
+                        authorization = authorizationService.authorize(request.headers("token"));
+                    } catch (JwtAuthenticationException ex) {
+                        logger.error("Credentials are invalid");
+                    }
+                    if (!authorization) {
                         halt(401, "Credentials are invalid");
                     }
                 });
@@ -236,7 +243,13 @@ public class MatchaApplication {
             });
             path("/form", () -> {
                 before("/*", (request, response) -> {
-                    if (!authorizationService.authorize(request.headers("token"))) {
+                    boolean authorization = false;
+                    try {
+                        authorization = authorizationService.authorize(request.headers("token"));
+                    } catch (JwtAuthenticationException ex) {
+                        logger.error("Credentials are invalid");
+                    }
+                    if (!authorization) {
                         halt(401, "Credentials are invalid");
                     }
                 });
@@ -249,7 +262,7 @@ public class MatchaApplication {
                         res.status(200);
                         return formId;
                     } catch (HaltException ex) {
-                       logger.error("Credentials are invalid");
+                        logger.error("Credentials are invalid");
                     } catch (MatchaException ex) {
                         logger.error("Failed to create form", ex);
                         res.status(400);
