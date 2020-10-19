@@ -4,18 +4,19 @@ import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.school.matcha.converters.*;
+import ru.school.matcha.domain.Auth;
 import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.*;
 import ru.school.matcha.exceptions.MatchaException;
-import ru.school.matcha.security.PasswordCipher;
-import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.AuthenticationServiceImpl;
+import ru.school.matcha.services.AuthorizationServiceImpl;
 import ru.school.matcha.services.FormServiceImpl;
 import ru.school.matcha.services.UserServiceImpl;
 import ru.school.matcha.services.interfaces.AuthenticationService;
+import ru.school.matcha.services.interfaces.AuthorizationService;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
@@ -35,28 +36,19 @@ public class MatchaApplication {
         Converter<FormDto, Form> formConverter = new FormConverter();
         Converter<CredentialsDto, Credentials> credentialsConverter = new CredentialsConverter();
         Converter<UserFullDto, User> userFullConverter = new UserFullConverter();
+        Converter<AuthDto, Auth> authConverter = new AuthConverter();
         UserService userService = new UserServiceImpl();
         FormService formService = new FormServiceImpl();
         AuthenticationService authenticationService = new AuthenticationServiceImpl();
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+        AuthorizationService authorizationService = new AuthorizationServiceImpl();
         path("/api", () -> {
             path("/auth", () -> post("/login", "application/json", (req, res) -> {
                 Serializer<AuthDto> serializer = new Serializer<>();
                 AuthDto authDto = serializer.deserialize(req.body(), AuthDto.class);
-                String username = authDto.getUsername();
+                Auth authData = authConverter.convertFromDto(authDto);
                 try {
-                    User user = userService.getUserByUsername(username)
-                            .orElseThrow(() -> new AuthenticationException(String.format("User with username: %s not found", username)));
-                    String encryptedPassword = userService.getUserEncryptPasswordById(user.getId());
-                    if (!PasswordCipher.validatePassword(authDto.getPassword(), encryptedPassword)) {
-                        throw new AuthenticationException("Users password is wrong");
-                    }
-                    authenticationService.authenticate(user.getUsername(), authDto.getPassword());
-                    String token = jwtTokenProvider.createToken(user.getUsername());
-                    return ImmutableMap.<String, String>builder()
-                            .put("username", username)
-                            .put("token", token)
-                            .build();
+                    String token = authenticationService.authenticate(authData.getUsername(), authData.getPassword());
+                    return ImmutableMap.<String, String>builder().put("username", authData.getUsername()).put("token", token).build();
                 } catch (AuthenticationException ex) {
                     logger.error("Failed to login", ex);
                     res.status(403);
@@ -73,6 +65,11 @@ public class MatchaApplication {
                 return res.body();
             }, new JsonTransformer()));
             path("/user", () -> {
+                before("/*", (request, response) -> {
+                    if (!authorizationService.authorize(request.headers("token"))) {
+                        halt(401, "Credentials are invalid");
+                    }
+                });
                 post("/", "application/json", (req, res) -> {
                     try {
                         Serializer<CredentialsDto> serializer = new Serializer<>();

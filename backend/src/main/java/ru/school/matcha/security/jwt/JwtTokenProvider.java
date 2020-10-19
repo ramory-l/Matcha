@@ -2,6 +2,7 @@ package ru.school.matcha.security.jwt;
 
 import io.jsonwebtoken.*;
 import org.apache.ibatis.io.Resources;
+import ru.school.matcha.exceptions.JwtAuthenticationException;
 import ru.school.matcha.exceptions.MatchaException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,24 +44,20 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("T_")) {
-            return bearerToken.substring(2, bearerToken.length());
-         }
+    public String resolveToken(String token) {
+        if (token != null && token.startsWith("T_")) {
+            return token.substring(2);
+        }
         return null;
     }
 
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            if (claims.getBody().getExpiration().before(new Date())) {
-                return false;
-            }
-            return true;
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException ex) {
-            // JwtAuthenticationException
-            throw new MatchaException("JWT token is expired or invalid");
+            throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
     }
+
 }
