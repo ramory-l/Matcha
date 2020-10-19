@@ -43,6 +43,9 @@ public class MatchaApplication {
         FormService formService = new FormServiceImpl();
         AuthenticationService authenticationService = new AuthenticationServiceImpl();
         AuthorizationService authorizationService = new AuthorizationServiceImpl();
+        before("/*", (req, res) -> {
+            res.header("access-control-expose-headers", "x-auth-token");
+        });
         path("/api", () -> {
             path("/auth", () -> post("/login", "application/json", (req, res) -> {
                 Serializer<AuthDto> serializer = new Serializer<>();
@@ -50,7 +53,7 @@ public class MatchaApplication {
                 Auth authData = authConverter.convertFromDto(authDto);
                 try {
                     String token = authenticationService.authenticate(authData.getUsername(), authData.getPassword());
-                    return ImmutableMap.<String, String>builder().put("username", authData.getUsername()).put("token", token).build();
+                    return ImmutableMap.<String, String>builder().put("username", authData.getUsername()).put("x-auth-token", token).build();
                 } catch (AuthenticationException ex) {
                     logger.error("Failed to login", ex);
                     res.status(403);
@@ -70,7 +73,7 @@ public class MatchaApplication {
                 before("/*", (request, response) -> {
                     boolean authorization = false;
                     try {
-                        authorization = authorizationService.authorize(request.headers("token"));
+                        authorization = authorizationService.authorize(request.headers("x-auth-token"));
                     } catch (JwtAuthenticationException ex) {
                         logger.error("Credentials are invalid");
                     }
