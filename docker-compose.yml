@@ -6,6 +6,8 @@ services:
       context: backend/docker/.
     ports:
       - "5432:5432"
+    networks:
+      - matcha
   generator:
     build:
       dockerfile: dockerfile_generator
@@ -13,6 +15,8 @@ services:
     depends_on:
       - database
       - backend
+    networks:
+      - matcha
   backend:
     build:
       dockerfile: dockerfile_backend
@@ -21,3 +25,8 @@ services:
       - "8080:8080"
     depends_on:
       - database
+    networks:
+      - matcha
+networks:
+  matcha:
+    driver: bridge

@@ -31,4 +31,4 @@ backend/HELP.md
 backend/target
 generator/target
 *.iml
-jars
+*/jars
