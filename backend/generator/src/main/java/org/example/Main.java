@@ -1,10 +1,13 @@
 package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import java.io.*;
 import java.nio.file.*;
@@ -35,11 +38,40 @@ public class Main {
             ex.printStackTrace();
         }
         String request = stringWriter.toString();
-        writeToFile(request);
-        sendRequest(request);
+//        writeToFile(request);
+        sendRequest(request, authorize());
     }
 
-    private static void sendRequest(String json) {
+    private static String authorize() {
+        String jwt = "";
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost("http://localhost:8080/api/auth/login");
+            ObjectMapper objectMapper = new ObjectMapper();
+            StringWriter stringWriter = new StringWriter();
+            Map<String, String> data = new HashMap<>();
+            data.put("username", "admin");
+            data.put("password", "root");
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(cleanWriter(stringWriter), data);
+            StringEntity entity = new StringEntity(stringWriter.toString());
+            httpPost.setEntity(entity);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            HttpResponse response = client.execute(httpPost);
+            String body = EntityUtils.toString(response.getEntity());
+            ObjectNode node = new ObjectMapper().readValue(body, ObjectNode.class);
+            if (node.has("x-auth-token")) {
+                jwt = node.get("x-auth-token").textValue();
+            }
+            client.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return jwt;
+    }
+
+
+    private static void sendRequest(String json, String jwt) {
         try {
             CloseableHttpClient client = HttpClients.createDefault();
             HttpPost httpPost = new HttpPost("http://localhost:8080/api/user/batch");
@@ -47,6 +79,7 @@ public class Main {
             httpPost.setEntity(entity);
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("x-auth-token", "T_" + jwt);
             client.execute(httpPost);
             client.close();
         } catch (Exception ex) {

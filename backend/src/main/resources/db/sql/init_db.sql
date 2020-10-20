@@ -27,3 +27,9 @@ create table "user"
     delete_ts   timestamp without time zone,
     foreign key (form_id) references form (id)
 );
+
+INSERT INTO public."user" (id, username, first_name, last_name, password, email, gender, birthday, description,
+                           is_active, form_id, create_ts, update_ts, delete_ts)
+VALUES (1, 'admin', '', '',
+        '1000:21442a0a98c8999af3d0d82b741772f7:2a842098fecb2f83a8b37dab1554a4fa4a21bb3df6caee0a54fcf07c2b0010b55e4bec925c0c86eeea6e095e89b47883fee143f50594c1c18dc02170238fe006',
+        'admin@admin.com', null, null, '', true, null, '2020-10-20 23:33:27.908894', null, null);
