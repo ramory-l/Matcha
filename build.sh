@@ -10,3 +10,4 @@ mv ./generator/target/usersGenerator.jar ./jars/
 rm -rf generator/target
 docker build -t backend . --file backend/Dockerfile
 docker build -t database . --file db/Dockerfile
+rm -rf jars
