@@ -1,12 +1,6 @@
-FROM maven:3.6.3-jdk-8
-
+FROM openjdk:8u265-jdk
 WORKDIR /backend
-
+COPY ../jars/Matcha.jar .
 EXPOSE 8080
 ENV TZ=Europe/Moscow
-
-ARG JAR_FILE=target/*.jar
-# Copy backend app into the container at /backend
-COPY ${JAR_FILE} /backend/app.jar
-# Run the app when the container launches
-CMD ["java","-jar","app.jar"]
+CMD ["java","-cp","Matcha.jar", "ru.school.matcha.MatchaApplication"]
