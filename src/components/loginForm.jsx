@@ -20,6 +20,7 @@ class LoginForm extends Form {
 
   doSubmit = () => {
     console.log("submitted");
+    window.location = "/";
   };
 
   render() {
