@@ -27,3 +27,8 @@ yarn-debug.log*
 yarn-error.log*
 backend/matcha.iml
 backend/HELP.md
+.idea
+backend/target
+generator/target
+*.iml
+*/jars

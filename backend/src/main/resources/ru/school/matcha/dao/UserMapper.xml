@@ -18,51 +18,86 @@
                      select="ru.school.matcha.dao.FormMapper.getFormById"/>
     </resultMap>
 
-    <insert id="createUser">
-        INSERT INTO user (username,
-                          first_name,
-                          last_name,
-                          email,
-                          gender,
-                          birthday,
-                          description,
-                          is_active,
-                          form_id,
-                          create_ts)
+    <insert id="createUser" keyProperty="user.id" useGeneratedKeys="true">
+        INSERT INTO "user"(username, email, password, is_active, form_id, create_ts)
+        VALUES (#{credentials.username},
+                #{credentials.email},
+                #{credentials.password},
+                true,
+                #{formId},
+                now())
+    </insert>
+
+    <insert id="createFullUser">
+        INSERT INTO "user"(username, first_name, last_name, password, email, gender, birthday, description, form_id)
         VALUES (#{username},
                 #{firstName},
                 #{lastName},
+                #{password},
                 #{email},
                 #{gender},
                 #{birthday},
                 #{description},
-                true,
-                #{form.id},
-                now())
+                #{form.id})
+        ON CONFLICT DO NOTHING
     </insert>
 
-    <update id="updateUser">
-        UPDATE "user" SET
-        <if test="firstName != null">
-            first_name = #{firstName},
+    <update id="updateUserByUsername">
+        <if test="username">
+            UPDATE "user" SET
+            <if test="firstName != null">
+                first_name = #{firstName},
+            </if>
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="form != null and form.id != null">
+                form_id = #{form.id},
+            </if>
+            update_ts = now()
+            WHERE username = #{username}
         </if>
-        <if test="lastName != null">
-            last_name = #{lastName},
+    </update>
+
+    <update id="updateUserById">
+        <if test="id">
+            UPDATE "user" SET
+            <if test="firstName != null">
+                first_name = #{firstName},
+            </if>
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="form != null and form.id != null">
+                form_id = #{form.id},
+            </if>
+            update_ts = now()
+            WHERE id = #{id}
         </if>
-        <if test="email != null">
-            email = #{email},
-        </if>
-        <if test="gender != null">
-            gender = #{gender},
-        </if>
-        <if test="birthday != null">
-            birthday = #{birthday},
-        </if>
-        <if test="description != null">
-            description = #{descrition},
-        </if>
-        update_ts = now()
-        WHERE id = #{id}
     </update>
 
     <delete id="deleteUserById">
@@ -129,12 +164,15 @@
             birthday,
             description,
             is_active,
-            form_id,
-            create_ts,
-            update_ts,
-            delete_ts
+            form_id
             FROM "user"
             WHERE username ILIKE #{username}
+        </if>
+    </select>
+
+    <select id="getUserEncryptPasswordById" resultType="java.lang.String">
+        <if test="id != null">
+            SELECT password FROM "user" WHERE id = #{id}
         </if>
     </select>
 </mapper>

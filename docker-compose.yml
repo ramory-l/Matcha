@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  database:
+    build:
+      dockerfile: dockerfile_db
+      context: backend/docker/.
+    ports:
+      - "5432:5432"
+    networks:
+      - matcha
+  generator:
+    build:
+      dockerfile: dockerfile_generator
+      context: backend/docker/.
+    depends_on:
+      - database
+      - backend
+    networks:
+      - matcha
+  backend:
+    build:
+      dockerfile: dockerfile_backend
+      context: backend/docker/.
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - matcha
+networks:
+  matcha:
+    driver: bridge

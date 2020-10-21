@@ -1,12 +1,14 @@
 package ru.school.matcha.dto;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
-import ru.school.matcha.enums.Gender;
 
 import java.util.Date;
 
 @Data
+@JsonAutoDetect
 public class UserDto {
+    private Long id;
     private String username;
     private String firstName;
     private String lastName;
@@ -14,6 +16,5 @@ public class UserDto {
     private String gender;
     private Date birthday;
     private String description;
-    private Boolean isActive;
     private FormDto form;
 }
