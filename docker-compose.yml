@@ -1,5 +1,17 @@
 version: "3.8"
 services:
+  frontend:
+    build: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./frontend:/frontend"
+      - "/frontend/node_modules"
+    depends_on:
+      - backend
+    networks:
+      - matcha
+    stdin_open: true
   database:
     build:
       dockerfile: dockerfile_db
