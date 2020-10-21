@@ -23,7 +23,8 @@ public class Main {
 
     public static void main(String[] args) {
         random.setSeed(5);
-        int count = Integer.parseInt(args[0]);
+        // int count = Integer.parseInt(args[0]);
+        int count = 500;
         List<String> randomWords = getFile(RANDOM_WORDS);
         List<String> names = getFile(NAMES);
         List<String> surnames = getFile(SURNAMES);
@@ -46,7 +47,7 @@ public class Main {
         String jwt = "";
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://localhost:8080/api/auth/login");
+            HttpPost httpPost = new HttpPost("http://backend:8080/api/auth/login");
             ObjectMapper objectMapper = new ObjectMapper();
             StringWriter stringWriter = new StringWriter();
             Map<String, String> data = new HashMap<>();
@@ -74,7 +75,7 @@ public class Main {
     private static void sendRequest(String json, String jwt) {
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://localhost:8080/api/user/batch");
+            HttpPost httpPost = new HttpPost("http://backend:8080/api/user/batch");
             StringEntity entity = new StringEntity(json);
             httpPost.setEntity(entity);
             httpPost.setHeader("Accept", "application/json");
