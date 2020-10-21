@@ -1,12 +1,9 @@
-package ru.school.matcha.dto;
+package org.example;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
 
 @Data
-@JsonAutoDetect
-public class FormDto {
-    private Long id;
+public class Form {
     private boolean man;
     private boolean woman;
     private boolean friendship;

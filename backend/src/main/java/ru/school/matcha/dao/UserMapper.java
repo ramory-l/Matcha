@@ -1,14 +1,14 @@
 package ru.school.matcha.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
+import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.User;
 
 import java.util.List;
 import java.util.Optional;
 
 @Mapper
-@Repository
 public interface UserMapper {
 
     List<User> getAllUsers();
@@ -17,11 +17,17 @@ public interface UserMapper {
 
     Optional<User> getUserByUsername(String username);
 
-    void createUser(User user);
+    void createUser(@Param("credentials") Credentials credentials, @Param("formId") Long formId, @Param("user") User user);
 
-    void updateUser(User user);
+    void createFullUser(User users);
+
+    void updateUserByUsername(User user);
+
+    void updateUserById(User user);
 
     void deleteUserById(Long id);
 
     void deleteUserByUsername(String username);
+
+    String getUserEncryptPasswordById(Long id);
 }

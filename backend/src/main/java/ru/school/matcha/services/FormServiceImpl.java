@@ -1,7 +1,7 @@
 package ru.school.matcha.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.apache.ibatis.session.SqlSession;
+import ru.school.matcha.configs.MyBatisUtil;
 import ru.school.matcha.dao.FormMapper;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.services.interfaces.FormService;
@@ -9,48 +9,66 @@ import ru.school.matcha.services.interfaces.FormService;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public class FormServiceImpl implements FormService {
-
-    private final FormMapper formMapper;
-
-    @Autowired
-    public FormServiceImpl(FormMapper formMapper) {
-        this.formMapper = formMapper;
-    }
 
     @Override
     public List<Form> getAllForms() {
-        return formMapper.getAllForms();
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
+            return formMapper.getAllForms();
+        }
     }
 
     @Override
     public Optional<Form> getFormById(Long id) {
-        return formMapper.getFormById(id);
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
+            return formMapper.getFormById(id);
+        }
     }
 
     @Override
     public Optional<Form> getFormByUserId(Long id) {
-        return formMapper.getFormByUserId(id);
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
+            return formMapper.getFormByUserId(id);
+        }
     }
 
     @Override
-    public void createForm(Form form) {
-        formMapper.createForm(form);
+    public Long createForm(Form form) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
+            formMapper.createForm(form);
+            sqlSession.commit();
+            return form.getId();
+        }
     }
 
     @Override
-    public void updateForm(Form form) {
-        formMapper.updateForm(form);
+    public void updateForm(Form form, Long userId) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
+            formMapper.updateForm(form);
+            sqlSession.commit();
+        }
     }
 
     @Override
     public void deleteFormById(Long id) {
-        formMapper.deleteFormById(id);
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
+            formMapper.deleteFormById(id);
+            sqlSession.commit();
+        }
     }
 
     @Override
     public void deleteFormByUserId(Long id) {
-        formMapper.deleteFormByUserId(id);
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
+            formMapper.deleteFormByUserId(id);
+            sqlSession.commit();
+        }
     }
 }
