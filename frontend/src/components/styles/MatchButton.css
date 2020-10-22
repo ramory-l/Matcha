@@ -1,9 +1,0 @@
-.MatchButton {
-  display: flex;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  border: 2px solid white;
-  justify-content: center;
-  align-items: center;
-}

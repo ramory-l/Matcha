@@ -1,6 +1,0 @@
-FROM openjdk:8u265-jdk
-WORKDIR /generator
-COPY UsersGenerator.jar .
-EXPOSE 8080
-ENV TZ=Europe/Moscow
-CMD ["java", "-cp", "UsersGenerator.jar", "org.example.Main"]
