@@ -43,9 +43,6 @@ public class MatchaApplication {
         FormService formService = new FormServiceImpl();
         AuthenticationService authenticationService = new AuthenticationServiceImpl();
         AuthorizationService authorizationService = new AuthorizationServiceImpl();
-        before("/*", (req, res) -> {
-            res.header("access-control-expose-headers", "x-auth-token");
-        });
         path("/api", () -> {
             path("/auth", () -> post("/login", "application/json", (req, res) -> {
                 Serializer<AuthDto> serializer = new Serializer<>();
@@ -399,6 +396,12 @@ public class MatchaApplication {
                     return res.body();
                 }, new JsonTransformer());
             });
+        });
+        after((req, res) -> {
+            res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "*");
+            res.header("Access-Control-Allow-Credentials", "true");
         });
     }
 
