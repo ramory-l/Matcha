@@ -5,7 +5,7 @@ WORKDIR /frontend
 # copy package.json into the container at /frontend
 COPY package*.json /frontend/
 # install dependencies
-RUN npm install react-scripts -g && npm install
+RUN npm install react-scripts -g --silent && npm install --silent
 # Copy the current directory contents into the container at /frontend
 COPY . /frontend/
 # Run the app when the container launches

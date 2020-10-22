@@ -12,31 +12,29 @@ services:
     networks:
       - matcha
     stdin_open: true
-  database:
-    build:
-      dockerfile: dockerfile_db
-      context: backend/docker/.
-    ports:
-      - "5432:5432"
-    networks:
-      - matcha
-  generator:
-    build:
-      dockerfile: dockerfile_generator
-      context: backend/docker/.
-    depends_on:
-      - database
-      - backend
-    networks:
-      - matcha
+    environment:
+      - CHOKIDAR_USEPOLLING=true
   backend:
-    build:
-      dockerfile: dockerfile_backend
-      context: backend/docker/.
+    build: backend
     ports:
       - "8080:8080"
     depends_on:
       - database
+    networks:
+      - matcha
+  database:
+    build: database
+    ports:
+      - "5432:5432"
+    networks:
+      - matcha
+    stdin_open: true
+  generator:
+    build: generator
+    ports:
+      - "8000:8000"
+    depends_on:
+      - backend
     networks:
       - matcha
 networks:
