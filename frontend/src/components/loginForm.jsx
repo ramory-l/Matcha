@@ -18,9 +18,17 @@ class LoginForm extends Form {
     password: Joi.string().required().label("Password"),
   });
 
-  doSubmit = () => {
+  doSubmit = async () => {
+    let response = await fetch("http://localhost:8080/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(this.state.data),
+    });
+    console.log(response);
     console.log("submitted");
-    window.location = "/";
+    // window.location = "/";
   };
 
   render() {
