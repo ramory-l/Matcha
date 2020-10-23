@@ -1,5 +1,6 @@
 package ru.school.matcha.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.configs.MyBatisUtil;
 import ru.school.matcha.dao.FormMapper;
@@ -9,6 +10,7 @@ import ru.school.matcha.services.interfaces.FormService;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class FormServiceImpl implements FormService {
 
     @Override
