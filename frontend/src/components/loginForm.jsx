@@ -1,7 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Form from "./common/form";
 import Joi from "joi";
+import auth from "../services/authService";
 import "./styles/authForm.scss";
 
 class LoginForm extends Form {
@@ -19,19 +20,22 @@ class LoginForm extends Form {
   });
 
   doSubmit = async () => {
-    let response = await fetch("http://localhost:8080/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(this.state.data),
-    });
-    console.log(response);
-    console.log("submitted");
-    // window.location = "/";
+    try {
+      const { data } = this.state;
+      await auth.login(data.username, data.password);
+      const { state } = this.props.location;
+      window.location = state ? state.from.pathname : "/";
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.username = ex.response.data;
+        this.setState({ errors });
+      }
+    }
   };
 
   render() {
+    if (auth.getCurrentUser()) return <Redirect to="/" />;
     return (
       <form className="LoginForm" onSubmit={this.handleSubmit}>
         <h1>Login Form</h1>

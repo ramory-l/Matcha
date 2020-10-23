@@ -1,12 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-const NavBar = () => {
+const NavBar = ({ user }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light mb-3">
-      <Link className="navbar-brand" to="/">
+      <NavLink className="navbar-brand" to="/">
         Matcha
-      </Link>
+      </NavLink>
       <button
         className="navbar-toggler"
         type="button"
@@ -22,10 +22,24 @@ const NavBar = () => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
-            <Link className="nav-link" to="/profile">
+            <NavLink className="nav-link" to="/profile">
               My Profile
-            </Link>
+            </NavLink>
           </li>
+          {user && (
+            <React.Fragment>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/profile">
+                  {user.name}
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/logout">
+                  Logout
+                </NavLink>
+              </li>
+            </React.Fragment>
+          )}
         </ul>
         <form className="form-inline my-2 my-lg-0">
           <input
@@ -34,6 +48,7 @@ const NavBar = () => {
             placeholder="Search"
             aria-label="Search"
           />
+
           <button
             className="btn btn-outline-success my-2 my-sm-0"
             type="submit"
