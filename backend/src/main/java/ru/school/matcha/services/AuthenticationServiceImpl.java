@@ -1,5 +1,6 @@
 package ru.school.matcha.services;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
@@ -10,6 +11,7 @@ import javax.naming.AuthenticationException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+@Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override

@@ -1,5 +1,6 @@
 package ru.school.matcha.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.configs.MyBatisUtil;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static java.util.Objects.nonNull;
 
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Override
