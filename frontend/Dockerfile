@@ -9,4 +9,5 @@ RUN npm install react-scripts -g --silent && npm install --silent
 # Copy the current directory contents into the container at /frontend
 COPY . .
 # Run the app when the container launches
+EXPOSE 3000
 CMD ["npm", "start"]

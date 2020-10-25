@@ -18,9 +18,9 @@ public class MatchaApplication {
         path("/api", () -> {
             path("/auth", () ->
                     post("/login", AuthenticateController.authenticate, new JsonTransformer()));
+            post("/user", UserController.createUser, new JsonTransformer());
             path("/user", () -> {
-                before("/*", AuthorizationController.authorize);
-                post("/", UserController.createUser, new JsonTransformer());
+                before("*", AuthorizationController.authorize);
                 post("/batch", UserController.batchUsersCreate, new JsonTransformer());
                 get("/all", UserController.getAllUsers, new JsonTransformer());
                 get("/:id", UserController.getUserById, new JsonTransformer());
@@ -30,8 +30,8 @@ public class MatchaApplication {
                 delete("/username/:username", UserController.deleteUserByUsername, new JsonTransformer());
             });
             path("/form", () -> {
-                before("/*", AuthorizationController.authorize);
-                post("/", FormController.createForm, new JsonTransformer());
+                before("*", AuthorizationController.authorize);
+                post("*", FormController.createForm, new JsonTransformer());
                 get("/all", FormController.getAllForms, new JsonTransformer());
                 get("/:id", FormController.getFormById, new JsonTransformer());
                 get("/user/:id", FormController.getFormByUserId, new JsonTransformer());
@@ -43,22 +43,18 @@ public class MatchaApplication {
     }
 
     private static void enableCORS() {
+        before((request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        });
         options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
             if (accessControlRequestHeaders != null) {
-                response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+                response.header("Access-Control-Allow-Headers", "Content-Type, x-auth-token");
             }
-            String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
-            if (accessControlRequestMethod != null) {
-                response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
-            }
+            response.header("Access-Control-Expose-Headers", "Content-Type");
+            response.header("Access-Control-Max-Age", "86400");
             return "OK";
-        });
-        before((request, response) -> {
-            response.header("Access-Control-Allow-Origin", "*");
-            response.header("Access-Control-Request-Method", "GET, POST, PUT, DELETE, OPTIONS");
-            response.header("Access-Control-Allow-Headers", "content-type, x-auth-token");
-            response.type("application/json");
         });
     }
 
