@@ -2,12 +2,9 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.converters.Converter;
-import ru.school.matcha.converters.CredentialsConverter;
 import ru.school.matcha.converters.UserConverter;
 import ru.school.matcha.converters.UserFullConverter;
-import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.User;
-import ru.school.matcha.dto.CredentialsDto;
 import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.dto.UserFullDto;
 import ru.school.matcha.exceptions.MatchaException;
@@ -24,13 +21,11 @@ import static java.lang.Long.parseLong;
 @Slf4j
 public class UserController {
 
-    private final static Converter<CredentialsDto, Credentials> credentialsConverter;
     private final static Converter<UserFullDto, User> userFullConverter;
     private final static Converter<UserDto, User> userConverter;
     private final static UserService userService;
 
     static {
-        credentialsConverter = new CredentialsConverter();
         userFullConverter = new UserFullConverter();
         userConverter = new UserConverter();
         userService = new UserServiceImpl();
@@ -38,12 +33,12 @@ public class UserController {
 
     public static Route createUser = (request, response) -> {
         try {
-            Serializer<CredentialsDto> serializer = new Serializer<>();
-            CredentialsDto credentialsDto = serializer.deserialize(request.body(), CredentialsDto.class);
-            Credentials credentials = credentialsConverter.convertFromDto(credentialsDto);
-            Long userId = userService.createUser(credentials);
-            response.status(200);
-            return userId;
+            Serializer<UserFullDto> serializer = new Serializer<>();
+            UserFullDto userFullDto = serializer.deserialize(request.body(), UserFullDto.class);
+            User user = userFullConverter.convertFromDto(userFullDto);
+            userService.createUser(user);
+            response.status(204);
+            return response.body();
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
         } catch (MatchaException ex) {

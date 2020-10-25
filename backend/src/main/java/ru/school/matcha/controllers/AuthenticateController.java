@@ -1,6 +1,5 @@
 package ru.school.matcha.controllers;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.converters.AuthConverter;
 import ru.school.matcha.converters.Converter;
@@ -30,8 +29,7 @@ public class AuthenticateController {
         AuthDto authDto = serializer.deserialize(request.body(), AuthDto.class);
         Auth authData = authConverter.convertFromDto(authDto);
         try {
-            String token = authenticationService.authenticate(authData.getUsername(), authData.getPassword());
-            return ImmutableMap.<String, String>builder().put("username", authData.getUsername()).put("x-auth-token", token).build();
+            return authenticationService.authenticate(authData.getUsername(), authData.getPassword());
         } catch (AuthenticationException ex) {
             log.error("Failed to login", ex);
             response.status(403);

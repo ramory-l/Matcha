@@ -31,8 +31,9 @@ public class JwtTokenProvider {
         this.validityInMilliseconds = parseLong(properties.getProperty("jwt.token.expired"));
     }
 
-    public String createToken(String username) {
+    public String createToken(Long id, String username) {
         Claims claims = Jwts.claims().setSubject(username);
+        claims.put("id", id);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
         return Jwts

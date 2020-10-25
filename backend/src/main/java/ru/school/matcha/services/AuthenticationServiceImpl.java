@@ -24,7 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!PasswordCipher.validatePassword(password, encryptedPassword)) {
             throw new AuthenticationException("Users password is wrong");
         }
-        return jwtTokenProvider.createToken(user.getUsername());
+        return jwtTokenProvider.createToken(user.getId(), user.getUsername());
     }
 
 }

@@ -18,11 +18,13 @@
                      select="ru.school.matcha.dao.FormMapper.getFormById"/>
     </resultMap>
 
-    <insert id="createUser" keyProperty="user.id" useGeneratedKeys="true">
-        INSERT INTO "user"(username, email, password, is_active, form_id, create_ts)
-        VALUES (#{credentials.username},
-                #{credentials.email},
-                #{credentials.password},
+    <insert id="createUser">
+        INSERT INTO "user"(username, email, password, first_name, last_name, is_active, form_id, create_ts)
+        VALUES (#{user.username},
+                #{user.email},
+                #{user.password},
+                #{user.firstName},
+                #{user.lastName},
                 true,
                 #{formId},
                 now())

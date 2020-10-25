@@ -5,7 +5,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.configs.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
-import ru.school.matcha.domain.Credentials;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.exceptions.MatchaException;
@@ -13,8 +12,6 @@ import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,16 +45,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long createUser(Credentials credentials) {
-        String username = credentials.getUsername();
+    public void createUser(User user) {
+        String username = user.getUsername();
         Optional<User> optionalUser = getUserByUsername(username);
         if (!optionalUser.isPresent()) {
             try {
-                credentials.setPassword(PasswordCipher.generateStrongPasswordHash(credentials.getPassword()));
+                user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
             } catch (Exception ex) {
                 throw new MatchaException("Encrypt password error");
             }
-            try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            Long formId = null;
+            SqlSession sqlSession = null;
+            try {
+                sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
                 UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
                 FormService formService = new FormServiceImpl();
                 Form defaultForm = new Form();
@@ -67,11 +67,27 @@ public class UserServiceImpl implements UserService {
                 defaultForm.setLove(false);
                 defaultForm.setSex(false);
                 defaultForm.setFlirt(false);
-                User user = new User();
+                User newUser = new User();
+                newUser.setUsername(user.getUsername());
+                newUser.setPassword(user.getPassword());
+                newUser.setEmail(user.getEmail());
+                newUser.setFirstName(user.getFirstName());
+                newUser.setLastName(user.getLastName());
                 defaultForm.setId(formService.createForm(defaultForm));
-                userMapper.createUser(credentials, defaultForm.getId(), user);
+                formId = defaultForm.getId();
+                userMapper.createUser(newUser, defaultForm.getId());
                 sqlSession.commit();
-                return user.getId();
+            } catch (Exception ex) {
+                if (nonNull(sqlSession)) {
+                    sqlSession.rollback();
+                }
+                FormService formService = new FormServiceImpl();
+                formService.deleteFormById(formId);
+                throw new MatchaException("Failed to create user with username: " + username);
+            } finally {
+                if (nonNull(sqlSession)) {
+                    sqlSession.close();
+                }
             }
         } else {
             throw new MatchaException(String.format("User with username %s already exist", username));
@@ -80,7 +96,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void batchCreateUsers(List<User> users) {
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession(ExecutorType.BATCH)) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession(ExecutorType.BATCH);
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             FormService formService = new FormServiceImpl();
             users.forEach(user -> {
@@ -94,13 +112,22 @@ public class UserServiceImpl implements UserService {
             });
             sqlSession.commit();
         } catch (Exception ex) {
-            throw new MatchaException("Failed to batchCreateUsers");
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Failed to batch create users");
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
         }
     }
 
     @Override
     public void updateUser(User user) {
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             if (nonNull(user.getId())) {
                 userMapper.updateUserById(user);
@@ -108,24 +135,55 @@ public class UserServiceImpl implements UserService {
                 userMapper.updateUserByUsername(user);
             }
             sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to update user");
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
         }
     }
 
     @Override
     public void deleteUserById(Long id) {
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             userMapper.deleteUserById(id);
             sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to delete user by id: " + id);
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
         }
     }
 
     @Override
     public void deleteUserByUsername(String username) {
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             userMapper.deleteUserByUsername(username);
             sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to delete user by username: " + username);
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
         }
     }
 
@@ -136,4 +194,5 @@ public class UserServiceImpl implements UserService {
             return userMapper.getUserEncryptPasswordById(id);
         }
     }
+
 }
