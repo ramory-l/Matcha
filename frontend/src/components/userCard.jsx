@@ -29,7 +29,7 @@ const UserCard = (props) => {
           &#128078;
         </span>
       </div>
-      <span>Rating: {user.fameRate}</span>
+      <span>Rating: {user.rate}</span>
     </div>
   );
 };
