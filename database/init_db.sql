@@ -36,9 +36,10 @@ create table "user"
 create table likes
 (
     id        bigserial primary key                     not null,
-    "to"      bigint references "user" (id)             not null,
-    "from"    bigint references "user" (id)             not null,
-    create_ts timestamp without time zone default now() not null
+    "from"      bigint references "user" (id)             not null,
+    "to"    bigint references "user" (id)             not null,
+    create_ts timestamp without time zone default now() not null,
+    unique ("to", "from")
 );
 
 INSERT INTO public.form (id,

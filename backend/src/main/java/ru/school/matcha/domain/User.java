@@ -10,6 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonAutoDetect
 public class User {
+
     private Long id;
     private String username;
     private String firstName;
@@ -21,13 +22,9 @@ public class User {
     private String description;
     private Boolean isActive;
     private Form form;
+    private Long rate;
     private Date createTs;
     private Date updateTs;
     private Date deleteTs;
 
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
 }
