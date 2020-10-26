@@ -20,7 +20,7 @@ public class UserConverter extends Converter<UserDto, User> {
             return null;
         }
         UserDto result = new UserDto();
-        result.setId(result.getId());
+        result.setId(source.getId());
         result.setUsername(source.getUsername());
         result.setFirstName(source.getFirstName());
         result.setLastName(source.getLastName());

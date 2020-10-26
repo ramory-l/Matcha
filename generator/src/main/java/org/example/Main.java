@@ -60,10 +60,7 @@ public class Main {
             httpPost.setHeader("Content-type", "application/json");
             HttpResponse response = client.execute(httpPost);
             String body = EntityUtils.toString(response.getEntity());
-            ObjectNode node = new ObjectMapper().readValue(body, ObjectNode.class);
-            if (node.has("x-auth-token")) {
-                jwt = node.get("x-auth-token").textValue();
-            }
+            jwt = body.substring(1, body.toString().length() - 1);
             client.close();
         } catch (Exception ex) {
             ex.printStackTrace();

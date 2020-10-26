@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS "user";
+DROP TABLE IF EXISTS form;
+DROP TABLE IF EXISTS "likes";
+
 create table form
 (
     id         bigserial primary key not null,
@@ -16,16 +20,25 @@ create table "user"
     first_name  varchar(255)                default '',
     last_name   varchar(255)                default '',
     password    text                        default ''    not null,
-    email       varchar(255)                              not null unique,
-    gender      varchar(255),
+    email       varchar(255)                default ''    not null unique,
+    gender      varchar(255)                default '',
     birthday    timestamp without time zone,
     description text                        default '',
     is_active   boolean                     default true  not null,
     form_id     bigint unique,
+    rate        bigint                      default 0     not null,
     create_ts   timestamp without time zone default now() not null,
     update_ts   timestamp without time zone,
     delete_ts   timestamp without time zone,
     foreign key (form_id) references form (id)
+);
+
+create table likes
+(
+    id        bigserial primary key                     not null,
+    "to"      bigint references "user" (id)             not null,
+    "from"    bigint references "user" (id)             not null,
+    create_ts timestamp without time zone default now() not null
 );
 
 INSERT INTO public.form (id,
