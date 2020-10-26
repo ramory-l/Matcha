@@ -11,7 +11,7 @@ const Input = ({ readonly, value, name, label, error, ...rest }) => {
           placeholder={value}
           id={name}
           className="form-control"
-          readOnly
+          disabled="true"
         />
       ) : (
         <input
