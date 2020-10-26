@@ -3,9 +3,9 @@
 <configuration>
     <properties resource='db/jdbc.properties'/>
     <typeAliases>
-        <typeAlias type='ru.school.matcha.domain.Credentials' alias='Credentials'/>
         <typeAlias type='ru.school.matcha.domain.User' alias='User'/>
         <typeAlias type='ru.school.matcha.domain.Form' alias='Form'/>
+        <typeAlias type='ru.school.matcha.domain.Auth' alias='Auth'/>
     </typeAliases>
     <environments default='development'>
         <environment id='development'>

@@ -28,6 +28,11 @@ public class MatchaApplication {
                 put("/", UserController.updateUser, new JsonTransformer());
                 delete("/:id", UserController.deleteUserById, new JsonTransformer());
                 delete("/username/:username", UserController.deleteUserByUsername, new JsonTransformer());
+                path("/like", () -> {
+                    post("/from/:from/to/:to", UserController.like, new JsonTransformer());
+                    get("/:id", UserController.getLikes, new JsonTransformer());
+                    delete("/from/:from/to/:to", UserController.deleteLike, new JsonTransformer());
+                });
             });
             path("/form", () -> {
                 before("*", AuthorizationController.authorize);

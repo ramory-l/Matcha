@@ -32,6 +32,7 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setDescription(source.getDescription());
         Converter<FormDto, Form> formConverter = new FormConverter();
         result.setForm(formConverter.convertFromEntity(source.getForm()));
+        result.setRate(source.getRate());
         return result;
     }
 
@@ -54,6 +55,7 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setDescription(source.getDescription());
         Converter<FormDto, Form> formConverter = new FormConverter();
         result.setForm(formConverter.convertFromDto(source.getForm()));
+        result.setRate(source.getRate());
         return result;
     }
 }

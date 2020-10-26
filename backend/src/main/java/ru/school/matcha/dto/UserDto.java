@@ -8,6 +8,7 @@ import java.util.Date;
 @Data
 @JsonAutoDetect
 public class UserDto {
+
     private Long id;
     private String username;
     private String firstName;
@@ -17,4 +18,6 @@ public class UserDto {
     private Date birthday;
     private String description;
     private FormDto form;
+    private Long rate;
+
 }
