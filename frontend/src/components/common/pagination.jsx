@@ -4,31 +4,32 @@ import _ from "lodash";
 import { Link } from "react-router-dom";
 
 const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
-  const pagesCount = Math.ceil(itemsCount / pageSize);
-  if (pagesCount === 1) return null;
   const [startRange, setStartRange] = useState(1);
   const [endRange, setEndRange] = useState(6);
 
-  const handleNext = () => {
-    setStartRange((prev) => prev + 1);
-    setEndRange((prev) => prev + 1);
-  };
+  const pagesCount = Math.ceil(itemsCount / pageSize);
 
-  const handlePrev = () => {
-    setStartRange((prev) => prev - 1);
-    setEndRange((prev) => prev - 1);
+  if (pagesCount === 1) return null;
+
+  const handleRangeChange = (direction) => {
+    let directionValue = 1;
+
+    if (direction === "prev") directionValue = -1;
+    onPageChange(currentPage + directionValue);
+    setStartRange((prev) => prev + directionValue);
+    setEndRange((prev) => prev + directionValue);
   };
 
   const pages = _.range(startRange, endRange);
   return (
     <nav aria-label="Page navigation example">
       <ul className="pagination">
-        <li class="page-item">
+        <li className={currentPage === 1 ? "page-item disabled" : "page-item"}>
           <Link
             to="#"
-            class="page-link"
+            className="page-link"
             aria-label="Previous"
-            onClick={() => handlePrev()}
+            onClick={() => handleRangeChange("prev")}
           >
             <span aria-hidden="true">&laquo;</span>
           </Link>
@@ -47,12 +48,16 @@ const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
             </Link>
           </li>
         ))}
-        <li class="page-item">
+        <li
+          className={
+            currentPage === pagesCount ? "page-item disabled" : "page-item"
+          }
+        >
           <Link
             to="#"
-            class="page-link"
+            className="page-link"
             aria-label="Next"
-            onClick={() => handleNext()}
+            onClick={() => handleRangeChange("next")}
           >
             <span aria-hidden="true">&raquo;</span>
           </Link>

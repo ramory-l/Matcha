@@ -7,7 +7,7 @@ import { paginate } from "../utils/paginate";
 const HomePage = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(15);
+  const pageSize = useState(10)[0];
 
   useEffect(() => {
     async function fetchUsers() {
@@ -16,6 +16,7 @@ const HomePage = () => {
     }
     fetchUsers();
   }, []);
+
   const paginatedUsers = paginate(users, currentPage, pageSize);
 
   const handlePageChange = (page) => {
