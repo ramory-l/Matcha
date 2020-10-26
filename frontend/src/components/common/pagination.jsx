@@ -24,7 +24,7 @@ const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
   return (
     <nav aria-label="Page navigation example">
       <ul className="pagination">
-        <li className={currentPage === 1 ? "page-item disabled" : "page-item"}>
+        <li className={startRange === 1 ? "page-item disabled" : "page-item"}>
           <Link
             to="#"
             className="page-link"
@@ -50,7 +50,7 @@ const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
         ))}
         <li
           className={
-            currentPage === pagesCount ? "page-item disabled" : "page-item"
+            endRange === pagesCount ? "page-item disabled" : "page-item"
           }
         >
           <Link
