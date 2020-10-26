@@ -17,3 +17,7 @@ export function getUsers() {
     headers: { "x-auth-token": "T_" + auth.getJwt() },
   });
 }
+
+export function getUser(username) {
+  return http.get(apiEndpoint + "username/" + username);
+}

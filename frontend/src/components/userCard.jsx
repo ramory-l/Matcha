@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./styles/userCard.scss";
 
 const UserCard = (props) => {
@@ -6,8 +7,10 @@ const UserCard = (props) => {
   return (
     <div className="UserCard my-2">
       <div className="UserCard-Creds">
-        <span className="UserCard-FirstName">{user.firstName}</span>
-        <span className="UserCard-LastName">{user.lastName}</span>
+        <Link to={`/profile/${user.username}`}>
+          <span className="UserCard-FirstName">{user.firstName}</span>
+          <span className="UserCard-LastName">{user.lastName}</span>
+        </Link>
       </div>
       <img
         className="UserCard-Avatar"
