@@ -15,6 +15,7 @@ import ru.school.matcha.services.interfaces.UserService;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -195,4 +196,72 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void like(Long from, Long to) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (nonNull(userMapper.getLike(from, to))) {
+                throw new MatchaException("Like already exist");
+            }
+            checkUsers(from, to);
+            userMapper.like(from, to);
+            userMapper.addRate(to);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to like. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public List<Long> getLikes(Long id) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.getLikes(id);
+        }
+    }
+
+    @Override
+    public void deleteLike(Long from, Long to) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (isNull(userMapper.getLike(from, to))) {
+                throw new MatchaException("Like doesn't exist");
+            }
+            checkUsers(from, to);
+            userMapper.deleteLike(from, to);
+            userMapper.deleteRate(to);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to delete like. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    private void checkUsers(Long from, Long to) {
+        if (isNull(getUserById(from))) {
+            log.error("User 'from' with id: {} doesn't exist", from);
+            throw new MatchaException("User 'from' with id: " + from + " doesn't exist");
+        }
+        if (isNull(getUserById(to))) {
+            log.error("User 'to' with id: {} doesn't exist", to);
+            throw new MatchaException("User 'to' with id: " + to + " doesn't exist");
+        }
+    }
 }

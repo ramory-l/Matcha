@@ -20,7 +20,7 @@ public class UserConverter extends Converter<UserDto, User> {
             return null;
         }
         UserDto result = new UserDto();
-        result.setId(result.getId());
+        result.setId(source.getId());
         result.setUsername(source.getUsername());
         result.setFirstName(source.getFirstName());
         result.setLastName(source.getLastName());
@@ -30,6 +30,7 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setDescription(source.getDescription());
         Converter<FormDto, Form> formConverter = new FormConverter();
         result.setForm(formConverter.convertFromEntity(source.getForm()));
+        result.setRate(source.getRate());
         return result;
     }
 
@@ -51,6 +52,7 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setDescription(source.getDescription());
         Converter<FormDto, Form> formConverter = new FormConverter();
         result.setForm(formConverter.convertFromDto(source.getForm()));
+        result.setRate(source.getRate());
         return result;
     }
 

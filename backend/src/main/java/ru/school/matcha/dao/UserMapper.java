@@ -29,4 +29,17 @@ public interface UserMapper {
     void deleteUserByUsername(String username);
 
     String getUserEncryptPasswordById(Long id);
+
+    void like(@Param("from") Long from, @Param("to") Long to);
+
+    List<Long> getLikes(Long id);
+
+    void deleteLike(@Param("from") Long from, @Param("to") Long to);
+
+    void addRate(Long id);
+
+    void deleteRate(Long id);
+
+    Long getLike(@Param("from") Long from, @Param("to") Long to);
+
 }
