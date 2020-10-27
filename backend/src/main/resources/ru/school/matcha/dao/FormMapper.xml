@@ -63,6 +63,12 @@
         </if>
     </delete>
 
+    <delete id="deleteAllInactiveForms">
+        DELETE
+        FROM form
+        WHERE id not in (SELECT form_id FROM "user")
+    </delete>
+
     <select id="getAllForms" resultMap="Form">
         SELECT id,
                man,

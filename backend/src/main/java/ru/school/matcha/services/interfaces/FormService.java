@@ -20,4 +20,7 @@ public interface FormService {
     void deleteFormById(Long id);
 
     void deleteFormByUserId(Long id);
+
+    void deleteAllInactiveForms();
+
 }

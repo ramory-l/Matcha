@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
                 newUser.setEmail(user.getEmail());
                 newUser.setFirstName(user.getFirstName());
                 newUser.setLastName(user.getLastName());
+                newUser.setRate(0L);
                 defaultForm.setId(formService.createForm(defaultForm));
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
@@ -98,10 +99,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void batchCreateUsers(List<User> users) {
         SqlSession sqlSession = null;
+        FormService formService = new FormServiceImpl();
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession(ExecutorType.BATCH);
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            FormService formService = new FormServiceImpl();
             users.forEach(user -> {
                 user.getForm().setId(formService.createForm(user.getForm()));
                 try {
@@ -109,6 +110,7 @@ public class UserServiceImpl implements UserService {
                 } catch (Exception ex) {
                     throw new MatchaException(ex.getMessage());
                 }
+                user.setRate(0L);
                 userMapper.createFullUser(user);
             });
             sqlSession.commit();
@@ -116,6 +118,7 @@ public class UserServiceImpl implements UserService {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
             }
+            formService.deleteAllInactiveForms();
             throw new MatchaException("Failed to batch create users");
         } finally {
             if (nonNull(sqlSession)) {

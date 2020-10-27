@@ -121,4 +121,24 @@ public class FormServiceImpl implements FormService {
         }
     }
 
+    @Override
+    public void deleteAllInactiveForms() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
+            formMapper.deleteAllInactiveForms();
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to delete all inactive forms");
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
 }
