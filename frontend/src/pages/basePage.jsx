@@ -23,7 +23,7 @@ const BasePage = () => {
           <Route path="/profile/:username" component={ProfilePage} />
           <Route path="/logout" component={Logout} />
           <Route path="/not-found" component={NotFound} />
-          <Route path="/" component={HomePage} />
+          <Route path="/" exact component={HomePage} />
           <Redirect to="/not-found" />
         </Switch>
       </main>

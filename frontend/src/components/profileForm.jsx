@@ -23,7 +23,9 @@ class ProfileForm extends Form {
         username = auth.getCurrentUser().sub;
       }
       const { data: user } = await getUser(username);
-      this.setState({ data: this.mapToViewModel(user) });
+      if (this.mounted) {
+        this.setState({ data: this.mapToViewModel(user) });
+      }
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
         this.props.history.replace("/not-found");
@@ -31,6 +33,15 @@ class ProfileForm extends Form {
   }
 
   async componentDidMount() {
+    this.mounted = true;
+    await this.populateProfile();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  async componentDidUpdate() {
     await this.populateProfile();
   }
 

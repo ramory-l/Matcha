@@ -8,10 +8,11 @@ const Input = ({ readonly, value, name, label, error, ...rest }) => {
         <input
           {...rest}
           name={name}
+          value=""
           placeholder={value}
           id={name}
           className="form-control"
-          disabled="true"
+          disabled={readonly}
         />
       ) : (
         <input
