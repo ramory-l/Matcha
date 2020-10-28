@@ -2,7 +2,7 @@ import React from "react";
 import ListGroup from "../components/common/listGroup";
 import ProfileForm from "../components/profileForm";
 
-const ProfilePage = () => {
+const ProfilePage = (props) => {
   return (
     <div className="row">
       <div className="col-3">
@@ -18,7 +18,7 @@ const ProfilePage = () => {
         </figure>
       </div>
       <div className="col-6">
-        <ProfileForm />
+        <ProfileForm {...props} />
       </div>
       <div className="col-2">
         <ListGroup
