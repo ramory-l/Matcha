@@ -1,11 +1,12 @@
-#DOCUMENTATION API
+# DOCUMENTATION API
 * <a href="##Аутентификация">Аутентификация</a>
 * <a href="##Пользователи">Пользователи</a>
 * <a href="##Анкеты">Анкеты</a>
 * <a href="##Лайки">Лайки</a>
 * <a href="##Дизлайки">Дизлайки</a>
 * <a href="##CORS">CORS</a>
-## Аутентификация (`/api/auth/`)
+## Аутентификация 
+(`/api/auth/`)
 #### Аутентификация по логину и паролю
     POST address:8080/api/auth/login (public)
 body:
