@@ -1,30 +1,32 @@
 #DOCUMENTATION API
-## CORS
-#### Рукопожатие с сервером и определение разрешенных адресов, методов и заголовков
-    OPTIONS address:8080 (public)
 ## Аутентификация (`/api/auth/`)
 #### Аутентификация по логину и паролю
     POST address:8080/api/auth/login (public)
-    body:
-    {
-        "username": "test",
-        "password": "test"
-    }
+body:
+```
+{
+    "username": "test",
+    "password": "test"
+}
+```
 example response: `200 "{jwtToken}"`
 ## Пользователи (`/api/user/`)
 #### Создание юзера
     POST address:8080/api/user (public)
-    body:
-        {
-            "username": "test",
-            "email": "test@testov.ru",
-            "password": "1234"
-        }
+body:
+```
+{
+    "username": "test",
+    "email": "test@testov.ru",
+    "password": "1234"
+}
+```
 example response: `204 ""`
 #### Создание пачки юзеров
     POST address:8080/api/user/batch (private)
-    body:
-    
+body:
+```
+```
 example response: `204 ""`
 #### Получение всех юзеров
     GET address:8080/api/user (private)
@@ -35,7 +37,8 @@ example response:
 #### Получение юзера по юзернейму
     GET address:8080/api/user/username/{username} (private)
 example response:
-`{
+```
+{
     "username": "test",
     "firstName": "",
     "lastName": "",
@@ -51,19 +54,22 @@ example response:
         "sex": false,
         "flirt": false
     }
-}`
+}
+```
 #### Обновление юзера
     PUT address:8080/api/user (private)
-    body:
-        {
-            "username": "test",
-            "firstName": "test",
-            "lastName": "test",
-            "email": "test",
-            "gender": "m/w",
-            "birthday": date,
-            "description": "test"
-        }
+body:
+```
+{
+    "username": "test",
+    "firstName": "test",
+    "lastName": "test",
+    "email": "test",
+    "gender": "m/w",
+    "birthday": date,
+    "description": "test"
+}
+```
 example response: `"User with username: test updated"`
 #### Удаление юзера по идентификатору
     DELETE address:8080/api/user/{id} (private)
@@ -74,15 +80,17 @@ example response:
 ## Анкеты (`/api/form`)
 #### Добавление анкеты
     POST address:8080/api/form (private)
-    body:
-        {
-            "man": true/false,
-            "woman": true/false,
-            "friendship": true/false,
-            "love": true/false,
-            "sex": true/false,
-            "flirt": true/false
-        }
+body:
+```
+{
+    "man": true/false,
+    "woman": true/false,
+    "friendship": true/false,
+    "love": true/false,
+    "sex": true/false,
+    "flirt": true/false
+}
+```
 example response: `200 "1"`
 #### Получение всех анкет
     GET address:8080/api/form/all (private)
@@ -95,15 +103,17 @@ example response:
 example response:
 #### Обновление анкеты
     PUT address:8080/api/form/{userId} (private)
-    body:
-        {
-            "man": true/false,
-            "woman": true/false,
-            "friendship": true/false,
-            "love": true/false,
-            "sex": true/false,
-            "flirt": true/false
-        }
+body:
+```
+{
+    "man": true/false,
+    "woman": true/false,
+    "friendship": true/false,
+    "love": true/false,
+    "sex": true/false,
+    "flirt": true/false
+}
+```
 example response: `204 ""`
 #### Удаление анкеты по идентификатору
     DELETE address:8080/api/form/{id} (private)
@@ -134,3 +144,6 @@ example response: `204 ""`
 #### Удаление дизлайка от `{from}` к `{to}`
     DELETE address:8080/api/user/dislike/from/{from}/to/{to} (private) -
 example response: `204 ""`
+## CORS
+#### Рукопожатие с сервером и определение разрешенных адресов, методов и заголовков
+    OPTIONS address:8080 (public)
