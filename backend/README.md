@@ -1,4 +1,5 @@
 # DOCUMENTATION API
+### Оглавление
 * <a href="#аутентификация-apiauth">Аутентификация</a>
 * <a href="#пользователи-apiuser">Пользователи</a>
 * <a href="#анкеты-apiform">Анкеты</a>
@@ -17,7 +18,7 @@ body:
 ```
 example response: `200 "{jwtToken}"`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 ## Пользователи (`/api/user/`)
 #### Создание юзера
     POST address:8080/api/user (public)
@@ -31,7 +32,7 @@ body:
 ```
 example response: `204 ""`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Создание пачки юзеров
     POST address:8080/api/user/batch (private)
 body:
@@ -39,17 +40,17 @@ body:
 ```
 example response: `204 ""`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение всех юзеров
     GET address:8080/api/user (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>    
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение юзера по идентификатору
     GET address:8080/api/user/{id} (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение юзера по юзернейму
     GET address:8080/api/user/username/{username} (private)
 example response:
@@ -73,7 +74,7 @@ example response:
 }
 ```
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Обновление юзера
     PUT address:8080/api/user (private)
 body:
@@ -90,17 +91,17 @@ body:
 ```
 example response: `"User with username: test updated"`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Удаление юзера по идентификатору
     DELETE address:8080/api/user/{id} (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Удаление юзера по юзернейму
     DELETE address:8080/api/user/username/{username} (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 ## Анкеты (`/api/form`)
 #### Добавление анкеты
     POST address:8080/api/form (private)
@@ -117,22 +118,22 @@ body:
 ```
 example response: `200 "1"`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение всех анкет
     GET address:8080/api/form/all (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение анкеты по идентификатору
     GET address:8080/api/form/{id} (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение анкеты по идентификатору юзера
     GET address:8080/api/form/user/{id} (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Обновление анкеты
     PUT address:8080/api/form/{userId} (private)
 body:
@@ -148,55 +149,56 @@ body:
 ```
 example response: `204 ""`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Удаление анкеты по идентификатору
     DELETE address:8080/api/form/{id} (private)
 example response: `204 ""`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Удаление анкеты по идентификатору пользователя
     DELETE address:8080/api/form/user/{id} (private)
 example response: `204 ""`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>## Лайки (`/api/user/like`)
+<a href="#documentation-api" title="Список разделов">Назад</a>
+## Лайки (`/api/user/like`)
 #### Получение всех лайков юзера с идентификатором `{id}`    
     GET address:8080/api/user/{id}/likes (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение всех лайков и дизлайков юзера с идентификатором `{id}`
     GET address:8080/api/user/{id}/likesDislikes (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Добавление лайка от `{from}` к `{to}`
     POST address:8080/api/user/like/from/{from}/to/{to} (private)
 example response: `204 ""
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Удаление лайка от `{from}` к `{to}`
     DELETE address:8080/api/user/like/from/{from}/to/{to} (private)
 example response: `204 ""`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 ## Дизлайки (`/api/user/dislike`)
 #### Получение всех дизлайков юзера с идентификатором `{id}`
     GET address:8080/api/user/{id}/dislikes (private)
 example response:
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Добавление дизлайка от `{from}` к `{to}`
     POST address:8080/api/user/dislike/from/{from}/to/{to} (private) -
 example response: `204 ""`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 #### Удаление дизлайка от `{from}` к `{to}`
     DELETE address:8080/api/user/dislike/from/{from}/to/{to} (private) -
 example response: `204 ""`
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
 ## CORS
 #### Рукопожатие с сервером и определение разрешенных адресов, методов и заголовков
     OPTIONS address:8080 (public)
 
-<a href="#documentation-api" title="Список разделов">&#9650; API &#9650;</a>
+<a href="#documentation-api" title="Список разделов">Назад</a>
