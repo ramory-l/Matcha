@@ -1,8 +1,30 @@
+Рукопожатие с сервером и определение разрешенных адресов, методов и заголовков
+    OPTIONS address:8080 (public)
 *****************************************************
-address:8080/api/form - анкеты
+address:8080/api/auth - аунтефикация
+*****************************************************
+Аунтефикация по логину и паролю
+    POST address:8080/api/auth/login (public)
+body:
+    {
+        "username": "test",
+        "password": "test"
+    }
+example request:
+    curl --location --request POST 'http://localhost:8080/api/auth/login' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "username":"test",
+        "password":"test"
+    }'
+example response:
+    200 "{jwtToken}"
+*****************************************************
+address:8080/api/form - анкеты [NEED TEST]
 *****************************************************
 Добавление анкеты
-    POST address:8080/api/form
+    POST address:8080/api/form (private) -
+body:
     {
         "man": true/false,
         "woman": true/false,
@@ -14,31 +36,32 @@ address:8080/api/form - анкеты
 example request:
 
 example response:
-
+    200 1
 -----------------------------------------------------
 Получение всех анкет
-    GET address:8080/api/form/all
+    GET address:8080/api/form/all (private) -
 example request:
 
 example response:
 
 -----------------------------------------------------
 Получение анкеты по идентификатору
-    GET address:8080/api/form/{id}
+    GET address:8080/api/form/{id} (private) -
 example request:
 
 example response:
 
 -----------------------------------------------------
 Получение анкеты по идентификатору юзера
-    GET address:8080/api/form/user/{id}
+    GET address:8080/api/form/user/{id} (private) -
 example request:
 
 example response:
 
 -----------------------------------------------------
 Обновление анкеты
-    PUT address:8080/api/form/{userId}
+    PUT address:8080/api/form/{userId} (private) -
+body:
     {
         "man": true/false,
         "woman": true/false,
@@ -50,26 +73,26 @@ example response:
 example request:
 
 example response:
-
+    204 ""
 -----------------------------------------------------
 Удаление анкеты по идентификатору
-    DELETE address:8080/api/form/{id}
+    DELETE address:8080/api/form/{id} (private) -
 example request:
 
 example response:
-
+    204 ""
 -----------------------------------------------------
 Удаление анкеты по идентификатору пользователя
-    DELETE address:8080/api/form/user/{id}
+    DELETE address:8080/api/form/user/{id} (private) -
 example request:
 
 example response:
-
+    204 ""
 *****************************************************
 address:8080/api/user/ - юзеры
 *****************************************************
 Создание юзера
-    POST address:8080/api/form/user
+    POST address:8080/api/user (public) -
 body:
     {
         "username": "test",
@@ -77,32 +100,35 @@ body:
         "password": "1234"
     }
 example request:
-    curl --location --request POST 'http://localhost:8080/api/user/' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "username": "test",
-        "email": "test@testov.ru",
-        "password": "1234"
-    }'
+
 example response:
-    1 [идентификатор юзера]
+    204 ""
+-----------------------------------------------------
+Создание пачки юзеров
+    POST address:8080/api/user/batch (private) -
+body:
+
+example request:
+
+example response:
+    204 ""
 -----------------------------------------------------
 Получение всех юзеров
-    GET address:8080/api/user/all
+    GET address:8080/api/user (private) -
 example request:
 
 example response:
 
 -----------------------------------------------------
 Получение юзера по идентификатору
-    GET address:8080/api/user/{id}
+    GET address:8080/api/user/{id} (private) -
 example request:
 
 example response:
 
 -----------------------------------------------------
 Получение юзера по юзернейму
-    GET address:8080/api/user/username/{username}
+    GET address:8080/api/user/username/{username} (private) -
 example request:
     curl --location --request GET 'http://localhost:8080/api/user/username/test'
 example response:
@@ -125,7 +151,7 @@ example response:
     }
 -----------------------------------------------------
 Обновление юзера
-    PUT address:8080/api/user
+    PUT address:8080/api/user (private) -
 body:
     {
         "username": "test",
@@ -151,14 +177,68 @@ example response:
     "User with username: test updated"
 -----------------------------------------------------
 Удаление юзера по идентификатору
-    DELETE address:8080/api/form/user/{id}
+    DELETE address:8080/api/user/{id} (private) -
 example request:
 
 example response:
 
 -----------------------------------------------------
 Удаление юзера по юзернейму
-    DELETE address:8080/api/user/{username}
+    DELETE address:8080/api/user/username/{username} (private) -
 example request:
 
 example response:
+
+*****************************************************
+address:8080/api/user/like - лайки
+*****************************************************
+Получение всех лайков юзера с идентификатором {id}
+    GET address:8080/api/user/{id}/likes (private) -
+example request:
+
+example response:
+
+-----------------------------------------------------
+Получение всех лайков и дизлайков юзера с идентификатором {id}
+    GET address:8080/api/user/{id}/likesDislikes (private) -
+example request:
+
+example response:
+
+-----------------------------------------------------
+Добавление лайка от {from} к {to}
+    POST address:8080/api/user/like/from/{from}/to/{to} (private) -
+example request:
+
+example response:
+    204 ""
+-----------------------------------------------------
+Удаление лайка от {from} к {to}
+    DELETE address:8080/api/user/like/from/{from}/to/{to} (private) -
+example request:
+
+example response:
+    204 ""
+*****************************************************
+address:8080/api/user/dislike - дизлайки
+*****************************************************
+Получение всех дизлайков юзера с идентификатором {id}
+    GET address:8080/api/user/{id}/dislikes (private) -
+example request:
+
+example response:
+
+-----------------------------------------------------
+Добавление дизлайка от {from} к {to}
+    POST address:8080/api/user/dislike/from/{from}/to/{to} (private) -
+example request:
+
+example response:
+    204 ""
+-----------------------------------------------------
+Удаление дизлайка от {from} к {to}
+    DELETE address:8080/api/user/dislike/from/{from}/to/{to} (private) -
+example request:
+
+example response:
+    204 ""

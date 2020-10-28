@@ -25,10 +25,4 @@ public interface UserService {
 
     String getUserEncryptPasswordById(Long id);
 
-    void like(Long from, Long to);
-
-    List<Long> getLikes(Long id);
-
-    void deleteLike(Long from, Long to);
-
 }

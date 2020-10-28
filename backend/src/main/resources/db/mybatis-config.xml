@@ -21,5 +21,6 @@
     <mappers>
         <mapper resource='ru/school/matcha/dao/FormMapper.xml'/>
         <mapper resource='ru/school/matcha/dao/UserMapper.xml'/>
+        <mapper resource='ru/school/matcha/dao/LikeMapper.xml'/>
     </mappers>
 </configuration>

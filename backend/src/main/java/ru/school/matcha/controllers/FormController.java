@@ -120,8 +120,7 @@ public class FormController {
             FormDto formDto = serializer.deserialize(request.body(), FormDto.class);
             Form form = formConverter.convertFromDto(formDto);
             formService.updateForm(form, userId);
-            response.status(200);
-            response.body("Form update was successful");
+            response.status(204);
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
         } catch (MatchaException ex) {
@@ -140,8 +139,7 @@ public class FormController {
         Long id = parseLong(request.params("id"));
         try {
             formService.deleteFormById(id);
-            response.status(200);
-            response.body(String.format("Removing form with id %s was successful", id));
+            response.status(204);
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
         } catch (MatchaException ex) {
@@ -160,8 +158,7 @@ public class FormController {
         Long userId = parseLong(request.params("id"));
         try {
             formService.deleteFormByUserId(userId);
-            response.status(200);
-            response.body(String.format("Removing form by user with user id %d was successful", userId));
+            response.status(204);
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
         } catch (MatchaException ex) {

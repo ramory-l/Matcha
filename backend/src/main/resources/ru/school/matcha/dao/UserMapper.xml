@@ -32,7 +32,8 @@
     </insert>
 
     <insert id="createFullUser">
-        INSERT INTO "user"(username, first_name, last_name, password, email, gender, birthday, description, form_id)
+        INSERT INTO "user"(username, first_name, last_name, password, email, gender, birthday, description, rate,
+                           form_id)
         VALUES (#{username},
                 #{firstName},
                 #{lastName},
@@ -45,17 +46,6 @@
                 #{form.id})
         ON CONFLICT DO NOTHING
     </insert>
-
-    <insert id="like">
-        INSERT INTO likes("from", "to")
-        values (#{from}, #{to})
-    </insert>
-
-    <update id="addRate">
-        UPDATE "user"
-        SET rate = (rate + 1)
-        WHERE id = #{id}
-    </update>
 
     <update id="updateUserByUsername">
         <if test="username">
@@ -129,19 +119,6 @@
         </if>
     </delete>
 
-    <delete id="deleteLike">
-        DELETE
-        FROM likes
-        WHERE "from" = #{from}
-          and "to" = #{to};
-    </delete>
-
-    <update id="deleteRate">
-        UPDATE "user"
-        SET rate = (rate - 1)
-        WHERE id = #{id}
-    </update>
-
     <select id="getAllUsers" resultMap="User">
         SELECT id,
                username,
@@ -202,19 +179,6 @@
         <if test="id != null">
             SELECT password FROM "user" WHERE id = #{id}
         </if>
-    </select>
-
-    <select id="getLikes" resultType="java.lang.Long">
-        SELECT "from"
-        FROM likes
-        WHERE "to" = #{id}
-    </select>
-
-    <select id="getLike" resultType="java.lang.Long">
-        SELECT id
-        FROM likes
-        WHERE "to" = #{to}
-          and "from" = #{from}
     </select>
 
 </mapper>

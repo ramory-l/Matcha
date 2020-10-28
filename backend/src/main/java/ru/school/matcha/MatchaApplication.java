@@ -1,10 +1,7 @@
 package ru.school.matcha;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.school.matcha.controllers.AuthenticateController;
-import ru.school.matcha.controllers.AuthorizationController;
-import ru.school.matcha.controllers.FormController;
-import ru.school.matcha.controllers.UserController;
+import ru.school.matcha.controllers.*;
 import ru.school.matcha.converters.*;
 
 import static spark.Spark.*;
@@ -22,16 +19,22 @@ public class MatchaApplication {
             path("/user", () -> {
                 before("*", AuthorizationController.authorize);
                 post("/batch", UserController.batchUsersCreate, new JsonTransformer());
-                get("/all", UserController.getAllUsers, new JsonTransformer());
+                get("*", UserController.getAllUsers, new JsonTransformer());
                 get("/:id", UserController.getUserById, new JsonTransformer());
                 get("/username/:username", UserController.getUserByUsername, new JsonTransformer());
-                put("/", UserController.updateUser, new JsonTransformer());
+                get("/:id/dislikes", LikeController.getDislikes, new JsonTransformer());
+                get("/:id/likes", LikeController.getLikes, new JsonTransformer());
+                get("/:id/likesDislikes", LikeController.getAllLikesAndDislikes, new JsonTransformer());
+                put("*", UserController.updateUser, new JsonTransformer());
                 delete("/:id", UserController.deleteUserById, new JsonTransformer());
                 delete("/username/:username", UserController.deleteUserByUsername, new JsonTransformer());
                 path("/like", () -> {
-                    post("/from/:from/to/:to", UserController.like, new JsonTransformer());
-                    get("/:id", UserController.getLikes, new JsonTransformer());
-                    delete("/from/:from/to/:to", UserController.deleteLike, new JsonTransformer());
+                    post("/from/:from/to/:to", LikeController.like, new JsonTransformer());
+                    delete("/from/:from/to/:to", LikeController.deleteLike, new JsonTransformer());
+                });
+                path("/dislike", () -> {
+                    post("/from/:from/to/:to", LikeController.dislike, new JsonTransformer());
+                    delete("/from/:from/to/:to", LikeController.deleteDislike, new JsonTransformer());
                 });
             });
             path("/form", () -> {
@@ -52,7 +55,7 @@ public class MatchaApplication {
             response.header("Access-Control-Allow-Origin", "*");
             response.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         });
-        options("/*", (request, response) -> {
+        options("*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
             if (accessControlRequestHeaders != null) {
                 response.header("Access-Control-Allow-Headers", "Content-Type, x-auth-token");
