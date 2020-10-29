@@ -130,6 +130,7 @@
                description,
                is_active,
                form_id,
+               rate,
                create_ts,
                update_ts,
                delete_ts
@@ -149,6 +150,7 @@
             description,
             is_active,
             form_id,
+            rate,
             create_ts,
             update_ts,
             delete_ts
@@ -169,7 +171,8 @@
             birthday,
             description,
             is_active,
-            form_id
+            form_id,
+            rate
             FROM "user"
             WHERE username ILIKE #{username}
         </if>
