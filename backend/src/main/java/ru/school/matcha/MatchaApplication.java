@@ -19,13 +19,13 @@ public class MatchaApplication {
             path("/user", () -> {
                 before("*", AuthorizationController.authorize);
                 post("/batch", UserController.batchUsersCreate, new JsonTransformer());
-                get("*", UserController.getAllUsers, new JsonTransformer());
+                get("/", UserController.getAllUsers, new JsonTransformer());
                 get("/:id", UserController.getUserById, new JsonTransformer());
                 get("/username/:username", UserController.getUserByUsername, new JsonTransformer());
                 get("/:id/dislikes", LikeController.getDislikes, new JsonTransformer());
                 get("/:id/likes", LikeController.getLikes, new JsonTransformer());
                 get("/:id/likesDislikes", LikeController.getAllLikesAndDislikes, new JsonTransformer());
-                put("*", UserController.updateUser, new JsonTransformer());
+                put("/", UserController.updateUser, new JsonTransformer());
                 delete("/:id", UserController.deleteUserById, new JsonTransformer());
                 delete("/username/:username", UserController.deleteUserByUsername, new JsonTransformer());
                 path("/like", () -> {
@@ -39,7 +39,7 @@ public class MatchaApplication {
             });
             path("/form", () -> {
                 before("*", AuthorizationController.authorize);
-                post("*", FormController.createForm, new JsonTransformer());
+                post("/", FormController.createForm, new JsonTransformer());
                 get("/all", FormController.getAllForms, new JsonTransformer());
                 get("/:id", FormController.getFormById, new JsonTransformer());
                 get("/user/:id", FormController.getFormByUserId, new JsonTransformer());
