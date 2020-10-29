@@ -135,6 +135,7 @@
                update_ts,
                delete_ts
         FROM "user"
+        ORDER BY id ASC
     </select>
 
     <select id="getUserById" resultMap="User">
