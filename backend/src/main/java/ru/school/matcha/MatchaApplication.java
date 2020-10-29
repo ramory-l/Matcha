@@ -17,7 +17,7 @@ public class MatchaApplication {
                     post("/login", AuthenticateController.authenticate, new JsonTransformer()));
             post("/user", UserController.createUser, new JsonTransformer());
             path("/user", () -> {
-                before("*", AuthorizationController.authorize);
+                before("/*", AuthorizationController.authorize);
                 post("/batch", UserController.batchUsersCreate, new JsonTransformer());
                 get("/", UserController.getAllUsers, new JsonTransformer());
                 get("/:id", UserController.getUserById, new JsonTransformer());
@@ -38,7 +38,7 @@ public class MatchaApplication {
                 });
             });
             path("/form", () -> {
-                before("*", AuthorizationController.authorize);
+                before("/*", AuthorizationController.authorize);
                 post("/", FormController.createForm, new JsonTransformer());
                 get("/all", FormController.getAllForms, new JsonTransformer());
                 get("/:id", FormController.getFormById, new JsonTransformer());
