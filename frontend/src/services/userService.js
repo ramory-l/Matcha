@@ -19,10 +19,14 @@ export function getUsers() {
 }
 
 export function getUser(username) {
-  return http.get(apiEndpoint + "username/" + username);
+  return http.get(apiEndpoint + "username/" + username, {
+    headers: { "x-auth-token": "T_" + auth.getJwt() },
+  });
 }
 
 export function likeUser(to) {
   let from = auth.getCurrentUser().id;
-  return http.post(`${apiEndpoint}like/from/${from}/to/${to}`);
+  return http.post(`${apiEndpoint}like/from/${from}/to/${to}`, {
+    headers: { "x-auth-token": "T_" + auth.getJwt() },
+  });
 }
