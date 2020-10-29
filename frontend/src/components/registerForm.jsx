@@ -54,7 +54,7 @@ class RegisterForm extends Form {
         {this.renderInput("firstName", "First Name")}
         {this.renderInput("lastName", "Last Name")}
         {this.renderInput("email", "Email address")}
-        {this.renderInput("password", "Password", "password")}
+        {this.renderInput("password", "Password", false, "password")}
         <div className="RegisterForm-Buttons">
           {this.renderButton("Register")}
           <Link to="/auth/login">

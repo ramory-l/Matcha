@@ -60,10 +60,11 @@ class Form extends Component {
     return <CheckBox label={label} name={name} />;
   }
 
-  renderInput(name, label, type = "text") {
+  renderInput(name, label, readonly = false, type = "text") {
     const { data, errors } = this.state;
     return (
       <Input
+        readonly={readonly}
         type={type}
         name={name}
         value={data[name]}

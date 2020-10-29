@@ -13,12 +13,11 @@ export function register(user) {
 }
 
 export function getUsers() {
-  console.log(
-    http.get(apiEndpoint + "all/", {
-      headers: { "x-auth-token": "T_" + auth.getJwt() },
-    })
-  );
-  return http.get(apiEndpoint + "all/", {
+  return http.get(apiEndpoint + "all", {
     headers: { "x-auth-token": "T_" + auth.getJwt() },
   });
+}
+
+export function getUser(username) {
+  return http.get(apiEndpoint + "username/" + username);
 }

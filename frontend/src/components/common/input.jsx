@@ -1,10 +1,28 @@
 import React from "react";
 
-const Input = ({ name, label, error, ...rest }) => {
+const Input = ({ readonly, value, name, label, error, ...rest }) => {
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>
-      <input {...rest} name={name} id={name} className="form-control" />
+      {readonly ? (
+        <input
+          {...rest}
+          name={name}
+          value=""
+          placeholder={value}
+          id={name}
+          className="form-control"
+          disabled={readonly}
+        />
+      ) : (
+        <input
+          {...rest}
+          value={value}
+          name={name}
+          id={name}
+          className="form-control"
+        />
+      )}
       {error && <div className="alert alert-danger">{error}</div>}
     </div>
   );

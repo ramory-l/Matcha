@@ -2,12 +2,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: lightgray;
+  background: rgba(173, 216, 230, 0.514);
   width: 200px;
   height: 300px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
-.UserCard-Creds {
+.UserCard-Creds a {
   display: flex;
   flex-direction: column;
   align-items: center;
