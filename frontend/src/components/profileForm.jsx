@@ -41,8 +41,9 @@ class ProfileForm extends Form {
     this.mounted = false;
   }
 
-  async componentDidUpdate() {
-    await this.populateProfile();
+  async componentDidUpdate(prevProps) {
+    if (this.props.match.params.username !== prevProps.match.params.username)
+      await this.populateProfile();
   }
 
   mapToViewModel(user) {
