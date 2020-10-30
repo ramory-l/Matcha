@@ -1,10 +1,28 @@
 import React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import * as userService from "../services/userService";
 import "./styles/userCard.scss";
 
 const UserCard = (props) => {
   const { user } = props;
+  const [rate, setRate] = useState(user.rate);
+
+  const handleRateChange = async (action) => {
+    const originalRate = rate;
+    let actionValue = action === "like" ? 1 : -1;
+
+    try {
+      await userService.rateUser(user.id, action);
+      setRate((prev) => prev + actionValue);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400)
+        toast.error(`You have already ${action}d this user!`);
+      setRate(originalRate);
+    }
+  };
+
   return (
     <div className="UserCard my-2">
       <div className="UserCard-Creds">
@@ -20,7 +38,7 @@ const UserCard = (props) => {
       />
       <div className="UserCard-RateButtons">
         <span
-          onClick={() => userService.likeUser(user.id)}
+          onClick={() => handleRateChange("like")}
           role="img"
           aria-label="like-button"
           className="RateButtons-Like"
@@ -28,6 +46,7 @@ const UserCard = (props) => {
           &#128077;
         </span>
         <span
+          onClick={() => handleRateChange("dislike")}
           role="img"
           aria-label="dislike-button"
           className="RateButtons-Dislike"
@@ -35,7 +54,7 @@ const UserCard = (props) => {
           &#128078;
         </span>
       </div>
-      <span>Rating: {user.rate}</span>
+      <span>Rating: {rate}</span>
     </div>
   );
 };
