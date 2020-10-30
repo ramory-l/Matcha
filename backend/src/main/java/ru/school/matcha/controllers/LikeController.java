@@ -23,11 +23,14 @@ public class LikeController {
     public static Route getLikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             List<Long> likes = likeService.getLikes(id, true);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get likes by user with id: {}", id, ex);
             response.status(400);
@@ -43,11 +46,14 @@ public class LikeController {
     public static Route getDislikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             List<Long> likes = likeService.getLikes(id, false);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get dislikes by user with id: {}", id, ex);
             response.status(400);
@@ -64,11 +70,14 @@ public class LikeController {
     public static Route getAllLikesAndDislikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             List<Long> likes = likeService.getLikes(id, null);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get all likes and dislikes by user with id: {}", id, ex);
             response.status(400);
@@ -85,11 +94,14 @@ public class LikeController {
     public static Route like = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
+            AuthorizationController.authorize(request);
             likeService.like(from, to, true);
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to like (from: {} to: {})", from, to, ex);
             response.status(400);
@@ -105,11 +117,14 @@ public class LikeController {
     public static Route dislike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
+            AuthorizationController.authorize(request);
             likeService.like(from, to, false);
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to dislike (from: {} to: {})", from, to, ex);
             response.status(400);
@@ -125,11 +140,14 @@ public class LikeController {
     public static Route deleteLike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
+            AuthorizationController.authorize(request);
             likeService.deleteLike(from, to, true);
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to delete like (from: {} to: {})", from, to, ex);
             response.status(400);
@@ -145,11 +163,14 @@ public class LikeController {
     public static Route deleteDislike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
+            AuthorizationController.authorize(request);
             likeService.deleteLike(from, to, false);
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to delete dislike (from: {} to: {})", from, to, ex);
             response.status(400);

@@ -39,8 +39,6 @@ public class UserController {
             userService.createUser(user);
             response.status(204);
             return response.body();
-        } catch (HaltException ex) {
-            log.error("Credentials are invalid");
         } catch (MatchaException ex) {
             log.error("Failed to create user", ex);
             response.status(400);
@@ -55,6 +53,7 @@ public class UserController {
 
     public static Route batchUsersCreate = (request, response) -> {
         try {
+            AuthorizationController.authorize(request);
             Serializer<UserFullDto> serializer = new Serializer<>();
             List<UserFullDto> userFullDtoList = serializer.deserializeList(request.body(), UserFullDto.class);
             List<User> users = userFullConverter.createFromDtos(userFullDtoList);
@@ -62,6 +61,8 @@ public class UserController {
             response.status(204);
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to batch create users", ex);
             response.status(400);
@@ -76,12 +77,15 @@ public class UserController {
 
     public static Route getAllUsers = (request, response) -> {
         try {
+            AuthorizationController.authorize(request);
             List<User> users = userService.getAllUsers();
             List<UserDto> result = userConverter.createFromEntities(users);
             response.status(200);
             return result;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get all users", ex);
             response.status(400);
@@ -97,6 +101,7 @@ public class UserController {
     public static Route getUserById = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             User user = userService.getUserById(id)
                     .orElseThrow(() -> new MatchaException(String.format("User with id: %d doesn't exits", id)));
             UserDto result = userConverter.convertFromEntity(user);
@@ -104,6 +109,8 @@ public class UserController {
             return result;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get user by id: {}", id, ex);
             response.status(400);
@@ -119,6 +126,7 @@ public class UserController {
     public static Route getUserByUsername = (request, response) -> {
         String username = request.params("username");
         try {
+            AuthorizationController.authorize(request);
             User user = userService.getUserByUsername(username)
                     .orElseThrow(() -> new MatchaException(String.format("User with username: %s doesn't exist", username)));
             UserDto result = userConverter.convertFromEntity(user);
@@ -126,6 +134,8 @@ public class UserController {
             return result;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get user by username: {}", username, ex);
             response.status(400);
@@ -140,6 +150,7 @@ public class UserController {
 
     public static Route updateUser = (request, response) -> {
         try {
+            AuthorizationController.authorize(request);
             Serializer<UserDto> serializer = new Serializer<>();
             UserDto userDto = serializer.deserialize(request.body(), UserDto.class);
             User user = userConverter.convertFromDto(userDto);
@@ -149,6 +160,8 @@ public class UserController {
             response.body(String.format("User with username: %s updated", user.getUsername()));
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to update user", ex);
             response.status(400);
@@ -164,11 +177,14 @@ public class UserController {
     public static Route deleteUserById = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             userService.deleteUserById(id);
             response.status(200);
             response.body(String.format("Removing user with id %d was successful", id));
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to delete user by id: {}", id, ex);
             response.status(400);
@@ -184,11 +200,14 @@ public class UserController {
     public static Route deleteUserByUsername = (request, response) -> {
         String username = request.params("username");
         try {
+            AuthorizationController.authorize(request);
             userService.deleteUserByUsername(username);
             response.status(200);
             response.body(String.format("Removing user with username %s was successful", username));
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to delete user by username: {}", username, ex);
             response.status(400);
