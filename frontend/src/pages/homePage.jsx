@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../components/common/pagination";
-import UserCard from "../components/userCard";
 import * as userService from "../services/userService";
 import { paginate } from "../utils/paginate";
+import auth from "../services/authService";
+import Users from "../components/users";
+import WithLoading from "../components/common/withLoading";
+
+const UsersWithLoading = WithLoading(Users);
 
 const HomePage = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = useState(10)[0];
@@ -13,11 +18,13 @@ const HomePage = () => {
     async function fetchUsers() {
       const { data } = await userService.getUsers();
       setUsers(data);
+      setIsLoading(false);
     }
     fetchUsers();
   }, []);
 
-  const paginatedUsers = paginate(users, currentPage, pageSize);
+  const filtered = users.filter((user) => user.id !== auth.getCurrentUser().id);
+  const paginatedUsers = paginate(filtered, currentPage, pageSize);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -25,13 +32,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="row justify-content-center">
-        {paginatedUsers.map((user, index) => (
-          <div key={index} className="col-xs-1 mx-2">
-            <UserCard user={user} />
-          </div>
-        ))}
-      </div>
+      <UsersWithLoading isLoading={isLoading} users={paginatedUsers} />
       <Pagination
         itemsCount={users.length}
         pageSize={pageSize}

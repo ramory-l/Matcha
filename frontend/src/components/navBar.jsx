@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const NavBar = ({ user }) => {
   return (
@@ -23,38 +23,27 @@ const NavBar = ({ user }) => {
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
             <NavLink className="nav-link" to="/profile/me">
-              My Profile
+              My profile
             </NavLink>
           </li>
-          {user && (
-            <React.Fragment>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/profile">
-                  {user.name}
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/logout">
-                  Logout
-                </NavLink>
-              </li>
-            </React.Fragment>
-          )}
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/messages">
+              My messages
+            </NavLink>
+          </li>
         </ul>
         <form className="form-inline my-2 my-lg-0">
           <input
             className="form-control mr-sm-2"
             type="search"
-            placeholder="Search"
-            aria-label="Search"
+            placeholder="Search for user"
+            aria-label="Search User"
           />
-
-          <button
-            className="btn btn-outline-success my-2 my-sm-0"
-            type="submit"
-          >
-            Search
-          </button>
+          <Link to="/logout">
+            <button type="button" className="btn btn-danger mx-2">
+              Logout
+            </button>
+          </Link>
         </form>
       </div>
     </nav>

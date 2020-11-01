@@ -4,6 +4,7 @@ import Logout from "../components/logout";
 import NavBar from "../components/navBar";
 import HomePage from "../pages/homePage";
 import ProfilePage from "../pages/profilePage";
+import Messages from "../components/messages";
 import NotFound from "../components/notFound";
 import auth from "../services/authService";
 
@@ -21,6 +22,8 @@ const BasePage = () => {
       <main className="container">
         <Switch>
           <Route path="/profile/:username" component={ProfilePage} />
+          <Route path="/messages/:username" component={Messages} />
+          <Route path="/messages" component={Messages} />
           <Route path="/logout" component={Logout} />
           <Route path="/not-found" component={NotFound} />
           <Route path="/" exact component={HomePage} />

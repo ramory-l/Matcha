@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import ListGroup from "../components/common/listGroup";
 import Loading from "../components/common/loading";
 import ProfileForm from "../components/profileForm";
@@ -7,6 +8,8 @@ import { getUser } from "../services/userService";
 
 const ProfilePage = (props) => {
   const [user, setUser] = useState(null);
+  let username = props.match.params.username;
+  let isMe = username === "me" ? true : false;
 
   useEffect(() => {
     async function fetchUser() {
@@ -33,6 +36,20 @@ const ProfilePage = (props) => {
                 Fame rating: <strong>{user.rate}</strong>
               </figcaption>
             </figure>
+            {isMe ? null : (
+              <Link
+                to={{
+                  pathname: `/messages/${user.username}`,
+                  state: {
+                    recipient: user,
+                  },
+                }}
+              >
+                <button type="button" className="btn btn-primary">
+                  Send a message
+                </button>
+              </Link>
+            )}
           </div>
           <div className="col-6">
             <ProfileForm {...props} user={user} />
