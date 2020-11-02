@@ -2,9 +2,17 @@
 <mapper namespace="ru.school.matcha.dao.LikeMapper">
 
     <select id="getLikes" resultType="java.lang.Long">
-        SELECT "from"
+        SELECT
+        <if test="outgoing == null or !outgoing">"from"</if>
+        <if test="outgoing">"to"</if>
         FROM likes
-        WHERE "to" = #{id}
+        WHERE
+        <if test="outgoing == null or !outgoing">
+            "to" = #{id}
+        </if>
+        <if test="outgoing">
+            "from" = #{id}
+        </if>
         <if test="like != null">
             <if test="like">
                 AND "like" = true

@@ -171,12 +171,12 @@ example response: `204 ""`
 <a href="#documentation-api" title="Список разделов">Назад</a>
 ## Лайки (`/api/user/like`)
 #### Получение всех лайков юзера с идентификатором `{id}`    
-    GET address:8080/api/user/{id}/likes (private)
+    GET address:8080/api/user/{id}/likes (optional param = ?outgoing=true/false) (private)
 example response:
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение всех лайков и дизлайков юзера с идентификатором `{id}`
-    GET address:8080/api/user/{id}/likesDislikes (private)
+    GET address:8080/api/user/{id}/likesDislikes (optional param = ?outgoing=true/false) (private)
 example response:
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
@@ -192,7 +192,7 @@ example response: `204 ""`
 <a href="#documentation-api" title="Список разделов">Назад</a>
 ## Дизлайки (`/api/user/dislike`)
 #### Получение всех дизлайков юзера с идентификатором `{id}`
-    GET address:8080/api/user/{id}/dislikes (private)
+    GET address:8080/api/user/{id}/dislikes (optional param = ?outgoing=true/false) (private)
 example response:
 
 <a href="#documentation-api" title="Список разделов">Назад</a>

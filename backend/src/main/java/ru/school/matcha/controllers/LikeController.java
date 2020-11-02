@@ -22,9 +22,10 @@ public class LikeController {
 
     public static Route getLikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
+        Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
             AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, true);
+            List<Long> likes = likeService.getLikes(id, true, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
@@ -45,9 +46,10 @@ public class LikeController {
 
     public static Route getDislikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
+        Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
             AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, false);
+            List<Long> likes = likeService.getLikes(id, false, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
@@ -69,9 +71,10 @@ public class LikeController {
 
     public static Route getAllLikesAndDislikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
+        Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
             AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, null);
+            List<Long> likes = likeService.getLikes(id, null, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {

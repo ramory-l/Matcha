@@ -10,7 +10,7 @@ public interface LikeMapper {
 
     void like(@Param("from") Long from, @Param("to") Long to, @Param("like") Boolean like);
 
-    List<Long> getLikes(@Param("id") Long id, @Param("like") Boolean like);
+    List<Long> getLikes(@Param("id") Long id, @Param("like") Boolean like, @Param("outgoing") Boolean outgoing);
 
     void deleteLike(@Param("from") Long from, @Param("to") Long to, @Param("like") Boolean like);
 
