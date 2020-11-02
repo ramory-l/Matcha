@@ -36,7 +36,9 @@ body:
 {
     "username": "test",
     "email": "test@testov.ru",
-    "password": "1234"
+    "password": "1234",
+    "firstName": "test",
+    "lastName": "test"
 }
 ```
 example response: `204 ""`
