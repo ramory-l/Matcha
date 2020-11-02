@@ -1,0 +1,22 @@
+.RateButtons {
+  display: flex;
+  width: 150px;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+%rate-button {
+  border-radius: 5px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.RateButtons-Like {
+  @extend %rate-button;
+  background-color: lightblue;
+}
+
+.RateButtons-Dislike {
+  @extend %rate-button;
+  background-color: lightcoral;
+}

@@ -1,8 +1,6 @@
 import React from "react";
 import Joi from "joi";
 import Form from "./common/form";
-import { getUser } from "../services/userService";
-import auth from "../services/authService";
 
 class ProfileForm extends Form {
   state = {
@@ -16,34 +14,16 @@ class ProfileForm extends Form {
     errors: {},
   };
 
-  async populateProfile() {
-    try {
-      let username = this.props.match.params.username;
-      if (username === "me") {
-        username = auth.getCurrentUser().sub;
-      }
-      const { data: user } = await getUser(username);
-      if (this.mounted) {
-        this.setState({ data: this.mapToViewModel(user) });
-      }
-    } catch (ex) {
-      if (ex.response && ex.response.status === 404)
-        this.props.history.replace("/not-found");
-    }
+  populateProfileForm() {
+    this.setState({ data: this.mapToViewModel(this.props.user) });
   }
 
-  async componentDidMount() {
-    this.mounted = true;
-    await this.populateProfile();
+  componentDidMount() {
+    this.populateProfileForm();
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  async componentDidUpdate(prevProps) {
-    if (this.props.match.params.username !== prevProps.match.params.username)
-      await this.populateProfile();
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) this.populateProfileForm();
   }
 
   mapToViewModel(user) {
@@ -68,7 +48,7 @@ class ProfileForm extends Form {
   });
 
   doSubmit = () => {
-    console.log("submitted");
+    console.log("saved");
   };
 
   render() {

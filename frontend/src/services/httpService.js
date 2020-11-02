@@ -12,6 +12,9 @@ axios.interceptors.response.use(null, (error) => {
     toast.error("An unexpected error occurred.");
   }
 
+  if (error.response && error.response.status === 401)
+    window.location = "/logout";
+
   return Promise.reject(error);
 });
 

@@ -24,9 +24,9 @@ export function getUser(username) {
   });
 }
 
-export function likeUser(to) {
+export function rateUser(to, action) {
   let from = auth.getCurrentUser().id;
-  return http.post(`${apiEndpoint}like/from/${from}/to/${to}`, {
-    headers: { "x-auth-token": "T_" + auth.getJwt() },
+  return http.post(`${apiEndpoint}${action}/from/${from}/to/${to}`, null, {
+    headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
