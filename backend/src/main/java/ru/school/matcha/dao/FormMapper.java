@@ -22,4 +22,7 @@ public interface FormMapper {
     void deleteFormById(Long id);
 
     void deleteFormByUserId(Long id);
+
+    void deleteAllInactiveForms();
+
 }

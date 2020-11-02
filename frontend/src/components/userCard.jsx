@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import * as userService from "../services/userService";
 import "./styles/userCard.scss";
 
 const UserCard = (props) => {
@@ -18,7 +19,12 @@ const UserCard = (props) => {
         alt="avatar"
       />
       <div className="UserCard-RateButtons">
-        <span role="img" aria-label="like-button" className="RateButtons-Like">
+        <span
+          onClick={() => userService.likeUser(user.id)}
+          role="img"
+          aria-label="like-button"
+          className="RateButtons-Like"
+        >
           &#128077;
         </span>
         <span

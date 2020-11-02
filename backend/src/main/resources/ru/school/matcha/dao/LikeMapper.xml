@@ -1,0 +1,69 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.school.matcha.dao.LikeMapper">
+
+    <select id="getLikes" resultType="java.lang.Long">
+        SELECT
+        <if test="outgoing == null or !outgoing">"from"</if>
+        <if test="outgoing">"to"</if>
+        FROM likes
+        WHERE
+        <if test="outgoing == null or !outgoing">
+            "to" = #{id}
+        </if>
+        <if test="outgoing">
+            "from" = #{id}
+        </if>
+        <if test="like != null">
+            <if test="like">
+                AND "like" = true
+            </if>
+            <if test="!like">
+                AND "like" = false
+            </if>
+        </if>
+    </select>
+
+    <select id="getLike" resultType="java.lang.Long">
+        SELECT id
+        FROM likes
+        WHERE "to" = #{to}
+        AND "from" = #{from}
+        <if test="like">
+            AND "like" = true
+        </if>
+        <if test="!like">
+            AND "like" = false
+        </if>
+    </select>
+
+    <delete id="deleteLike">
+        DELETE
+        FROM likes
+        WHERE "from" = #{from}
+        AND "to" = #{to}
+        <if test="like">
+            AND "like" = true
+        </if>
+        <if test="!like">
+            AND "like" = false
+        </if>
+    </delete>
+
+    <update id="deleteRate">
+        UPDATE "user"
+        SET rate = (rate - 1)
+        WHERE id = #{id}
+    </update>
+
+    <insert id="like">
+        INSERT INTO likes("from", "to", "like")
+        values (#{from}, #{to}, #{like})
+    </insert>
+
+    <update id="addRate">
+        UPDATE "user"
+        SET rate = (rate + 1)
+        WHERE id = #{id}
+    </update>
+
+</mapper>

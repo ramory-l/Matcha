@@ -36,10 +36,28 @@ create table "user"
 create table likes
 (
     id        bigserial primary key                     not null,
-    "from"      bigint references "user" (id)             not null,
-    "to"    bigint references "user" (id)             not null,
+    "from"    bigint references "user" (id)             not null,
+    "to"      bigint references "user" (id)             not null,
+    "like"    boolean                     default true  not null,
     create_ts timestamp without time zone default now() not null,
-    unique ("to", "from")
+    unique ("to", "from", "like")
+);
+
+create table tags
+(
+    id        bigserial primary key                     not null,
+    tag       varchar(255)                              not null,
+    create_ts timestamp without time zone default now() not null,
+    user_id   bigint references "user" (id),
+    unique (tag, user_id)
+);
+
+create table guests
+(
+    id        bigserial primary key                     not null,
+    guest_id  bigserial references "user" (id),
+    user_id   bigserial references "user" (id),
+    create_ts timestamp without time zone default now() not null
 );
 
 INSERT INTO public.form (id,

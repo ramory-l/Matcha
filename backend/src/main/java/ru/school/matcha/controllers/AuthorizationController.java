@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.exceptions.JwtAuthenticationException;
 import ru.school.matcha.services.AuthorizationServiceImpl;
 import ru.school.matcha.services.interfaces.AuthorizationService;
-import spark.Filter;
+import spark.Request;
 
 import static spark.Spark.halt;
 
@@ -17,7 +17,7 @@ public class AuthorizationController {
         authorizationService = new AuthorizationServiceImpl();
     }
 
-    public static Filter authorize = (request, response) -> {
+    public static void authorize(Request request) {
         boolean authorization = false;
         try {
             authorization = authorizationService.authorize(request.headers("x-auth-token"));
@@ -27,6 +27,6 @@ public class AuthorizationController {
         if (!authorization) {
             halt(401, "Credentials are invalid");
         }
-    };
+    }
 
 }

@@ -15,6 +15,7 @@ import spark.Route;
 import java.util.List;
 
 import static java.lang.Long.parseLong;
+import static spark.Spark.halt;
 
 @Slf4j
 public class FormController {
@@ -29,6 +30,7 @@ public class FormController {
 
     public static Route createForm = (request, response) -> {
         try {
+            AuthorizationController.authorize(request);
             Serializer<FormDto> serializer = new Serializer<>();
             FormDto formDto = serializer.deserialize(request.body(), FormDto.class);
             Form form = formConverter.convertFromDto(formDto);
@@ -37,6 +39,8 @@ public class FormController {
             return formId;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to create form", ex);
             response.status(400);
@@ -51,12 +55,15 @@ public class FormController {
 
     public static Route getAllForms = (request, response) -> {
         try {
+            AuthorizationController.authorize(request);
             List<Form> forms = formService.getAllForms();
             List<FormDto> result = formConverter.createFromEntities(forms);
             response.status(200);
             return result;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get all forms", ex);
             response.status(400);
@@ -72,6 +79,7 @@ public class FormController {
     public static Route getFormById = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             Form form = formService.getFormById(id)
                     .orElseThrow(() -> new MatchaException(String.format("Form with id: %s doesn't exist", id)));
             FormDto result = formConverter.convertFromEntity(form);
@@ -79,6 +87,8 @@ public class FormController {
             return result;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get form by id: {}", id, ex);
             response.status(400);
@@ -94,6 +104,7 @@ public class FormController {
     public static Route getFormByUserId = (request, response) -> {
         Long userId = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             Form form = formService.getFormByUserId(userId)
                     .orElseThrow(() -> new MatchaException(String.format("Form by user with id %d doesn't exist", userId)));
             FormDto result = formConverter.convertFromEntity(form);
@@ -101,6 +112,8 @@ public class FormController {
             return result;
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to get form by user id: {}", userId, ex);
             response.status(400);
@@ -116,14 +129,16 @@ public class FormController {
     public static Route updateFormByUserId = (request, response) -> {
         Long userId = parseLong(request.params("userId"));
         try {
+            AuthorizationController.authorize(request);
             Serializer<FormDto> serializer = new Serializer<>();
             FormDto formDto = serializer.deserialize(request.body(), FormDto.class);
             Form form = formConverter.convertFromDto(formDto);
             formService.updateForm(form, userId);
-            response.status(200);
-            response.body("Form update was successful");
+            response.status(204);
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to update form", ex);
             response.status(400);
@@ -139,11 +154,13 @@ public class FormController {
     public static Route deleteFormById = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             formService.deleteFormById(id);
-            response.status(200);
-            response.body(String.format("Removing form with id %s was successful", id));
+            response.status(204);
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to delete form by id: {}", id, ex);
             response.status(400);
@@ -159,11 +176,13 @@ public class FormController {
     public static Route deleteFormByUserId = (request, response) -> {
         Long userId = parseLong(request.params("id"));
         try {
+            AuthorizationController.authorize(request);
             formService.deleteFormByUserId(userId);
-            response.status(200);
-            response.body(String.format("Removing form by user with user id %d was successful", userId));
+            response.status(204);
         } catch (HaltException ex) {
             log.error("Credentials are invalid");
+            response.status(ex.statusCode());
+            response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to delete form by user id: {}", userId, ex);
             response.status(400);

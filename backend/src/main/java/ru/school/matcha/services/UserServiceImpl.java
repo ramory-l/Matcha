@@ -15,7 +15,6 @@ import ru.school.matcha.services.interfaces.UserService;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -74,6 +73,7 @@ public class UserServiceImpl implements UserService {
                 newUser.setEmail(user.getEmail());
                 newUser.setFirstName(user.getFirstName());
                 newUser.setLastName(user.getLastName());
+                newUser.setRate(0L);
                 defaultForm.setId(formService.createForm(defaultForm));
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
@@ -98,10 +98,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void batchCreateUsers(List<User> users) {
         SqlSession sqlSession = null;
+        FormService formService = new FormServiceImpl();
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession(ExecutorType.BATCH);
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            FormService formService = new FormServiceImpl();
             users.forEach(user -> {
                 user.getForm().setId(formService.createForm(user.getForm()));
                 try {
@@ -109,6 +109,7 @@ public class UserServiceImpl implements UserService {
                 } catch (Exception ex) {
                     throw new MatchaException(ex.getMessage());
                 }
+                user.setRate(0L);
                 userMapper.createFullUser(user);
             });
             sqlSession.commit();
@@ -116,6 +117,7 @@ public class UserServiceImpl implements UserService {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
             }
+            formService.deleteAllInactiveForms();
             throw new MatchaException("Failed to batch create users");
         } finally {
             if (nonNull(sqlSession)) {
@@ -196,72 +198,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public void like(Long from, Long to) {
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            if (nonNull(userMapper.getLike(from, to))) {
-                throw new MatchaException("Like already exist");
-            }
-            checkUsers(from, to);
-            userMapper.like(from, to);
-            userMapper.addRate(to);
-            sqlSession.commit();
-        } catch (Exception ex) {
-            if (nonNull(sqlSession)) {
-                sqlSession.rollback();
-            }
-            throw new MatchaException("Error to like. " + ex.getMessage());
-        } finally {
-            if (nonNull(sqlSession)) {
-                sqlSession.close();
-            }
-        }
-    }
-
-    @Override
-    public List<Long> getLikes(Long id) {
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getLikes(id);
-        }
-    }
-
-    @Override
-    public void deleteLike(Long from, Long to) {
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            if (isNull(userMapper.getLike(from, to))) {
-                throw new MatchaException("Like doesn't exist");
-            }
-            checkUsers(from, to);
-            userMapper.deleteLike(from, to);
-            userMapper.deleteRate(to);
-            sqlSession.commit();
-        } catch (Exception ex) {
-            if (nonNull(sqlSession)) {
-                sqlSession.rollback();
-            }
-            throw new MatchaException("Error to delete like. " + ex.getMessage());
-        } finally {
-            if (nonNull(sqlSession)) {
-                sqlSession.close();
-            }
-        }
-    }
-
-    private void checkUsers(Long from, Long to) {
-        if (isNull(getUserById(from))) {
-            log.error("User 'from' with id: {} doesn't exist", from);
-            throw new MatchaException("User 'from' with id: " + from + " doesn't exist");
-        }
-        if (isNull(getUserById(to))) {
-            log.error("User 'to' with id: {} doesn't exist", to);
-            throw new MatchaException("User 'to' with id: " + to + " doesn't exist");
-        }
-    }
 }
