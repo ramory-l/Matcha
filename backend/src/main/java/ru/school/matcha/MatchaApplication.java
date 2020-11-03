@@ -3,6 +3,7 @@ package ru.school.matcha;
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.controllers.*;
 import ru.school.matcha.converters.*;
+import ru.school.matcha.handlers.ChatWebSocketHandler;
 
 import static spark.Spark.*;
 
@@ -11,6 +12,7 @@ public class MatchaApplication {
 
     public static void main(String[] args) {
         port(8080);
+        webSocket("/chat", ChatWebSocketHandler.class);
         enableCORS();
         path("/api", () -> {
             path("/auth", () ->
