@@ -28,7 +28,7 @@ public class ChatWebSocketHandler {
             }
             String username = jwtTokenProvider.getUsernameFromToken(token);
             sessionUsernameMap.put(session, username);
-            sendMessage(sessionUsernameMap.get(session), username + " joined the chat");
+            sendMessage(username, " YAHOOOOOOOOO");
         } catch (JwtAuthenticationException ex) {
             log.error("Credentials are invalid");
         } catch (Exception ex) {
@@ -39,7 +39,7 @@ public class ChatWebSocketHandler {
     public static void sendMessage(String sender, String message) {
         sessionUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
-                session.getRemote().sendString(sender + message);
+                session.getRemote().sendString(sender + ": " + message);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -48,9 +48,7 @@ public class ChatWebSocketHandler {
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
-        String username = sessionUsernameMap.get(user);
         sessionUsernameMap.remove(user);
-        sendMessage("Server", username + " left the chat");
     }
 
     @OnWebSocketMessage
