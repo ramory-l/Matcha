@@ -5,6 +5,8 @@ import org.apache.ibatis.io.Resources;
 import ru.school.matcha.exceptions.JwtAuthenticationException;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Properties;
 
@@ -23,7 +25,7 @@ public class JwtTokenProvider {
             throw new RuntimeException(e.getMessage());
         }
 
-        this.secret = properties.getProperty("jwt.token.secret");
+        this.secret = Arrays.toString(Base64.getEncoder().encode(properties.getProperty("jwt.token.secret").getBytes()));
         this.validityInMilliseconds = parseLong(properties.getProperty("jwt.token.expired"));
     }
 
