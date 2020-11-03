@@ -12,7 +12,7 @@ public class MatchaApplication {
 
     public static void main(String[] args) {
         port(8080);
-        webSocket("/chat", ChatWebSocketHandler.class);
+        webSocket("/socket", ChatWebSocketHandler.class);
         enableCORS();
         path("/api", () -> {
             path("/auth", () ->
