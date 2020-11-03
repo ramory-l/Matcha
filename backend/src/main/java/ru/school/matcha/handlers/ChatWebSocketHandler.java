@@ -23,7 +23,7 @@ public class ChatWebSocketHandler {
         try {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
             String token = session.getUpgradeRequest().getParameterMap().get("x-auth-token").get(0);
-            if (!jwtTokenProvider.validateToken(token)) {
+            if (!jwtTokenProvider.validateToken(jwtTokenProvider.resolveToken(token))) {
                 throw new JwtAuthenticationException("Credential are invalid");
             }
             String username = jwtTokenProvider.getUsernameFromToken(token);
