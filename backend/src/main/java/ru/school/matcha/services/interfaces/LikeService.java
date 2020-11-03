@@ -6,7 +6,7 @@ public interface LikeService {
 
     void like(Long from, Long to, boolean like);
 
-    List<Long> getLikes(Long id, Boolean like);
+    List<Long> getLikes(Long id, Boolean like, Boolean outgoing);
 
     void deleteLike(Long from, Long to, boolean like);
 

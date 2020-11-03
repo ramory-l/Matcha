@@ -3,9 +3,7 @@ package ru.school.matcha.security.jwt;
 import io.jsonwebtoken.*;
 import org.apache.ibatis.io.Resources;
 import ru.school.matcha.exceptions.JwtAuthenticationException;
-import ru.school.matcha.exceptions.MatchaException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Base64;
@@ -59,6 +57,11 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException ex) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
+    }
+
+    public String getUsernameFromToken(String token) {
+        Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+        return claims.getBody().getSubject();
     }
 
 }

@@ -56,10 +56,10 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public List<Long> getLikes(Long id, Boolean like) {
+    public List<Long> getLikes(Long id, Boolean like, Boolean outgoing) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
-            return likeMapper.getLikes(id, like);
+            return likeMapper.getLikes(id, like, outgoing);
         }
     }
 
