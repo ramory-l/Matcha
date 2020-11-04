@@ -14,7 +14,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
+import com.google.api.services.drive.model.Permission;
 import org.apache.ibatis.io.Resources;
 
 import java.io.FileNotFoundException;
@@ -60,8 +60,13 @@ public class GoogleDrive {
             java.io.File filePath = new java.io.File("backend/images/" + fileName);
             FileContent mediaContent = new FileContent("image/jpeg", filePath);
             File file = service.files().create(fileMetadata, mediaContent)
-                    .setFields("webViewLink")
+                    .setFields("webViewLink, id")
                     .execute();
+            service.permissions().create(file.getId(),
+                    new Permission()
+                            .setType("anyone")
+                            .setRole("reader")
+            ).execute();
             System.out.println("File webViewLink: " + file.getWebViewLink());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -73,19 +78,19 @@ public class GoogleDrive {
             NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                     .setApplicationName(APPLICATION_NAME).build();
-            FileList result = service.files().list()
-                    .setPageSize(10)
-                    .setFields("nextPageToken, files(webViewLink)")
-                    .execute();
-            List<File> files = result.getFiles();
-            if (files == null || files.isEmpty()) {
-                System.out.println("No files found.");
-            } else {
-                System.out.println("Files:");
-                for (File file : files) {
-                    System.out.println(file.getWebViewLink());
-                }
-            }
+//            FileList result = service.files().list()
+//                    .setPageSize(10)
+//                    .setFields("nextPageToken, files(webViewLink)")
+//                    .execute();
+//            List<File> files = result.getFiles();
+//            if (files == null || files.isEmpty()) {
+//                System.out.println("No files found.");
+//            } else {
+//                System.out.println("Files:");
+//                for (File file : files) {
+//                    System.out.println(file.getWebViewLink());
+//                }
+//            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
