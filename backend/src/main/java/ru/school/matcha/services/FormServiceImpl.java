@@ -2,7 +2,7 @@ package ru.school.matcha.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
-import ru.school.matcha.configs.MyBatisUtil;
+import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.FormMapper;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.exceptions.MatchaException;
