@@ -14,6 +14,7 @@ public class MatchaApplication {
         port(8080);
         webSocket("/socket", ChatWebSocketHandler.class);
         enableCORS();
+        GoogleDrive.run();
         path("/api", () -> {
             path("/auth", () ->
                     post("/login", AuthenticateController.authenticate, new JsonTransformer()));
