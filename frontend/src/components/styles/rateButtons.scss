@@ -16,7 +16,15 @@
   background-color: lightblue;
 }
 
+.RateButtons-Like_active {
+  box-shadow: 0 0 20px rgba(3, 255, 24, 0.959);
+}
+
 .RateButtons-Dislike {
   @extend %rate-button;
   background-color: lightcoral;
+}
+
+.RateButtons-Dislike_active {
+  box-shadow: 0 0 20px rgb(255, 2, 2);
 }

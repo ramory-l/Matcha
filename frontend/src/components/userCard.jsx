@@ -55,7 +55,11 @@ const UserCard = (props) => {
         src={user.img ? user.img : "/default-avatar.png"}
         alt="avatar"
       />
-      <RateButtons onRateChange={handleRateChange} />
+      <RateButtons
+        userLiked={user.isLiked}
+        userDisliked={user.isDisliked}
+        onRateChange={handleRateChange}
+      />
       <span>Rating: {rate}</span>
     </div>
   );
