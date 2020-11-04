@@ -30,3 +30,17 @@ export function rateUser(to, action) {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
+
+export function unrateUser(to, action) {
+  let from = auth.getCurrentUser().id;
+  return http.delete(`${apiEndpoint}${action}/from/${from}/to/${to}`, {
+    headers: { "x-auth-token": `T_${auth.getJwt()}` },
+  });
+}
+
+export function getUserRates(type, outgoing) {
+  let userId = auth.getCurrentUser().id;
+  return http.get(`${apiEndpoint}${userId}/${type}?outgoing=${outgoing}`, {
+    headers: { "x-auth-token": `T_${auth.getJwt()}` },
+  });
+}

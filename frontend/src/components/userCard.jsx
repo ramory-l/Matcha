@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import * as userService from "../services/userService";
 import RateButtons from "./rateButtons";
 import "./styles/userCard.scss";
@@ -11,16 +10,35 @@ const UserCard = (props) => {
   const [rate, setRate] = useState(user.rate);
 
   const handleRateChange = async (action) => {
-    const originalRate = rate;
-    let actionValue = action === "like" ? 1 : -1;
+    const actionValue = action === "like" ? 1 : -1;
 
-    try {
+    if (!user.isLiked && !user.isDisliked) {
       await userService.rateUser(user.id, action);
+      if (action === "like") user.isLiked = true;
+      else user.isDisliked = true;
       setRate((prev) => prev + actionValue);
-    } catch (ex) {
-      if (ex.response && ex.response.status === 400)
-        toast.error(`You have already ${action}d this user!`);
-      setRate(originalRate);
+    } else if (user.isLiked) {
+      user.isLiked = false;
+      if (action === "like") {
+        await userService.unrateUser(user.id, action);
+        setRate((prev) => prev - 1);
+      } else {
+        await userService.unrateUser(user.id, "like");
+        await userService.rateUser(user.id, action);
+        user.isDisliked = true;
+        setRate((prev) => prev - 2);
+      }
+    } else if (user.isDisliked) {
+      user.isDisliked = false;
+      if (action === "dislike") {
+        await userService.unrateUser(user.id, action);
+        setRate((prev) => prev + 1);
+      } else {
+        await userService.unrateUser(user.id, "dislike");
+        await userService.rateUser(user.id, action);
+        user.isLiked = true;
+        setRate((prev) => prev + 2);
+      }
     }
   };
 

@@ -12,18 +12,31 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [likes, setLikes] = useState([]);
+  const [dislikes, setDislikes] = useState([]);
   const pageSize = useState(10)[0];
 
   useEffect(() => {
     async function fetchUsers() {
-      const { data } = await userService.getUsers();
-      setUsers(data);
+      const { data: users } = await userService.getUsers();
+      const { data: likes } = await userService.getUserRates("likes", true);
+      const { data: dislikes } = await userService.getUserRates(
+        "dislikes",
+        true
+      );
+      setLikes(likes);
+      setDislikes(dislikes);
+      setUsers(users);
       setIsLoading(false);
     }
     fetchUsers();
   }, []);
 
-  const filtered = users.filter((user) => user.id !== auth.getCurrentUser().id);
+  const filtered = users.filter((user) => {
+    if (likes.includes(user.id)) user.isLiked = true;
+    if (dislikes.includes(user.id)) user.isDisliked = true;
+    return user.id !== auth.getCurrentUser().id;
+  });
   const paginatedUsers = paginate(filtered, currentPage, pageSize);
 
   const handlePageChange = (page) => {
