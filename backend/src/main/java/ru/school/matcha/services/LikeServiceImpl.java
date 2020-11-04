@@ -2,13 +2,15 @@ package ru.school.matcha.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
-import ru.school.matcha.configs.MyBatisUtil;
+import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.LikeMapper;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.services.interfaces.LikeService;
 import ru.school.matcha.services.interfaces.UserService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -60,6 +62,17 @@ public class LikeServiceImpl implements LikeService {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
             return likeMapper.getLikes(id, like, outgoing);
+        }
+    }
+
+    @Override
+    public Map<String, List<Long>> getLikes(Long id, Boolean outgoing) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
+            Map<String, List<Long>> likes = new HashMap<>();
+            likes.put("like", likeMapper.getLikes(id, true, outgoing));
+            likes.put("dislike", likeMapper.getLikes(id, false, outgoing));
+            return likes;
         }
     }
 

@@ -1,4 +1,4 @@
-package ru.school.matcha.configs;
+package ru.school.matcha.utils;
 
 import java.io.IOException;
 import java.io.Reader;

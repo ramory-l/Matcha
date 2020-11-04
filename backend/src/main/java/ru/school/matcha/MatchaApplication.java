@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.controllers.*;
 import ru.school.matcha.converters.*;
 import ru.school.matcha.handlers.ChatWebSocketHandler;
+import ru.school.matcha.utils.GoogleDrive;
 
 import static spark.Spark.*;
 
@@ -14,6 +15,7 @@ public class MatchaApplication {
         port(8080);
         webSocket("/socket", ChatWebSocketHandler.class);
         enableCORS();
+        GoogleDrive.run();
         path("/api", () -> {
             path("/auth", () ->
                     post("/login", AuthenticateController.authenticate, new JsonTransformer()));

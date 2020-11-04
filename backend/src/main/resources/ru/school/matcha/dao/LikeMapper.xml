@@ -13,13 +13,11 @@
         <if test="outgoing">
             "from" = #{id}
         </if>
-        <if test="like != null">
-            <if test="like">
-                AND "like" = true
-            </if>
-            <if test="!like">
-                AND "like" = false
-            </if>
+        <if test="like">
+            AND "like" = true
+        </if>
+        <if test="!like">
+            AND "like" = false
         </if>
     </select>
 
