@@ -8,6 +8,7 @@ import spark.HaltException;
 import spark.Route;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Long.parseLong;
 
@@ -74,7 +75,7 @@ public class LikeController {
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
             AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, null, outgoing);
+            Map<String, List<Long>> likes = likeService.getLikes(id, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
