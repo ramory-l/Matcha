@@ -1,21 +1,29 @@
 package ru.school.matcha;
 
+import com.google.api.client.util.Charsets;
+import com.google.common.io.ByteSource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.io.Resources;
 import ru.school.matcha.controllers.*;
 import ru.school.matcha.converters.*;
 import ru.school.matcha.handlers.ChatWebSocketHandler;
 import ru.school.matcha.utils.GoogleDrive;
+import ru.school.matcha.utils.ImageCoder;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import static spark.Spark.*;
 
 @Slf4j
 public class MatchaApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         port(8080);
         webSocket("/socket", ChatWebSocketHandler.class);
         enableCORS();
-        GoogleDrive.run();
+//        GoogleDrive.run();
+//        GoogleDrive.createFile("test.jpg");
         path("/api", () -> {
             path("/auth", () ->
                     post("/login", AuthenticateController.authenticate, new JsonTransformer()));

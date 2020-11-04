@@ -6,6 +6,7 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -28,8 +29,9 @@ public class GoogleDrive {
     private static final String APPLICATION_NAME = "Matcha";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "backend/tokens";
-    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY);
+    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
     private static final String CREDENTIALS = "credentials.json";
+    private static Drive service;
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) {
         try {
@@ -51,10 +53,25 @@ public class GoogleDrive {
         return null;
     }
 
+    public static void createFile(String fileName) {
+        try {
+            File fileMetadata = new File();
+            fileMetadata.setName(fileName);
+            java.io.File filePath = new java.io.File("backend/images/" + fileName);
+            FileContent mediaContent = new FileContent("image/jpeg", filePath);
+            File file = service.files().create(fileMetadata, mediaContent)
+                    .setFields("webViewLink")
+                    .execute();
+            System.out.println("File webViewLink: " + file.getWebViewLink());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void run() {
         try {
-            final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-            Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+            NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                     .setApplicationName(APPLICATION_NAME).build();
             FileList result = service.files().list()
                     .setPageSize(10)
