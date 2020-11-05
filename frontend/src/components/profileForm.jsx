@@ -1,6 +1,7 @@
 import React from "react";
 import Joi from "joi";
 import Form from "./common/form";
+import * as userService from "../services/userService";
 
 class ProfileForm extends Form {
   state = {
@@ -8,7 +9,10 @@ class ProfileForm extends Form {
       username: "",
       firstName: "",
       lastName: "",
+      gender: "",
       email: "",
+      birthday: "",
+      description: "",
       password: "",
     },
     errors: {},
@@ -31,7 +35,10 @@ class ProfileForm extends Form {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
+      gender: user.gender || "",
       email: user.email,
+      birthday: user.birthday || "",
+      description: user.description || "",
       password: "",
     };
   }
@@ -40,15 +47,18 @@ class ProfileForm extends Form {
     username: Joi.string().min(2).required().label("Username"),
     firstName: Joi.string().required().label("First Name"),
     lastName: Joi.string().required().label("Last Name"),
+    gender: Joi.string().required().label("Gender"),
     email: Joi.string()
       .email({ tlds: false })
       .required()
       .label("Email address"),
+    birthday: Joi.any().optional(),
+    description: Joi.any().optional(),
     password: Joi.string().required().label("Password"),
   });
 
-  doSubmit = () => {
-    console.log("saved");
+  doSubmit = async () => {
+    await userService.updateUser(this.state.data);
   };
 
   render() {
@@ -60,6 +70,10 @@ class ProfileForm extends Form {
         {this.renderInput("username", "Username", readonly)}
         {this.renderInput("firstName", "First Name", readonly)}
         {this.renderInput("lastName", "Last Name", readonly)}
+        {readonly
+          ? this.renderInput("gender", "Gender", readonly)
+          : this.renderSelect("gender", "Gender", ["woman", "man"])}
+
         {this.renderInput("email", "Email address", readonly)}
         {readonly
           ? null
