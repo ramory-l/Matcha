@@ -48,8 +48,17 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setEmail(source.getEmail());
         result.setPassword(source.getPassword());
         if (nonNull(source.getGender())) {
-            Gender gender = source.getGender().equals("m") ? Gender.MAN : Gender.WOMAN;
-            result.setGender(gender.getGender());
+            Gender gender = null;
+            if (source.getGender().equals("m")) {
+                gender = Gender.MAN;
+            } else if (source.getGender().equals("w")) {
+                gender = Gender.WOMAN;
+            }
+            if (isNull(gender)) {
+                result.setGender(null);
+            } else {
+                result.setGender(gender.getGender());
+            }
         }
         result.setBirthday(source.getBirthday());
         result.setDescription(source.getDescription());
