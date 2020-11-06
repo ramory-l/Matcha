@@ -6,14 +6,11 @@ import * as userService from "../services/userService";
 class ProfileForm extends Form {
   state = {
     data: {
-      username: "",
       firstName: "",
       lastName: "",
       gender: "",
-      email: "",
       birthday: "",
       description: "",
-      password: "",
     },
     errors: {},
   };
@@ -32,29 +29,20 @@ class ProfileForm extends Form {
 
   mapToViewModel(user) {
     return {
-      username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
       gender: user.gender || "",
-      email: user.email,
       birthday: user.birthday || "",
       description: user.description || "",
-      password: "",
     };
   }
 
   schema = Joi.object({
-    username: Joi.string().min(2).required().label("Username"),
     firstName: Joi.string().required().label("First Name"),
     lastName: Joi.string().required().label("Last Name"),
     gender: Joi.string().required().label("Gender"),
-    email: Joi.string()
-      .email({ tlds: false })
-      .required()
-      .label("Email address"),
     birthday: Joi.any().optional(),
     description: Joi.any().optional(),
-    password: Joi.string().required().label("Password"),
   });
 
   doSubmit = async () => {
@@ -62,22 +50,18 @@ class ProfileForm extends Form {
   };
 
   render() {
-    const username = this.props.match.params.username;
-    const readonly = username === "me" ? false : true;
+    const readonly = !this.props.isMe;
+    const { firstName } = this.state.data;
     return (
       <form onSubmit={this.handleSubmit}>
-        <h1>{username === "me" ? "My" : username} Profile</h1>
-        {this.renderInput("username", "Username", readonly)}
+        <h1>{this.props.isMe ? "My" : `${firstName}'s`} Profile</h1>
         {this.renderInput("firstName", "First Name", readonly)}
         {this.renderInput("lastName", "Last Name", readonly)}
+        {this.renderDatePicker("birthday", "Birthday")}
         {readonly
           ? this.renderInput("gender", "Gender", readonly)
           : this.renderSelect("gender", "Gender", ["woman", "man"])}
-
-        {this.renderInput("email", "Email address", readonly)}
-        {readonly
-          ? null
-          : this.renderInput("password", "Password", readonly, "password")}
+        {this.renderTextarea("description", "Description", readonly)}
         {readonly ? null : this.renderButton("Save")}
       </form>
     );

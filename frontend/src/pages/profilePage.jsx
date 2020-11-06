@@ -52,15 +52,11 @@ const ProfilePage = (props) => {
             )}
           </div>
           <div className="col-6">
-            <ProfileForm {...props} user={user} />
+            <ProfileForm {...props} user={user} isMe={isMe} />
           </div>
           <div className="col-2">
             <ListGroup
-              items={[
-                { _id: "1", name: "Who viewed my profile" },
-                { _id: "2", name: "Who liked me" },
-                { _id: "3", name: "My matches" },
-              ]}
+              items={["Who viewed my profile", "Who liked me", "My matches"]}
             />
           </div>
         </div>

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Input from "./input";
 import CheckBox from "./checkBox";
 import Select from "./select";
+import Textarea from "./textarea";
+import DatePicker from "./datePicker";
 import Joi from "joi";
 
 class Form extends Component {
@@ -88,6 +90,23 @@ class Form extends Component {
         error={errors[name]}
       />
     );
+  }
+
+  renderTextarea(name, label, readonly) {
+    const { data } = this.state;
+    return (
+      <Textarea
+        value={data[name]}
+        name={name}
+        label={label}
+        readonly={readonly}
+      />
+    );
+  }
+
+  renderDatePicker(name, label) {
+    const { data } = this.state;
+    return <DatePicker name={name} label={label} value={data[name]} />;
   }
 }
 

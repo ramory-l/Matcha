@@ -23,12 +23,22 @@ const NavBar = ({ user }) => {
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
             <NavLink className="nav-link" to="/profile/me">
-              My profile
+              My Profile
             </NavLink>
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" to="/messages">
-              My messages
+              Messages
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/photos">
+              Photos
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/settings">
+              Settings
             </NavLink>
           </li>
         </ul>

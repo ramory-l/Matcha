@@ -20,10 +20,10 @@ const Input = ({ readonly, value, name, label, error, ...rest }) => {
           value={value}
           name={name}
           id={name}
-          className="form-control"
+          className={error ? "form-control is-invalid" : "form-control"}
         />
       )}
-      {error && <div className="alert alert-danger">{error}</div>}
+      {error && <div className="text-danger">{error}</div>}
     </div>
   );
 };

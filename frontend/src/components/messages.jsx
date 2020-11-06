@@ -10,13 +10,7 @@ const Messages = (props) => {
     <div className="row">
       <div className="col-3">
         <h2>Your Messages:</h2>
-        <ListGroup
-          items={[
-            { _id: "1", name: "John Conor" },
-            { _id: "2", name: "Putin" },
-            { _id: "3", name: "Gaben" },
-          ]}
-        />
+        <ListGroup items={["John Conor", "Putin", "Gaben"]} />
       </div>
       <div className="col-6">
         <ChatBox />
