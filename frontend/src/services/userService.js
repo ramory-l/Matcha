@@ -46,7 +46,9 @@ export function getUserRates(type, outgoing) {
 }
 
 export function updateUser(user) {
-  return http.put(`${apiEndpoint}`, user, {
+  const tempUser = { ...user };
+  delete tempUser.password;
+  return http.put(`${apiEndpoint}/`, tempUser, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
