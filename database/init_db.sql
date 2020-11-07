@@ -27,11 +27,9 @@ create table "user"
     is_active   boolean                     default true  not null,
     form_id     bigint unique,
     rate        bigint                      default 0     not null,
-    avatar_id   bigint,
     create_ts   timestamp without time zone default now() not null,
     update_ts   timestamp without time zone,
     delete_ts   timestamp without time zone,
-    foreign key (avatar_id) references images (id),
     foreign key (form_id) references form (id)
 );
 
@@ -60,14 +58,6 @@ create table guests
     guest_id  bigserial references "user" (id),
     user_id   bigserial references "user" (id),
     create_ts timestamp without time zone default now() not null
-);
-
-create table images
-(
-    id          bigserial primary key not null,
-    name        text                  not null,
-    link        text                  not null,
-    external_id text                  not null
 );
 
 INSERT INTO public.form (id,

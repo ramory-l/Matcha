@@ -3,7 +3,9 @@ package ru.school.matcha.converters;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.FormDto;
+import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.dto.UserFullDto;
+import ru.school.matcha.enums.Gender;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -45,7 +47,10 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setLastName(source.getLastName());
         result.setEmail(source.getEmail());
         result.setPassword(source.getPassword());
-        result.setGender(source.getGender());
+        if (nonNull(source.getGender())) {
+            Gender gender = source.getGender().equals("m") ? Gender.MAN : Gender.WOMAN;
+            result.setGender(gender.getGender());
+        }
         result.setBirthday(source.getBirthday());
         result.setDescription(source.getDescription());
         Converter<FormDto, Form> formConverter = new FormConverter();
