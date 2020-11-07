@@ -2,7 +2,7 @@ import http from "./httpService";
 import { apiUrl } from "../config.json";
 import auth from "./authService";
 
-const apiEndpoint = apiUrl + "/user";
+const apiEndpoint = apiUrl + "/users";
 
 export function register(user) {
   return http.post(apiEndpoint, {
