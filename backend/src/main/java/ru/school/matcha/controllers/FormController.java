@@ -21,17 +21,18 @@ public class FormController {
 
     private static final Converter<FormDto, Form> formConverter;
     private static final FormService formService;
+    private static final Serializer<FormDto> serializerFormDto;
 
     static {
         formService = new FormServiceImpl();
         formConverter = new FormConverter();
+        serializerFormDto = new Serializer<>();
     }
 
     public static Route createForm = (request, response) -> {
         try {
             AuthorizationController.authorize(request);
-            Serializer<FormDto> serializer = new Serializer<>();
-            FormDto formDto = serializer.deserialize(request.body(), FormDto.class);
+            FormDto formDto = serializerFormDto.deserialize(request.body(), FormDto.class);
             Form form = formConverter.convertFromDto(formDto);
             Long formId = formService.createForm(form);
             response.status(200);
@@ -96,14 +97,12 @@ public class FormController {
         return response.body();
     };
 
-    public static Route updateFormId = (request, response) -> {
-        Long userId = parseLong(request.params("userId"));
+    public static Route updateForm = (request, response) -> {
         try {
             AuthorizationController.authorize(request);
-            Serializer<FormDto> serializer = new Serializer<>();
-            FormDto formDto = serializer.deserialize(request.body(), FormDto.class);
+            FormDto formDto = serializerFormDto.deserialize(request.body(), FormDto.class);
             Form form = formConverter.convertFromDto(formDto);
-            formService.updateFormById(form);
+            formService.updateForm(form);
             response.status(204);
         } catch (HaltException ex) {
             response.status(ex.statusCode());

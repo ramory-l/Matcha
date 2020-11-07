@@ -13,7 +13,7 @@ public interface FormService {
 
     Long createForm(Form form);
 
-    void updateFormById(Form form);
+    void updateForm(Form form);
 
     void deleteFormById(Long id);
 

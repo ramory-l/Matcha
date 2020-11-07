@@ -61,7 +61,7 @@ public class MatchaApplication {
                 post("/", FormController.createForm, new JsonTransformer());
                 get("/all", FormController.getAllForms, new JsonTransformer());
                 get("/:id", FormController.getFormById, new JsonTransformer());
-                put("/:id", FormController.updateFormId, new JsonTransformer());
+                put("/", FormController.updateForm, new JsonTransformer());
                 delete("/:id", FormController.deleteFormById, new JsonTransformer());
             });
         });

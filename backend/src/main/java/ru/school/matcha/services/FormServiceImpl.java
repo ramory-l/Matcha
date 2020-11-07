@@ -58,7 +58,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public void updateFormById(Form form) {
+    public void updateForm(Form form) {
         if (isNull(form.getId())) {
             throw new MatchaException("The update could not be completed because the identifier was not specified");
         }
