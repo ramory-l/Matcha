@@ -1,6 +1,7 @@
 import http from "./httpService";
 import { apiUrl } from "../config.json";
 import auth from "./authService";
+import moment from "moment";
 
 const apiEndpoint = apiUrl + "/user";
 
@@ -47,7 +48,8 @@ export function getUserRates(type, outgoing) {
 
 export function updateUser(user) {
   const tempUser = { ...user };
-  delete tempUser.password;
+  tempUser.username = auth.getCurrentUser().sub;
+  tempUser.birthday = moment(user.birthday).valueOf();
   return http.put(`${apiEndpoint}/`, tempUser, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });

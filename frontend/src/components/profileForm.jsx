@@ -2,6 +2,8 @@ import React from "react";
 import Joi from "joi";
 import Form from "./common/form";
 import * as userService from "../services/userService";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 class ProfileForm extends Form {
   state = {
@@ -16,7 +18,11 @@ class ProfileForm extends Form {
   };
 
   populateProfileForm() {
-    this.setState({ data: this.mapToViewModel(this.props.user) });
+    this.setState({
+      data: this.mapToViewModel(
+        this.state.data.firstName ? this.state.data : this.props.user
+      ),
+    });
   }
 
   componentDidMount() {
@@ -32,7 +38,7 @@ class ProfileForm extends Form {
       firstName: user.firstName,
       lastName: user.lastName,
       gender: user.gender || "",
-      birthday: user.birthday || "",
+      birthday: moment(user.birthday).format("YYYY-MM-DD") || "",
       description: user.description || "",
     };
   }
@@ -40,28 +46,36 @@ class ProfileForm extends Form {
   schema = Joi.object({
     firstName: Joi.string().required().label("First Name"),
     lastName: Joi.string().required().label("Last Name"),
-    gender: Joi.string().required().label("Gender"),
+    gender: Joi.string().optional(),
     birthday: Joi.any().optional(),
     description: Joi.any().optional(),
   });
 
   doSubmit = async () => {
     await userService.updateUser(this.state.data);
+    toast.success("Changes successfully saved!");
+    this.props.onEditModeChange();
   };
 
   render() {
-    const readonly = !this.props.isMe;
-    const { firstName } = this.state.data;
+    const readonly = !(this.props.editMode && this.props.isMe);
+    const { firstName, lastName } = this.state.data;
     return (
       <form onSubmit={this.handleSubmit}>
-        <h1>{this.props.isMe ? "My" : `${firstName}'s`} Profile</h1>
-        {this.renderInput("firstName", "First Name", readonly)}
-        {this.renderInput("lastName", "Last Name", readonly)}
-        {this.renderDatePicker("birthday", "Birthday")}
+        <h1>
+          {this.props.editMode ? "Editing profile" : firstName + " " + lastName}
+        </h1>
+        {this.props.editMode
+          ? this.renderInput("firstName", "First Name", readonly)
+          : null}
+        {this.props.editMode
+          ? this.renderInput("lastName", "Last Name", readonly)
+          : null}
+        {this.renderDatePicker("birthday", "Birthday", readonly)}
         {readonly
           ? this.renderInput("gender", "Gender", readonly)
           : this.renderSelect("gender", "Gender", ["woman", "man"])}
-        {this.renderTextarea("description", "Description", readonly)}
+        {this.renderTextArea("description", "Description", readonly)}
         {readonly ? null : this.renderButton("Save")}
       </form>
     );

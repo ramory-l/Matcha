@@ -1,18 +1,20 @@
 import React from "react";
 
-const Textarea = ({ label, name, value, readonly }) => {
+const TextArea = ({ label, name, value, readonly, onChange }) => {
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>
       <textarea
         className="form-control"
         id={name}
+        name={name}
         rows="3"
-        defaultValue={value}
+        value={value}
         disabled={readonly}
+        onChange={onChange}
       ></textarea>
     </div>
   );
 };
 
-export default Textarea;
+export default TextArea;

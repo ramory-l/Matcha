@@ -10,6 +10,11 @@ const ProfilePage = (props) => {
   const [user, setUser] = useState(null);
   let username = props.match.params.username;
   let isMe = username === "me" ? true : false;
+  const [editMode, setEditMode] = useState(false);
+
+  const handleEditModeChange = () => {
+    setEditMode((prev) => !prev);
+  };
 
   useEffect(() => {
     async function fetchUser() {
@@ -36,7 +41,15 @@ const ProfilePage = (props) => {
                 Fame rating: <strong>{user.rate}</strong>
               </figcaption>
             </figure>
-            {isMe ? null : (
+            {isMe ? (
+              <button
+                onClick={handleEditModeChange}
+                type="button"
+                className="btn btn-primary"
+              >
+                Edit profile
+              </button>
+            ) : (
               <Link
                 to={{
                   pathname: `/messages/${user.username}`,
@@ -52,7 +65,13 @@ const ProfilePage = (props) => {
             )}
           </div>
           <div className="col-6">
-            <ProfileForm {...props} user={user} isMe={isMe} />
+            <ProfileForm
+              {...props}
+              user={user}
+              isMe={isMe}
+              editMode={editMode}
+              onEditModeChange={handleEditModeChange}
+            />
           </div>
           <div className="col-2">
             <ListGroup
