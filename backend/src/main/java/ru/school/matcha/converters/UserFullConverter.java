@@ -1,14 +1,23 @@
 package ru.school.matcha.converters;
 
 import ru.school.matcha.domain.Form;
+import ru.school.matcha.domain.Image;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.FormDto;
+import ru.school.matcha.dto.ImageDto;
 import ru.school.matcha.dto.UserFullDto;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 public class UserFullConverter extends Converter<UserFullDto, User> {
+
+    private static final Converter<FormDto, Form> formConverter;
+    private static final Converter<ImageDto, Image> imageConverter;
+
+    static {
+        formConverter = new FormConverter();
+        imageConverter = new ImageConverter();
+    }
 
     public UserFullConverter() {
         super(UserFullConverter::convertToEntity, UserFullConverter::convertToDto);
@@ -28,9 +37,14 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setGender(source.getGender());
         result.setBirthday(source.getBirthday());
         result.setDescription(source.getDescription());
-        Converter<FormDto, Form> formConverter = new FormConverter();
         result.setForm(formConverter.convertFromEntity(source.getForm()));
         result.setRate(source.getRate());
+        result.setIsActive(source.getIsActive());
+        result.setAvatar(imageConverter.convertFromEntity(source.getAvatar()));
+        result.setRole(source.getRole());
+        result.setCreateTs(source.getCreateTs());
+        result.setUpdateTs(source.getUpdateTs());
+        result.setDeleteTs(source.getDeleteTs());
         return result;
     }
 
@@ -48,9 +62,15 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setGender(source.getGender());
         result.setBirthday(source.getBirthday());
         result.setDescription(source.getDescription());
-        Converter<FormDto, Form> formConverter = new FormConverter();
         result.setForm(formConverter.convertFromDto(source.getForm()));
         result.setRate(source.getRate());
+        result.setIsActive(source.getIsActive());
+        result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
+        result.setRole(source.getRole());
+        result.setCreateTs(source.getCreateTs());
+        result.setUpdateTs(source.getUpdateTs());
+        result.setDeleteTs(source.getDeleteTs());
         return result;
     }
+
 }

@@ -12,6 +12,5 @@ public class ImageDto {
     private String link;
     private String externalId;
     private Long userId;
-    private Boolean deleted;
 
 }
