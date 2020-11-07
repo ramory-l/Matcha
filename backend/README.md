@@ -28,7 +28,7 @@ body:
 example response: `200 "{jwtToken}"`
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
-## Пользователи (`/api/user/`)
+## Пользователи (`/api/users/`)
 #### Создание юзера
     POST address:8080/api/user (public)
 body:
@@ -161,7 +161,7 @@ example response: `204 ""`
 example response: `204 ""`
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
-## Лайки (`/api/user/like`)
+## Лайки (`/api/user/likes`)
 #### Получение всех лайков юзера с идентификатором `{id}`    
     GET address:8080/api/user/{id}/likes (optional param = ?outgoing=true/false) (private)
 example response:
@@ -182,7 +182,7 @@ example response: `204 ""
 example response: `204 ""`
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
-## Дизлайки (`/api/user/dislike`)
+## Дизлайки (`/api/user/dislikes`)
 #### Получение всех дизлайков юзера с идентификатором `{id}`
     GET address:8080/api/user/{id}/dislikes (optional param = ?outgoing=true/false) (private)
 example response:
@@ -203,3 +203,6 @@ example response: `204 ""`
     OPTIONS address:8080 (public)
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
+## Картинки (`/api/users/images`)
+## Гости (`/api/users/guests`)
+## Тэги (`/api/users/tags`)
