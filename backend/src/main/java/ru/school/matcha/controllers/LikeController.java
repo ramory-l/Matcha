@@ -26,11 +26,10 @@ public class LikeController {
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
             AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, true, outgoing);
+            List<Long> likes = likeService.getLikesByUserId(id, true, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -50,11 +49,10 @@ public class LikeController {
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
             AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, false, outgoing);
+            List<Long> likes = likeService.getLikesByUserId(id, false, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -75,11 +73,10 @@ public class LikeController {
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
             AuthorizationController.authorize(request);
-            Map<String, List<Long>> likes = likeService.getLikes(id, outgoing);
+            Map<String, List<Long>> likes = likeService.getLikesByUserId(id, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -103,7 +100,6 @@ public class LikeController {
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -126,7 +122,6 @@ public class LikeController {
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -149,7 +144,6 @@ public class LikeController {
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -172,7 +166,6 @@ public class LikeController {
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {

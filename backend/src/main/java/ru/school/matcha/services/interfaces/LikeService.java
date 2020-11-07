@@ -5,12 +5,12 @@ import java.util.Map;
 
 public interface LikeService {
 
-    void like(Long from, Long to, boolean like);
+    void like(Long from, Long to, boolean isLike);
 
-    List<Long> getLikes(Long id, Boolean like, Boolean outgoing);
+    List<Long> getLikesByUserId(Long userId, Boolean isLike, Boolean outgoing);
 
-    Map<String, List<Long>> getLikes(Long id, Boolean outgoing);
+    Map<String, List<Long>> getLikesByUserId(Long userId, Boolean outgoing);
 
-    void deleteLike(Long from, Long to, boolean like);
+    void deleteLike(Long from, Long to, boolean isLike);
 
 }

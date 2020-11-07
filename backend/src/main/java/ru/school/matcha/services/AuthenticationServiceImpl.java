@@ -11,15 +11,26 @@ import javax.naming.AuthenticationException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+import static java.util.Objects.isNull;
+
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    private static final UserService userService;
+    private static final JwtTokenProvider jwtTokenProvider;
+
+    static {
+        userService = new UserServiceImpl();
+        jwtTokenProvider = new JwtTokenProvider();
+    }
+
     @Override
-    public String authenticate(String username, String password) throws AuthenticationException, InvalidKeySpecException, NoSuchAlgorithmException {
-        UserService userService = new UserServiceImpl();
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
-        User user = userService.getUserByUsername(username)
-                .orElseThrow(() -> new AuthenticationException(String.format("User with username: %s not found", username)));
+    public String authenticate(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException {
+        log.info("Authenticate user with username: {}", username);
+        User user = userService.getUserByUsername(username);
+        if (isNull(user)) {
+            throw new AuthenticationException(String.format("User with username: %s not found", username));
+        }
         String encryptedPassword = userService.getUserEncryptPasswordById(user.getId());
         if (!PasswordCipher.validatePassword(password, encryptedPassword)) {
             throw new AuthenticationException("Users password is wrong");

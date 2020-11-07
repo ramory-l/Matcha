@@ -1,6 +1,7 @@
 package ru.school.matcha.security.jwt;
 
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.io.Resources;
 import ru.school.matcha.exceptions.JwtAuthenticationException;
 
@@ -12,6 +13,7 @@ import java.util.Properties;
 
 import static java.lang.Long.parseLong;
 
+@Slf4j
 public class JwtTokenProvider {
 
     private final String secret;

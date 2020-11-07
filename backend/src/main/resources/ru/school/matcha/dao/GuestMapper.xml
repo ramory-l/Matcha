@@ -1,0 +1,22 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.school.matcha.dao.GuestMapper">
+
+    <insert id="createGuest">
+        INSERT INTO guests(guest_id, user_id)
+        VALUES (#{guestId}, #{userId})
+    </insert>
+
+    <delete id="deleteGuest">
+        DELETE
+        FROM guests
+        WHERE user_id = #{userId}
+          AND guest_id = #{guestId}
+    </delete>
+
+    <select id="getGuestsByUserId" resultType="java.lang.Long">
+        SELECT guest_id
+        FROM guests
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>

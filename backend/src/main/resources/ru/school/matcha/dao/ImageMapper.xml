@@ -1,0 +1,65 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.school.matcha.dao.ImageMapper">
+
+    <resultMap id="Image" type="ru.school.matcha.domain.Image">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="link" column="link"/>
+        <result property="externalId" column="external_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="deleted" column="deleted"/>
+        <result property="createTs" column="create_ts"/>
+        <result property="deleteTs" column="delete_ts"/>
+    </resultMap>
+
+    <insert id="createImage" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO images(name, link, external_id, user_id)
+        VALUES (#{name}, #{link}, #{externalId}, #{user_id})
+    </insert>
+
+    <update id="deleteImageById">
+        UPDATE "images"
+        SET deleted   = true,
+            delete_ts = now()
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteAllImagesByUserId">
+        UPDATE "images"
+        SET deleted   = true,
+            delete_ts = now()
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteImageByExternalId">
+        UPDATE "images"
+        SET deleted   = true,
+            delete_ts = now()
+        WHERE external_id = #{externalId}
+    </delete>
+
+    <select id="getImageById" resultMap="Image">
+        SELECT *
+        FROM images
+        WHERE id = #{id}
+    </select>
+
+    <select id="getAvatarByUserId" resultMap="Image">
+        SELECT *
+        FROM images
+        WHERE id = (SELECT avatar_id FROM "user" WHERE id = #{id})
+    </select>
+
+    <select id="getImagesByUserId" resultMap="Image">
+        SELECT *
+        FROM images
+        WHERE user_id = #{id}
+    </select>
+
+    <select id="getImageByExternalId" resultMap="Image">
+        SELECT *
+        FROM images
+        WHERE external_id = #{externalId}
+    </select>
+
+</mapper>

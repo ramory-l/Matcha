@@ -8,15 +8,15 @@
         FROM likes
         WHERE
         <if test="outgoing == null or !outgoing">
-            "to" = #{id}
+            "to" = #{userId}
         </if>
         <if test="outgoing">
-            "from" = #{id}
+            "from" = #{userId}
         </if>
-        <if test="like">
+        <if test="isLike">
             AND "like" = true
         </if>
-        <if test="!like">
+        <if test="!isLike">
             AND "like" = false
         </if>
     </select>
@@ -26,10 +26,10 @@
         FROM likes
         WHERE "to" = #{to}
         AND "from" = #{from}
-        <if test="like">
+        <if test="isLike">
             AND "like" = true
         </if>
-        <if test="!like">
+        <if test="!isLike">
             AND "like" = false
         </if>
     </select>
@@ -39,10 +39,10 @@
         FROM likes
         WHERE "from" = #{from}
         AND "to" = #{to}
-        <if test="like">
+        <if test="isLike">
             AND "like" = true
         </if>
-        <if test="!like">
+        <if test="!isLike">
             AND "like" = false
         </if>
     </delete>
@@ -50,18 +50,18 @@
     <update id="deleteRate">
         UPDATE "user"
         SET rate = (rate - 1)
-        WHERE id = #{id}
+        WHERE id = #{userId}
     </update>
 
     <insert id="like">
         INSERT INTO likes("from", "to", "like")
-        values (#{from}, #{to}, #{like})
+        values (#{from}, #{to}, #{isLike})
     </insert>
 
     <update id="addRate">
         UPDATE "user"
         SET rate = (rate + 1)
-        WHERE id = #{id}
+        WHERE id = #{userId}
     </update>
 
 </mapper>

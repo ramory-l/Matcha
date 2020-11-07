@@ -7,15 +7,11 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class Image {
+public class Tag {
 
     private Long id;
-    private String name;
-    private String link;
-    private String externalId;
+    private String tag;
     private Long userId;
-    private Boolean deleted;
     private Date createTs;
-    private Date deleteTs;
 
 }

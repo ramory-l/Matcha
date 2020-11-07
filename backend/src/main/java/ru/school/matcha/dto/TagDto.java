@@ -5,9 +5,10 @@ import lombok.Data;
 
 @Data
 @JsonAutoDetect
-public class AuthDto {
+public class TagDto {
 
-    private String username;
-    private String password;
+    private Long id;
+    private String tag;
+    private Long userId;
 
 }

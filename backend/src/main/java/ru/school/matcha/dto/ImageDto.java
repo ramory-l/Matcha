@@ -1,13 +1,11 @@
-package ru.school.matcha.domain;
+package ru.school.matcha.dto;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
-@NoArgsConstructor
-public class Image {
+@JsonAutoDetect
+public class ImageDto {
 
     private Long id;
     private String name;
@@ -15,7 +13,5 @@ public class Image {
     private String externalId;
     private Long userId;
     private Boolean deleted;
-    private Date createTs;
-    private Date deleteTs;
 
 }

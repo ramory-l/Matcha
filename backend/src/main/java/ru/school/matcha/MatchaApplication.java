@@ -28,8 +28,9 @@ public class MatchaApplication {
                 get("/:id/dislikes", LikeController.getDislikes, new JsonTransformer());
                 get("/:id/likes", LikeController.getLikes, new JsonTransformer());
                 get("/:id/likesDislikes", LikeController.getAllLikesAndDislikes, new JsonTransformer());
-//                get("/:id/guests", , new JsonTransformer());
-//                get("/:id/images", , new JsonTransformer());
+                get("/:id/guests", GuestController.getGuestsByUserId, new JsonTransformer());
+                get("/:id/images", ImageController.getImagesByUserId, new JsonTransformer());
+                get("/:id/tags", TagController.getTagsByUserId, new JsonTransformer());
                 put("/", UserController.updateUser, new JsonTransformer());
                 delete("/:id", UserController.deleteUserById, new JsonTransformer());
                 delete("/username/:username", UserController.deleteUserByUsername, new JsonTransformer());
@@ -42,30 +43,26 @@ public class MatchaApplication {
                     delete("/from/:from/to/:to", LikeController.deleteDislike, new JsonTransformer());
                 });
                 path("/tags", () -> {
-//                    post("/", , new JsonTransformer());
-//                    get("/:id", , new JsonTransformer());
-//                    get("/", , new JsonTransformer());
-//                    delete("/:id", , new JsonTransformer());
+                    post("/", TagController.createTag, new JsonTransformer());
+                    get("/", TagController.getTags, new JsonTransformer());
+                    delete("/:id", TagController.deleteTag, new JsonTransformer());
                 });
                 path("/guests", () -> {
-//                    post("/from/:from/to/:to", , new JsonTransformer());
-//                    get("/:id", , new JsonTransformer());
-//                    delete("/from/:from/to/:to", , new JsonTransformer());
+                    post("/from/:from/to/:to", GuestController.createGuest, new JsonTransformer());
+                    delete("/from/:from/to/:to", GuestController.deleteGuest, new JsonTransformer());
                 });
                 path("/images", () -> {
-//                    post("/", , new JsonTransformer());
-//                    get("/:id", , new JsonTransformer());
-//                    delete("/:id", , new JsonTransformer());
+                    post("/", ImageController.createImage, new JsonTransformer());
+                    get("/:id", ImageController.getImageById, new JsonTransformer());
+                    delete("/:id", ImageController.deleteImageById, new JsonTransformer());
                 });
             });
             path("/forms", () -> {
                 post("/", FormController.createForm, new JsonTransformer());
                 get("/all", FormController.getAllForms, new JsonTransformer());
                 get("/:id", FormController.getFormById, new JsonTransformer());
-                get("/user/:id", FormController.getFormByUserId, new JsonTransformer());
-                put("/{userId}", FormController.updateFormByUserId, new JsonTransformer());
+                put("/:id", FormController.updateFormId, new JsonTransformer());
                 delete("/:id", FormController.deleteFormById, new JsonTransformer());
-                delete("/user/:id", FormController.deleteFormByUserId, new JsonTransformer());
             });
         });
     }

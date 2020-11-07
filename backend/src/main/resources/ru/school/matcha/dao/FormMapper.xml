@@ -26,7 +26,7 @@
                 #{flirt})
     </insert>
 
-    <update id="updateForm">
+    <update id="updateFormById">
         UPDATE form SET
         <if test="man != null">
             man = #{man},
@@ -50,17 +50,9 @@
     </update>
 
     <delete id="deleteFormById">
-        <if test="id">
-            DELETE FROM form
-            WHERE id = #{id}
-        </if>
-    </delete>
-
-    <delete id="deleteFormByUserId">
-        <if test="id">
-            DELETE FROM form
-            WHERE id = (SELECT form_id FROM "user" WHERE id = #{id})
-        </if>
+        DELETE
+        FROM form
+        WHERE id = #{id}
     </delete>
 
     <delete id="deleteAllInactiveForms">
@@ -70,44 +62,14 @@
     </delete>
 
     <select id="getAllForms" resultMap="Form">
-        SELECT id,
-               man,
-               woman,
-               friendship,
-               love,
-               sex,
-               flirt
+        SELECT *
         FROM form
     </select>
 
     <select id="getFormById" resultMap="Form">
-        <if test="id">
-            SELECT
-            id,
-            man,
-            woman,
-            friendship,
-            love,
-            sex,
-            flirt
-            FROM form
-            WHERE id = #{id}
-        </if>
-    </select>
-
-    <select id="getFormByUserId" resultMap="Form">
-        <if test="id">
-            SELECT
-            id,
-            man,
-            woman,
-            friendship,
-            love,
-            sex,
-            flirt
-            FROM form
-            WHERE id = (SELECT form_id FROM "user" WHERE id = #{id})
-        </if>
+        SELECT *
+        FROM form
+        WHERE id = #{id}
     </select>
 
 </mapper>

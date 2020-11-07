@@ -8,16 +8,16 @@ import java.util.List;
 @Mapper
 public interface LikeMapper {
 
-    void like(@Param("from") Long from, @Param("to") Long to, @Param("like") Boolean like);
+    void like(@Param("from") Long from, @Param("to") Long to, @Param("isLike") Boolean isLike);
 
-    List<Long> getLikes(@Param("id") Long id, @Param("like") Boolean like, @Param("outgoing") Boolean outgoing);
+    List<Long> getLikes(@Param("userId") Long userId, @Param("isLike") Boolean isLike, @Param("outgoing") Boolean outgoing);
 
-    void deleteLike(@Param("from") Long from, @Param("to") Long to, @Param("like") Boolean like);
+    void deleteLike(@Param("from") Long from, @Param("to") Long to, @Param("isLike") Boolean isLike);
 
-    void addRate(Long id);
+    void addRate(Long userId);
 
-    void deleteRate(Long id);
+    void deleteRate(Long userId);
 
-    Long getLike(@Param("from") Long from, @Param("to") Long to, @Param("like") Boolean like);
+    Long getLike(@Param("from") Long from, @Param("to") Long to, @Param("isLike") Boolean isLike);
 
 }

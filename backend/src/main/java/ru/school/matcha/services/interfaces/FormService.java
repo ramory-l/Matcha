@@ -9,17 +9,13 @@ public interface FormService {
 
     List<Form> getAllForms();
 
-    Optional<Form> getFormById(Long id);
-
-    Optional<Form> getFormByUserId(Long id);
+    Form getFormById(Long id);
 
     Long createForm(Form form);
 
-    void updateForm(Form form, Long userId);
+    void updateFormById(Form form);
 
     void deleteFormById(Long id);
-
-    void deleteFormByUserId(Long id);
 
     void deleteAllInactiveForms();
 

@@ -10,9 +10,15 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class AuthorizationServiceImpl implements AuthorizationService {
 
+    private static final JwtTokenProvider jwtTokenProvider;
+
+    static {
+        jwtTokenProvider = new JwtTokenProvider();
+    }
+
     @Override
-    public boolean authorize(String token) {
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+    public boolean authorize(String token) throws JwtAuthenticationException {
+        log.info("Authorize user with token: {}", token);
         token = jwtTokenProvider.resolveToken(token);
         if (isNull(token)) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");

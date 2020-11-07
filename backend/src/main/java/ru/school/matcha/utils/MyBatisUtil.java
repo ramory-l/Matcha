@@ -3,11 +3,14 @@ package ru.school.matcha.utils;
 import java.io.IOException;
 import java.io.Reader;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+@Slf4j
 public class MyBatisUtil {
+
     private static final SqlSessionFactory factory;
 
     private MyBatisUtil() {

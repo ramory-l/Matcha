@@ -60,7 +60,6 @@ public class UserController {
             userService.batchCreateUsers(users);
             response.status(204);
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -83,7 +82,6 @@ public class UserController {
             response.status(200);
             return result;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -102,13 +100,11 @@ public class UserController {
         Long id = parseLong(request.params("id"));
         try {
             AuthorizationController.authorize(request);
-            User user = userService.getUserById(id)
-                    .orElseThrow(() -> new MatchaException(String.format("User with id: %d doesn't exits", id)));
+            User user = userService.getUserById(id);
             UserDto result = userConverter.convertFromEntity(user);
             response.status(200);
             return result;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -127,13 +123,11 @@ public class UserController {
         String username = request.params("username");
         try {
             AuthorizationController.authorize(request);
-            User user = userService.getUserByUsername(username)
-                    .orElseThrow(() -> new MatchaException(String.format("User with username: %s doesn't exist", username)));
+            User user = userService.getUserByUsername(username);
             UserDto result = userConverter.convertFromEntity(user);
             response.status(200);
             return result;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -155,11 +149,8 @@ public class UserController {
             UserDto userDto = serializer.deserialize(request.body(), UserDto.class);
             User user = userConverter.convertFromDto(userDto);
             userService.updateUser(user);
-            response.status(200);
-//                        условие в зависимости от параметра
-            response.body(String.format("User with username: %s updated", user.getUsername()));
+            response.status(204);
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -179,10 +170,8 @@ public class UserController {
         try {
             AuthorizationController.authorize(request);
             userService.deleteUserById(id);
-            response.status(200);
-            response.body(String.format("Removing user with id %d was successful", id));
+            response.status(204);
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -202,10 +191,8 @@ public class UserController {
         try {
             AuthorizationController.authorize(request);
             userService.deleteUserByUsername(username);
-            response.status(200);
-            response.body(String.format("Removing user with username %s was successful", username));
+            response.status(204);
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {

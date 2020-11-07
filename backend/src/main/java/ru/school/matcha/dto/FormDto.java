@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @JsonAutoDetect
 public class FormDto {
+
     private Long id;
     private boolean man;
     private boolean woman;
@@ -13,4 +14,5 @@ public class FormDto {
     private boolean love;
     private boolean sex;
     private boolean flirt;
+
 }
