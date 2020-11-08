@@ -35,7 +35,6 @@ create table "user"
     create_ts   timestamp without time zone default now()  not null,
     update_ts   timestamp without time zone,
     delete_ts   timestamp without time zone,
-    foreign key (avatar_id) references images (id),
     foreign key (form_id) references form (id)
 );
 
