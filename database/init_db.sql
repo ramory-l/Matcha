@@ -77,23 +77,20 @@ create table images
     create_ts   timestamp without time zone default now() not null
 );
 
-INSERT INTO public.form (id,
-                         man,
+INSERT INTO public.form (man,
                          woman,
                          friendship,
                          love,
                          sex,
                          flirt)
-VALUES (1,
-        false,
+VALUES (false,
         false,
         false,
         false,
         false,
         false);
 
-INSERT INTO public."user" (id,
-                           username,
+INSERT INTO public."user" (username,
                            first_name,
                            last_name,
                            password,
@@ -104,8 +101,7 @@ INSERT INTO public."user" (id,
                            is_active,
                            form_id,
                            role)
-VALUES (1,
-        'admin',
+VALUES ('admin',
         'admin',
         'admin',
         '1000:21442a0a98c8999af3d0d82b741772f7:2a842098fecb2f83a8b37dab1554a4fa4a21bb3df6caee0a54fcf07c2b0010b55e4bec925c0c86eeea6e095e89b47883fee143f50594c1c18dc02170238fe006',
@@ -114,5 +110,5 @@ VALUES (1,
         null,
         'I AM SUPERMAN!',
         true,
-        1,
+        (select id from form limit 1),
         'ADMIN');
