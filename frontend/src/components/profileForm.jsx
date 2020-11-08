@@ -19,9 +19,7 @@ class ProfileForm extends Form {
 
   populateProfileForm() {
     this.setState({
-      data: this.mapToViewModel(
-        this.state.data.firstName ? this.state.data : this.props.user
-      ),
+      data: this.mapToViewModel(this.props.user),
     });
   }
 

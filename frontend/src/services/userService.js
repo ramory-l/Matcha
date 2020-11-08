@@ -3,7 +3,7 @@ import { apiUrl } from "../config.json";
 import auth from "./authService";
 import moment from "moment";
 
-const apiEndpoint = apiUrl + "/user";
+const apiEndpoint = apiUrl + "/users";
 
 export function register(user) {
   return http.post(apiEndpoint, {
@@ -27,14 +27,14 @@ export function getUser(username) {
 
 export function rateUser(to, action) {
   let from = auth.getCurrentUser().id;
-  return http.post(`${apiEndpoint}/${action}/from/${from}/to/${to}`, null, {
+  return http.post(`${apiEndpoint}/${action}s/from/${from}/to/${to}`, null, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
 
 export function unrateUser(to, action) {
   let from = auth.getCurrentUser().id;
-  return http.delete(`${apiEndpoint}/${action}/from/${from}/to/${to}`, {
+  return http.delete(`${apiEndpoint}/${action}s/from/${from}/to/${to}`, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
