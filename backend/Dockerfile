@@ -17,6 +17,5 @@ ENV TZ=Europe/Moscow
 WORKDIR /backend
 COPY . /backend
 EXPOSE 8080
-EXPOSE 8888
 RUN mvn install assembly:single
 CMD ["java", "-cp", "target/Matcha.jar", "ru.school.matcha.MatchaApplication"]

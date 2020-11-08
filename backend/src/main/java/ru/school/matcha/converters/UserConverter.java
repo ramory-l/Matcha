@@ -6,7 +6,6 @@ import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.FormDto;
 import ru.school.matcha.dto.ImageDto;
 import ru.school.matcha.dto.UserDto;
-import ru.school.matcha.enums.Gender;
 
 import static java.util.Objects.isNull;
 
@@ -53,10 +52,7 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setFirstName(source.getFirstName());
         result.setLastName(source.getLastName());
         result.setEmail(source.getEmail());
-        if (nonNull(source.getGender())) {
-            Gender gender = source.getGender().equals("m") ? Gender.MAN : Gender.WOMAN;
-            result.setGender(gender.getGender());
-        }
+        result.setGender(source.getGender());
         result.setBirthday(source.getBirthday());
         result.setDescription(source.getDescription());
         result.setForm(formConverter.convertFromDto(source.getForm()));
