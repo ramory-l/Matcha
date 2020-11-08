@@ -21,7 +21,9 @@ import static java.lang.Long.parseLong;
 public class FormController {
 
     private static final Converter<FormDto, Form> formConverter;
+
     private static final FormService formService;
+
     private static final Serializer<FormDto> serializerFormDto;
 
     static {

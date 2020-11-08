@@ -33,4 +33,5 @@ public class Serializer<T>  {
         CollectionType javaType = mapper.getTypeFactory().constructCollectionType(List.class, valueType);
         return mapper.readValue(json, javaType);
     }
+
 }

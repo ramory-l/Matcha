@@ -24,7 +24,9 @@ public class UserController {
 
     private final static Converter<UserFullDto, User> userFullConverter;
     private final static Converter<UserDto, User> userConverter;
+
     private final static UserService userService;
+
     private final static Serializer<UserFullDto> userFullDtoSerializer;
     private final static Serializer<UserDto> userDtoSerializer;
 

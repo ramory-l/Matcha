@@ -17,16 +17,19 @@ import javax.naming.AuthenticationException;
 public class AuthenticateController {
 
     private static final Converter<AuthDto, Auth> authConverter;
+
     private static final AuthenticationService authenticationService;
+
+    private static final Serializer<AuthDto> authDtoSerializer;
 
     static {
         authConverter = new AuthConverter();
         authenticationService = new AuthenticationServiceImpl();
+        authDtoSerializer = new Serializer<>();
     }
 
     public static Route authenticate = (request, response) -> {
-        Serializer<AuthDto> serializer = new Serializer<>();
-        AuthDto authDto = serializer.deserialize(request.body(), AuthDto.class);
+        AuthDto authDto = authDtoSerializer.deserialize(request.body(), AuthDto.class);
         Auth authData = authConverter.convertFromDto(authDto);
         try {
             return authenticationService.authenticate(authData.getUsername(), authData.getPassword());
