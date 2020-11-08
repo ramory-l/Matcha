@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @JsonAutoDetect
 public class AuthDto {
+
     private String username;
     private String password;
+
 }

@@ -19,5 +19,6 @@ public class UserDto {
     private String description;
     private FormDto form;
     private Long rate;
+    private ImageDto avatar;
 
 }

@@ -3,7 +3,8 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
-import ru.school.matcha.configs.MyBatisUtil;
+import ru.school.matcha.services.interfaces.ImageService;
+import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
@@ -13,15 +14,23 @@ import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Objects.nonNull;
 
 @Slf4j
 public class UserServiceImpl implements UserService {
 
+    private static final FormService formService;
+    private static final ImageService imageService;
+
+    static {
+        formService = new FormServiceImpl();
+        imageService = new ImageServiceImpl();
+    }
+
     @Override
     public List<User> getAllUsers() {
+        log.info("Get all users");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getAllUsers();
@@ -29,26 +38,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
+    public User getUserById(Long id) {
+        log.info("Get user by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getUserById(id);
+            return userMapper.getUserById(id)
+                    .orElseThrow(() -> new MatchaException(String.format("User with id: %d doesn't exist", id)));
         }
     }
 
     @Override
-    public Optional<User> getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
+        log.info("Get user by username: {}", username);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getUserByUsername(username);
+            return userMapper.getUserByUsername(username)
+                    .orElseThrow(() -> new MatchaException(String.format("User with username: %s doesn't exist", username)));
         }
     }
 
     @Override
     public void createUser(User user) {
+        log.info("Create new user");
         String username = user.getUsername();
-        Optional<User> optionalUser = getUserByUsername(username);
-        if (!optionalUser.isPresent()) {
+        try {
+            try {
+                getUserByUsername(username);
+                throw new MatchaException();
+            } catch (MatchaException ignored) {
+            }
             try {
                 user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
             } catch (Exception ex) {
@@ -90,13 +108,14 @@ public class UserServiceImpl implements UserService {
                     sqlSession.close();
                 }
             }
-        } else {
+        } catch (MatchaException ex) {
             throw new MatchaException(String.format("User with username %s already exist", username));
         }
     }
 
     @Override
     public void batchCreateUsers(List<User> users) {
+        log.info("Batch create users");
         SqlSession sqlSession = null;
         FormService formService = new FormServiceImpl();
         try {
@@ -132,9 +151,14 @@ public class UserServiceImpl implements UserService {
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (nonNull(user.getAvatar()) && nonNull(user.getAvatar().getId())) {
+                imageService.getImageById(user.getAvatar().getId());
+            }
             if (nonNull(user.getId())) {
+                log.info("Update user with id: {}", user.getId());
                 userMapper.updateUserById(user);
-            } else {
+            } else if (nonNull(user.getUsername())) {
+                log.info("Update user with username: {}", user.getUsername());
                 userMapper.updateUserByUsername(user);
             }
             sqlSession.commit();
@@ -142,7 +166,7 @@ public class UserServiceImpl implements UserService {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
             }
-            throw new MatchaException("Error to update user");
+            throw new MatchaException("Error to update user. " + ex.getMessage());
         } finally {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
@@ -151,18 +175,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(Long id) {
+    public void deleteUserById(Long userId) {
+        log.info("Delete user with id: {}", userId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            userMapper.deleteUserById(id);
+            User user = getUserById(userId);
+            userMapper.deleteUserById(userId);
+            formService.deleteFormById(user.getForm().getId());
             sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
             }
-            throw new MatchaException("Error to delete user by id: " + id);
+            throw new MatchaException("Error to delete user by id: " + userId);
         } finally {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
@@ -172,11 +199,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserByUsername(String username) {
+        log.info("Delete user with username: {}", username);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            User user = getUserByUsername(username);
             userMapper.deleteUserByUsername(username);
+            formService.deleteFormById(user.getForm().getId());
             sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {

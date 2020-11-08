@@ -2,12 +2,14 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.services.LikeServiceImpl;
 import ru.school.matcha.services.interfaces.LikeService;
 import spark.HaltException;
 import spark.Route;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Long.parseLong;
 
@@ -24,12 +26,11 @@ public class LikeController {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
-            AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, true, outgoing);
+            AuthorizationController.authorize(request, Role.USER);
+            List<Long> likes = likeService.getLikesByUserId(id, true, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -48,12 +49,11 @@ public class LikeController {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
-            AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, false, outgoing);
+            AuthorizationController.authorize(request, Role.USER);
+            List<Long> likes = likeService.getLikesByUserId(id, false, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -73,12 +73,11 @@ public class LikeController {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
-            AuthorizationController.authorize(request);
-            List<Long> likes = likeService.getLikes(id, null, outgoing);
+            AuthorizationController.authorize(request, Role.USER);
+            Map<String, List<Long>> likes = likeService.getLikesByUserId(id, outgoing);
             response.status(200);
             return likes;
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -97,12 +96,11 @@ public class LikeController {
     public static Route like = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             likeService.like(from, to, true);
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -120,12 +118,11 @@ public class LikeController {
     public static Route dislike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             likeService.like(from, to, false);
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -143,12 +140,11 @@ public class LikeController {
     public static Route deleteLike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             likeService.deleteLike(from, to, true);
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
@@ -166,12 +162,11 @@ public class LikeController {
     public static Route deleteDislike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             likeService.deleteLike(from, to, false);
             response.status(204);
             return response.body();
         } catch (HaltException ex) {
-            log.error("Credentials are invalid");
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {

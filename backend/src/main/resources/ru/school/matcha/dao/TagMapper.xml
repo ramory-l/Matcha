@@ -1,0 +1,57 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.school.matcha.dao.TagMapper">
+
+    <resultMap id="Tag" type="ru.school.matcha.domain.Tag">
+        <id property="id" column="id"/>
+        <result property="tag" column="tag"/>
+        <result property="userId" column="user_id"/>
+        <result property="createTs" column="create_ts"/>
+    </resultMap>
+
+    <insert id="createTag">
+        INSERT INTO tags(tag, user_id)
+        VALUES (#{tag}, #{userId})
+    </insert>
+
+    <delete id="deleteTagsWithName">
+        DELETE
+        FROM tags
+        WHERE tag = #{name}
+    </delete>
+
+    <delete id="deleteTagById">
+        DELETE
+        FROM tags
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteUserTags">
+        DELETE
+        FROM tags
+        WHERE user_id = #{userId}
+    </delete>
+
+    <select id="getTags" resultMap="Tag">
+        SELECT *
+        FROM tags
+    </select>
+
+    <select id="getTagsByUserId" resultMap="Tag">
+        SELECT *
+        FROM tags
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="getTagByName" resultMap="Tag">
+        SELECT *
+        FROM tags
+        WHERE tag = #{name}
+    </select>
+
+    <select id="getTagById" resultMap="Tag">
+        SELECT *
+        FROM tags
+        WHERE id = #{id}
+    </select>
+
+</mapper>

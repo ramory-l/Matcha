@@ -5,10 +5,10 @@
 <a href="#создание-юзера">Создание юзера</a> | <a href="#добавление-анкеты">Добавление анкеты</a> | <a href="#получение-всех-лайков-юзера-с-идентификатором-id">Получение всех лайков юзера с идентификатором</a> | <a href="#получение-всех-дизлайков-юзера-с-идентификатором-id">Получение всех дизлайков юзера с идентификатором `{id}`</a>
 <a href="#создание-пачки-юзеров">Создание пачки юзеров</a> | <a href="#получение-всех-анкет">Получение всех анкет</a> | <a href="#получение-всех-лайков-и-дизлайков-юзера-с-идентификатором-id">Получение всех лайков и дизлайков юзера с идентификатором `{id}`</a> | <a href="#добавление-дизлайка-от-from-к-to">Добавление дизлайка от `{from}` к `{to}`</a>
 <a href="#получение-всех-юзеров">Получение всех юзеров</a> | <a href="#получение-анкеты-по-идентификатору">Получение анкеты по идентификатору</a> | <a href="#добавление-лайка-от-from-к-to">Добавление лайка от `{from}` к `{to}`</a> | <a href="#удаление-дизлайка-от-from-к-to">Удаление дизлайка от `{from}` к `{to}`</a>
-<a href="#получение-юзера-по-идентификатору">Получение юзера по идентификатору</a> | <a href="#получение-анкеты-по-идентификатору-юзера">Получение анкеты по идентификатору юзера</a> | <a href="#удаление-лайка-от-from-к-to">Удаление лайка от `{from}` к `{to}`</a> |
-<a href="#получение-юзера-по-юзернейму">Получение юзера по юзернейму</a> | <a href="#обновление-анкеты">Обновление анкеты</a> | |
-<a href="#обновление-юзера">Обновление юзера</a> | <a href="#удаление-анкеты-по-идентификатору">Удаление анкеты по идентификатору</a> | |
-<a href="#удаление-юзера-по-идентификатору">Удаление юзера по идентификатору</a> | <a href="#удаление-анкеты-по-идентификатору-пользователя">Удаление анкеты по идентификатору пользователя</a> | |
+<a href="#получение-юзера-по-идентификатору">Получение юзера по идентификатору</a> | <a href="#обновление-анкеты">Обновление анкеты</a> | <a href="#удаление-лайка-от-from-к-to">Удаление лайка от `{from}` к `{to}`</a> |
+<a href="#получение-юзера-по-юзернейму">Получение юзера по юзернейму</a> | <a href="#удаление-анкеты-по-идентификатору">Удаление анкеты по идентификатору</a> | |
+<a href="#обновление-юзера">Обновление юзера</a> | | |
+<a href="#удаление-юзера-по-идентификатору">Удаление юзера по идентификатору</a> | | |
 <a href="#удаление-юзера-по-юзернейму">Удаление юзера по юзернейму</a> | | |
 
 <a href="#optional">Optional</a> | <a href="#аутентификация-apiauth">Аутентификация</a> 
@@ -28,7 +28,7 @@ body:
 example response: `200 "{jwtToken}"`
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
-## Пользователи (`/api/user/`)
+## Пользователи (`/api/users/`)
 #### Создание юзера
     POST address:8080/api/user (public)
 body:
@@ -113,9 +113,9 @@ example response:
 example response:
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
-## Анкеты (`/api/form`)
+## Анкеты (`/api/forms`)
 #### Добавление анкеты
-    POST address:8080/api/form (private)
+    POST address:8080/api/forms/ (private)
 body:
 ```
 {
@@ -131,22 +131,17 @@ example response: `200 "1"`
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение всех анкет
-    GET address:8080/api/form/all (private)
+    GET address:8080/api/forms/all (private)
 example response:
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
 #### Получение анкеты по идентификатору
-    GET address:8080/api/form/{id} (private)
-example response:
-
-<a href="#documentation-api" title="Список разделов">Назад</a>
-#### Получение анкеты по идентификатору юзера
-    GET address:8080/api/form/user/{id} (private)
+    GET address:8080/api/forms/{id} (private)
 example response:
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
 #### Обновление анкеты
-    PUT address:8080/api/form/{userId} (private)
+    PUT address:8080/api/forms/ (private)
 body:
 ```
 {
@@ -162,16 +157,11 @@ example response: `204 ""`
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
 #### Удаление анкеты по идентификатору
-    DELETE address:8080/api/form/{id} (private)
+    DELETE address:8080/api/forms/{id} (private)
 example response: `204 ""`
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
-#### Удаление анкеты по идентификатору пользователя
-    DELETE address:8080/api/form/user/{id} (private)
-example response: `204 ""`
-
-<a href="#documentation-api" title="Список разделов">Назад</a>
-## Лайки (`/api/user/like`)
+## Лайки (`/api/user/likes`)
 #### Получение всех лайков юзера с идентификатором `{id}`    
     GET address:8080/api/user/{id}/likes (optional param = ?outgoing=true/false) (private)
 example response:
@@ -192,7 +182,7 @@ example response: `204 ""
 example response: `204 ""`
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
-## Дизлайки (`/api/user/dislike`)
+## Дизлайки (`/api/user/dislikes`)
 #### Получение всех дизлайков юзера с идентификатором `{id}`
     GET address:8080/api/user/{id}/dislikes (optional param = ?outgoing=true/false) (private)
 example response:
@@ -213,3 +203,6 @@ example response: `204 ""`
     OPTIONS address:8080 (public)
 
 <a href="#documentation-api" title="Список разделов">Назад</a>
+## Картинки (`/api/users/images`)
+## Гости (`/api/users/guests`)
+## Тэги (`/api/users/tags`)

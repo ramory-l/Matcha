@@ -2,13 +2,15 @@ package ru.school.matcha.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
-import ru.school.matcha.configs.MyBatisUtil;
+import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.LikeMapper;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.services.interfaces.LikeService;
 import ru.school.matcha.services.interfaces.UserService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -23,21 +25,21 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public void like(Long from, Long to, boolean like) {
+    public void like(Long from, Long to, boolean isLike) {
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
-            if (nonNull(likeMapper.getLike(from, to, like))) {
-                if (like) {
+            if (nonNull(likeMapper.getLike(from, to, isLike))) {
+                if (isLike) {
                     throw new MatchaException("Like already exist");
                 } else {
                     throw new MatchaException("Dislike already exist");
                 }
             }
             checkUsers(from, to);
-            likeMapper.like(from, to, like);
-            if (like) {
+            likeMapper.like(from, to, isLike);
+            if (isLike) {
                 likeMapper.addRate(to);
             } else {
                 likeMapper.deleteRate(to);
@@ -56,29 +58,43 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public List<Long> getLikes(Long id, Boolean like, Boolean outgoing) {
+    public List<Long> getLikesByUserId(Long userId, Boolean isLike, Boolean outgoing) {
+        log.info("Get likes/dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
-            return likeMapper.getLikes(id, like, outgoing);
+            return likeMapper.getLikes(userId, isLike, outgoing);
         }
     }
 
     @Override
-    public void deleteLike(Long from, Long to, boolean like) {
+    public Map<String, List<Long>> getLikesByUserId(Long userId, Boolean outgoing) {
+        log.info("Get likes and dislikes by user with id: {}", userId);
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
+            Map<String, List<Long>> likes = new HashMap<>();
+            likes.put("like", likeMapper.getLikes(userId, true, outgoing));
+            likes.put("dislike", likeMapper.getLikes(userId, false, outgoing));
+            return likes;
+        }
+    }
+
+    @Override
+    public void deleteLike(Long from, Long to, boolean isLike) {
+        log.info("Delete like/dislike from {} to {}", from, to);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
-            if (isNull(likeMapper.getLike(from, to, like))) {
-                if (like) {
+            if (isNull(likeMapper.getLike(from, to, isLike))) {
+                if (isLike) {
                     throw new MatchaException("Like doesn't exist");
                 } else {
                     throw new MatchaException("Dislike doesn't exist");
                 }
             }
             checkUsers(from, to);
-            likeMapper.deleteLike(from, to, like);
-            if (like) {
+            likeMapper.deleteLike(from, to, isLike);
+            if (isLike) {
                 likeMapper.deleteRate(to);
             } else {
                 likeMapper.addRate(to);

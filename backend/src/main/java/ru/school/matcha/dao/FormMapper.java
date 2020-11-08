@@ -13,15 +13,11 @@ public interface FormMapper {
 
     Optional<Form> getFormById(Long id);
 
-    Optional<Form> getFormByUserId(Long id);
-
     void createForm(Form form);
 
-    void updateForm(Form form);
+    void updateFormById(Form form);
 
     void deleteFormById(Long id);
-
-    void deleteFormByUserId(Long id);
 
     void deleteAllInactiveForms();
 

@@ -1,13 +1,16 @@
 package ru.school.matcha.services.interfaces;
 
 import java.util.List;
+import java.util.Map;
 
 public interface LikeService {
 
-    void like(Long from, Long to, boolean like);
+    void like(Long from, Long to, boolean isLike);
 
-    List<Long> getLikes(Long id, Boolean like, Boolean outgoing);
+    List<Long> getLikesByUserId(Long userId, Boolean isLike, Boolean outgoing);
 
-    void deleteLike(Long from, Long to, boolean like);
+    Map<String, List<Long>> getLikesByUserId(Long userId, Boolean outgoing);
+
+    void deleteLike(Long from, Long to, boolean isLike);
 
 }

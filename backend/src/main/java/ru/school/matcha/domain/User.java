@@ -1,14 +1,13 @@
 package ru.school.matcha.domain;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.school.matcha.security.enums.Role;
 
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@JsonAutoDetect
 public class User {
 
     private Long id;
@@ -23,6 +22,8 @@ public class User {
     private Boolean isActive;
     private Form form;
     private Long rate;
+    private Image avatar;
+    private Role role;
     private Date createTs;
     private Date updateTs;
     private Date deleteTs;
