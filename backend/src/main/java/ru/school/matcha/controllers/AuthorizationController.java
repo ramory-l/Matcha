@@ -28,7 +28,7 @@ public class AuthorizationController {
         }
         if (isNull(userRole)) {
             halt(401, "Credentials are invalid");
-        } else if (!userRole.equals(role) || !userRole.equals(Role.ADMIN)) {
+        } else if (!userRole.equals(role) && !userRole.equals(Role.ADMIN)) {
             halt(403, "Access is denied");
         }
     }

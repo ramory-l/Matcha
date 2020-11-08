@@ -182,11 +182,11 @@ public class UserController {
         } catch (MatchaException ex) {
             log.error("Failed to delete user by id: {}", id, ex);
             response.status(400);
-            response.body(String.format("Failed to delete user by id: %d. %s", id, ex.getMessage()));
+            response.body(String.format("Failed to delete user by id: %d", id));
         } catch (Exception ex) {
             log.error("An unexpected error occurred while trying to delete user by id: {}", id, ex);
             response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to delete user by id: %d. %s", id, ex.getMessage()));
+            response.body(String.format("An unexpected error occurred while trying to delete user by id: %d", id));
         }
         return response.body();
     };

@@ -1,6 +1,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ru.school.matcha.dao.GuestMapper">
 
+    <resultMap id="Guest" type="ru.school.matcha.domain.Guest">
+        <result property="userId" column="guest_id"/>
+        <result property="date" column="create_ts"/>
+    </resultMap>
+
     <insert id="createGuest">
         INSERT INTO guests(guest_id, user_id)
         VALUES (#{guestId}, #{userId})
@@ -13,8 +18,8 @@
           AND guest_id = #{guestId}
     </delete>
 
-    <select id="getGuestsByUserId" resultType="java.lang.Long">
-        SELECT guest_id
+    <select id="getGuestsByUserId" resultMap="Guest">
+        SELECT guest_id, create_ts
         FROM guests
         WHERE user_id = #{userId}
     </select>

@@ -14,7 +14,7 @@
 
     <insert id="createImage" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO images(name, link, external_id, user_id)
-        VALUES (#{name}, #{link}, #{externalId}, #{user_id})
+        VALUES (#{name}, #{link}, #{externalId}, #{userId})
     </insert>
 
     <update id="deleteImageById">
@@ -53,7 +53,7 @@
     <select id="getImagesByUserId" resultMap="Image">
         SELECT *
         FROM images
-        WHERE user_id = #{id}
+        WHERE user_id = #{id} and deleted = false
     </select>
 
     <select id="getImageByExternalId" resultMap="Image">

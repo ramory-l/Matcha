@@ -11,6 +11,7 @@ import ru.school.matcha.utils.GoogleDrive;
 import ru.school.matcha.utils.ImageCoder;
 import ru.school.matcha.utils.MyBatisUtil;
 
+import java.io.File;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -19,6 +20,7 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class ImageServiceImpl implements ImageService {
 
+    private final String FILE_PATH = "backend/images/";
     private static final UserService userService;
 
     static {
@@ -36,6 +38,7 @@ public class ImageServiceImpl implements ImageService {
                 throw new MatchaException("Failed to create image in GoogleDrive");
             }
             image.setUserId(userId);
+            deleteImageFromServer(fileName);
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             imageMapper.createImage(image);
@@ -50,6 +53,15 @@ public class ImageServiceImpl implements ImageService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
+        }
+    }
+
+    private void deleteImageFromServer(String fileName) {
+        File file = new File(FILE_PATH + fileName);
+        if (file.delete()) {
+            log.info("Deleting file from server is success");
+        } else {
+            log.info("Deleting file from server is failed");
         }
     }
 

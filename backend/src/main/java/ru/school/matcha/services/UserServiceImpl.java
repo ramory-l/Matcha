@@ -172,9 +172,9 @@ public class UserServiceImpl implements UserService {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             User user = getUserById(userId);
-            formService.deleteFormById(user.getForm().getId());
             userMapper.deleteUserById(userId);
             sqlSession.commit();
+            formService.deleteFormById(user.getForm().getId());
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
@@ -195,9 +195,9 @@ public class UserServiceImpl implements UserService {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             User user = getUserByUsername(username);
-            formService.deleteFormById(user.getForm().getId());
             userMapper.deleteUserByUsername(username);
             sqlSession.commit();
+            formService.deleteFormById(user.getForm().getId());
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();

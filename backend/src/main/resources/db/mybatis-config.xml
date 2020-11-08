@@ -3,10 +3,12 @@
 <configuration>
     <properties resource='db/jdbc.properties'/>
     <typeAliases>
-        <typeAlias type='ru.school.matcha.domain.User' alias='User'/>
-        <typeAlias type='ru.school.matcha.domain.Form' alias='Form'/>
         <typeAlias type='ru.school.matcha.domain.Auth' alias='Auth'/>
+        <typeAlias type='ru.school.matcha.domain.Form' alias='Form'/>
+        <typeAlias type='ru.school.matcha.domain.Guest' alias='Guest'/>
         <typeAlias type='ru.school.matcha.domain.Image' alias='Image'/>
+        <typeAlias type='ru.school.matcha.domain.Tag' alias='Tag'/>
+        <typeAlias type='ru.school.matcha.domain.User' alias='User'/>
     </typeAliases>
     <environments default='development'>
         <environment id='development'>

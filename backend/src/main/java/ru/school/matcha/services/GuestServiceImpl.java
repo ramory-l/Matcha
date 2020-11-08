@@ -3,6 +3,7 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.dao.GuestMapper;
+import ru.school.matcha.domain.Guest;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.services.interfaces.GuestService;
 import ru.school.matcha.utils.MyBatisUtil;
@@ -35,7 +36,7 @@ public class GuestServiceImpl implements GuestService {
     }
 
     @Override
-    public List<Long> getGuestsByUserId(Long userId) {
+    public List<Guest> getGuestsByUserId(Long userId) {
         log.info("Get guests by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             GuestMapper guestMapper = sqlSession.getMapper(GuestMapper.class);

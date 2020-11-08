@@ -36,7 +36,7 @@ public class ImageController {
             AuthorizationController.authorize(request, Role.USER);
             ImageBase64Dto imageBase64Dto = imageBase64DtoSerializer.deserialize(request.body(), ImageBase64Dto.class);
             response.status(200);
-            return imageService.createImage(imageBase64Dto.getBase64(), imageBase64Dto.getName(), imageBase64Dto.getUserId());
+            return imageService.createImage(imageBase64Dto.getBase64(), imageBase64Dto.getName() + ".jpg", imageBase64Dto.getUserId());
         } catch (HaltException ex) {
             response.status(ex.statusCode());
             response.body(ex.body());
