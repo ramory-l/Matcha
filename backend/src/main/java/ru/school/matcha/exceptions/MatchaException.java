@@ -21,4 +21,5 @@ public class MatchaException extends RuntimeException {
     protected MatchaException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
 }

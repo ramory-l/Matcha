@@ -9,8 +9,8 @@ import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.services.interfaces.FormService;
 
 import java.util.List;
-import java.util.Optional;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -18,6 +18,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public List<Form> getAllForms() {
+        log.info("Get all forms");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
             return formMapper.getAllForms();
@@ -25,23 +26,18 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public Optional<Form> getFormById(Long id) {
+    public Form getFormById(Long id) {
+        log.info("Get form by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
-            return formMapper.getFormById(id);
-        }
-    }
-
-    @Override
-    public Optional<Form> getFormByUserId(Long id) {
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
-            return formMapper.getFormByUserId(id);
+            return formMapper.getFormById(id)
+                    .orElseThrow(() -> new MatchaException(String.format("Form with id: %s doesn't exist", id)));
         }
     }
 
     @Override
     public Long createForm(Form form) {
+        log.info("Create new form");
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -62,18 +58,22 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public void updateForm(Form form, Long userId) {
+    public void updateForm(Form form) {
+        if (isNull(form.getId())) {
+            throw new MatchaException("The update could not be completed because the identifier was not specified");
+        }
+        log.info("Update form by id: {}", form.getId());
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
-            formMapper.updateForm(form);
+            formMapper.updateFormById(form);
             sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
             }
-            throw new MatchaException("Error to update form by user id: " + userId);
+            throw new MatchaException("Error to update form by id: " + form.getId());
         } finally {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
@@ -83,6 +83,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public void deleteFormById(Long id) {
+        log.info("Delete form by id: {}", id);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -102,27 +103,8 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public void deleteFormByUserId(Long id) {
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-            FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
-            formMapper.deleteFormByUserId(id);
-            sqlSession.commit();
-        } catch (Exception ex) {
-            if (nonNull(sqlSession)) {
-                sqlSession.rollback();
-            }
-            throw new MatchaException("Error to delete form by user id: " + id);
-        } finally {
-            if (nonNull(sqlSession)) {
-                sqlSession.close();
-            }
-        }
-    }
-
-    @Override
     public void deleteAllInactiveForms() {
+        log.info("Delete all inactive forms");
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();

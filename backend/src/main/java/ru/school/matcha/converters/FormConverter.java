@@ -8,7 +8,7 @@ import static java.util.Objects.isNull;
 public class FormConverter extends Converter<FormDto, Form> {
 
     public FormConverter() {
-        super(FormConverter::converToEntity, FormConverter::convertToDto);
+        super(FormConverter::convertToEntity, FormConverter::convertToDto);
     }
 
     private static FormDto convertToDto(Form source) {
@@ -26,7 +26,7 @@ public class FormConverter extends Converter<FormDto, Form> {
         return result;
     }
 
-    private static Form converToEntity(FormDto source) {
+    private static Form convertToEntity(FormDto source) {
         if (isNull(source)) {
             return null;
         }

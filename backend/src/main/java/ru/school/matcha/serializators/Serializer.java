@@ -1,14 +1,15 @@
 package ru.school.matcha.serializators;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 
+@Slf4j
 public class Serializer<T>  {
 
     private final ObjectMapper mapper;
@@ -32,4 +33,5 @@ public class Serializer<T>  {
         CollectionType javaType = mapper.getTypeFactory().constructCollectionType(List.class, valueType);
         return mapper.readValue(json, javaType);
     }
+
 }

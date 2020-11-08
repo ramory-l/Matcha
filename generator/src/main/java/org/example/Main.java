@@ -72,7 +72,7 @@ public class Main {
     private static void sendRequest(String json, String jwt) {
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://backend:8080/api/user/batch");
+            HttpPost httpPost = new HttpPost("http://backend:8080/api/users/batch");
             StringEntity entity = new StringEntity(json);
             httpPost.setEntity(entity);
             httpPost.setHeader("Accept", "application/json");
@@ -188,7 +188,7 @@ public class Main {
             user.setPassword(passIterator.next());
             int randomNumber = random(names.size() - 1, 0);
             user.setFirstName(names.get(randomNumber));
-            user.setGender(randomNumber % 2 == 0 ? "m" : "w");
+            user.setGender(randomNumber % 2 == 0 ? "man" : "woman");
             user.setLastName(surnames.get(random(surnames.size() - 1, 0)));
             user.setForm(generateForm());
             user.setBirthday(generateBirthday());
