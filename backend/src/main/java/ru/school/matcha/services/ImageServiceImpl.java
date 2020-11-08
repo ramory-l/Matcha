@@ -26,7 +26,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Long createImage(String base64, String fileName) {
+    public Long createImage(String base64, String fileName, Long userId) {
         log.info("Create image");
         SqlSession sqlSession = null;
         try {
@@ -35,6 +35,7 @@ public class ImageServiceImpl implements ImageService {
             if (isNull(image)) {
                 throw new MatchaException("Failed to create image in GoogleDrive");
             }
+            image.setUserId(userId);
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             imageMapper.createImage(image);

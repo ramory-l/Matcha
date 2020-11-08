@@ -48,13 +48,13 @@ public class GuestController {
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
-            log.error("Failed to get guests by user with id: {}", username, ex);
+            log.error("Failed to get guests by user with id: {}", userId, ex);
             response.status(400);
-            response.body(String.format("Failed to get user by username: %s. %s", username, ex.getMessage()));
+            response.body(String.format("Failed to get guests by user with id: %d. %s", userId, ex.getMessage()));
         } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to get user by username: {}", username, ex);
+            log.error("An unexpected error occurred while trying to get guests by user with id: {}", userId, ex);
             response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to get user by username: %s. %s", username, ex.getMessage()));
+            response.body(String.format("An unexpected error occurred while trying to get guests by user with id: %d. %s", userId, ex.getMessage()));
         }
         return response.body();
     };
@@ -63,19 +63,19 @@ public class GuestController {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
             AuthorizationController.authorize(request, Role.ADMIN);
-            response.status(200);
-            return result;
+            guestService.deleteGuest(to, from);
+            response.status(204);
         } catch (HaltException ex) {
             response.status(ex.statusCode());
             response.body(ex.body());
         } catch (MatchaException ex) {
             log.error("Failed to delete guest (from: {} to: {})", from, to, ex);
             response.status(400);
-            response.body(String.format("Failed to get user by username: %s. %s", username, ex.getMessage()));
+            response.body(String.format("Failed to delete guest (from: %d to: %d). %s", from, to, ex.getMessage()));
         } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to get user by username: {}", username, ex);
+            log.error("An unexpected error occurred while trying to delete guest (from: {} to: {})", from, to, ex);
             response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to get user by username: %s. %s", username, ex.getMessage()));
+            response.body(String.format("An unexpected error occurred while trying to delete guest (from: %d to: %d). %s", from, to, ex.getMessage()));
         }
         return response.body();
     };

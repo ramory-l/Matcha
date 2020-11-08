@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ImageService {
 
-    Long createImage(String base64, String fileName);
+    Long createImage(String base64, String fileName, Long userId);
 
     Image getImageById(Long id);
 

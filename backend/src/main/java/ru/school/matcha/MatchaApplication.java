@@ -45,7 +45,7 @@ public class MatchaApplication {
                 path("/tags", () -> {
                     post("/", TagController.createTag, new JsonTransformer());
                     get("/", TagController.getTags, new JsonTransformer());
-                    delete("/:id", TagController.deleteTag, new JsonTransformer());
+                    delete("/:id", TagController.deleteTagById, new JsonTransformer());
                 });
                 path("/guests", () -> {
                     post("/from/:from/to/:to", GuestController.createGuest, new JsonTransformer());
