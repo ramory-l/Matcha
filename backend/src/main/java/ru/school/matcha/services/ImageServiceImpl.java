@@ -20,7 +20,6 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class ImageServiceImpl implements ImageService {
 
-    private final String FILE_PATH = "backend/images/";
     private static final UserService userService;
 
     static {
@@ -57,6 +56,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private void deleteImageFromServer(String fileName) {
+        final String FILE_PATH = "backend/images/";
         File file = new File(FILE_PATH + fileName);
         if (file.delete()) {
             log.info("Deleting file from server is success");
