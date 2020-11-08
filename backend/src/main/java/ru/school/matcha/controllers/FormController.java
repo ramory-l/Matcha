@@ -6,6 +6,7 @@ import ru.school.matcha.converters.FormConverter;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.dto.FormDto;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.FormServiceImpl;
 import ru.school.matcha.services.interfaces.FormService;
@@ -31,7 +32,7 @@ public class FormController {
 
     public static Route createForm = (request, response) -> {
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             FormDto formDto = serializerFormDto.deserialize(request.body(), FormDto.class);
             Form form = formConverter.convertFromDto(formDto);
             Long formId = formService.createForm(form);
@@ -54,7 +55,7 @@ public class FormController {
 
     public static Route getAllForms = (request, response) -> {
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.ADMIN);
             List<Form> forms = formService.getAllForms();
             List<FormDto> result = formConverter.createFromEntities(forms);
             response.status(200);
@@ -77,7 +78,7 @@ public class FormController {
     public static Route getFormById = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             Form form = formService.getFormById(id);
             FormDto result = formConverter.convertFromEntity(form);
             response.status(200);
@@ -99,7 +100,7 @@ public class FormController {
 
     public static Route updateForm = (request, response) -> {
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             FormDto formDto = serializerFormDto.deserialize(request.body(), FormDto.class);
             Form form = formConverter.convertFromDto(formDto);
             formService.updateForm(form);
@@ -122,7 +123,7 @@ public class FormController {
     public static Route deleteFormById = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.ADMIN);
             formService.deleteFormById(id);
             response.status(204);
         } catch (HaltException ex) {

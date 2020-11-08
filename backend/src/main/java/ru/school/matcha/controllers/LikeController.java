@@ -2,6 +2,7 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.services.LikeServiceImpl;
 import ru.school.matcha.services.interfaces.LikeService;
 import spark.HaltException;
@@ -25,7 +26,7 @@ public class LikeController {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             List<Long> likes = likeService.getLikesByUserId(id, true, outgoing);
             response.status(200);
             return likes;
@@ -48,7 +49,7 @@ public class LikeController {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             List<Long> likes = likeService.getLikesByUserId(id, false, outgoing);
             response.status(200);
             return likes;
@@ -72,7 +73,7 @@ public class LikeController {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             Map<String, List<Long>> likes = likeService.getLikesByUserId(id, outgoing);
             response.status(200);
             return likes;
@@ -95,7 +96,7 @@ public class LikeController {
     public static Route like = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             likeService.like(from, to, true);
             response.status(204);
             return response.body();
@@ -117,7 +118,7 @@ public class LikeController {
     public static Route dislike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             likeService.like(from, to, false);
             response.status(204);
             return response.body();
@@ -139,7 +140,7 @@ public class LikeController {
     public static Route deleteLike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             likeService.deleteLike(from, to, true);
             response.status(204);
             return response.body();
@@ -161,7 +162,7 @@ public class LikeController {
     public static Route deleteDislike = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             likeService.deleteLike(from, to, false);
             response.status(204);
             return response.body();

@@ -2,6 +2,7 @@ package ru.school.matcha.services;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.exceptions.JwtAuthenticationException;
+import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.services.interfaces.AuthorizationService;
 
@@ -17,13 +18,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public boolean authorize(String token) throws JwtAuthenticationException {
+    public Role authorize(String token) throws JwtAuthenticationException {
         log.info("Authorize user with token: {}", token);
         token = jwtTokenProvider.resolveToken(token);
         if (isNull(token)) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
-        return jwtTokenProvider.validateToken(token);
+        if (jwtTokenProvider.validateToken(token)) {
+            return jwtTokenProvider.getRoleFromToken(token);
+        } else {
+            return null;
+        }
     }
 
 }

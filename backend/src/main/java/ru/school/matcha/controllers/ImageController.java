@@ -2,6 +2,7 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.services.ImageServiceImpl;
 import ru.school.matcha.services.interfaces.ImageService;
 import spark.HaltException;
@@ -19,7 +20,7 @@ public class ImageController {
     public static Route createImage = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             response.status(200);
             return ;
         } catch (HaltException ex) {
@@ -40,7 +41,7 @@ public class ImageController {
     public static Route getImageById = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
 
             response.status(200);
             return result;
@@ -62,7 +63,7 @@ public class ImageController {
     public static Route getImagesByUserId = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
 
             response.status(200);
             return result;
@@ -84,7 +85,7 @@ public class ImageController {
     public static Route deleteImageById = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             response.status(200);
             return result;
         } catch (HaltException ex) {

@@ -2,6 +2,7 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.services.TagServiceImpl;
 import ru.school.matcha.services.interfaces.TagService;
 import spark.HaltException;
@@ -19,7 +20,7 @@ public class TagController {
     public static Route createTag = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             response.status(200);
             return ;
         } catch (HaltException ex) {
@@ -40,7 +41,7 @@ public class TagController {
     public static Route getTags = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             response.status(200);
             return result;
         } catch (HaltException ex) {
@@ -61,7 +62,7 @@ public class TagController {
     public static Route getTagsByUserId = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
 
             response.status(200);
             return result;
@@ -83,7 +84,7 @@ public class TagController {
     public static Route deleteTag = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             response.status(200);
             return result;
         } catch (HaltException ex) {

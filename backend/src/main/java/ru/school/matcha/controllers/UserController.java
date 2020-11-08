@@ -8,6 +8,7 @@ import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.dto.UserFullDto;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.UserServiceImpl;
 import ru.school.matcha.services.interfaces.UserService;
@@ -24,17 +25,20 @@ public class UserController {
     private final static Converter<UserFullDto, User> userFullConverter;
     private final static Converter<UserDto, User> userConverter;
     private final static UserService userService;
+    private final static Serializer<UserFullDto> userFullDtoSerializer;
+    private final static Serializer<UserDto> userDtoSerializer;
 
     static {
         userFullConverter = new UserFullConverter();
         userConverter = new UserConverter();
         userService = new UserServiceImpl();
+        userFullDtoSerializer = new Serializer<>();
+        userDtoSerializer = new Serializer<>();
     }
 
     public static Route createUser = (request, response) -> {
         try {
-            Serializer<UserFullDto> serializer = new Serializer<>();
-            UserFullDto userFullDto = serializer.deserialize(request.body(), UserFullDto.class);
+            UserFullDto userFullDto = userFullDtoSerializer.deserialize(request.body(), UserFullDto.class);
             User user = userFullConverter.convertFromDto(userFullDto);
             userService.createUser(user);
             response.status(204);
@@ -53,7 +57,7 @@ public class UserController {
 
     public static Route batchUsersCreate = (request, response) -> {
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.ADMIN);
             Serializer<UserFullDto> serializer = new Serializer<>();
             List<UserFullDto> userFullDtoList = serializer.deserializeList(request.body(), UserFullDto.class);
             List<User> users = userFullConverter.createFromDtos(userFullDtoList);
@@ -76,7 +80,7 @@ public class UserController {
 
     public static Route getAllUsers = (request, response) -> {
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             List<User> users = userService.getAllUsers();
             List<UserDto> result = userConverter.createFromEntities(users);
             response.status(200);
@@ -99,7 +103,7 @@ public class UserController {
     public static Route getUserById = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             User user = userService.getUserById(id);
             UserDto result = userConverter.convertFromEntity(user);
             response.status(200);
@@ -122,7 +126,7 @@ public class UserController {
     public static Route getUserByUsername = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             User user = userService.getUserByUsername(username);
             UserDto result = userConverter.convertFromEntity(user);
             response.status(200);
@@ -144,9 +148,8 @@ public class UserController {
 
     public static Route updateUser = (request, response) -> {
         try {
-            AuthorizationController.authorize(request);
-            Serializer<UserDto> serializer = new Serializer<>();
-            UserDto userDto = serializer.deserialize(request.body(), UserDto.class);
+            AuthorizationController.authorize(request, Role.USER);
+            UserDto userDto = userDtoSerializer.deserialize(request.body(), UserDto.class);
             User user = userConverter.convertFromDto(userDto);
             userService.updateUser(user);
             response.status(204);
@@ -168,7 +171,7 @@ public class UserController {
     public static Route deleteUserById = (request, response) -> {
         Long id = parseLong(request.params("id"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.ADMIN);
             userService.deleteUserById(id);
             response.status(204);
         } catch (HaltException ex) {
@@ -189,7 +192,7 @@ public class UserController {
     public static Route deleteUserByUsername = (request, response) -> {
         String username = request.params("username");
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.ADMIN);
             userService.deleteUserByUsername(username);
             response.status(204);
         } catch (HaltException ex) {

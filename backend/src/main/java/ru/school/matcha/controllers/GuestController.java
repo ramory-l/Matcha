@@ -2,6 +2,7 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.services.GuestServiceImpl;
 import ru.school.matcha.services.interfaces.GuestService;
 import spark.HaltException;
@@ -21,7 +22,7 @@ public class GuestController {
     public static Route createGuest = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             response.status(204);
             guestService.createGuest(to, from);
         } catch (HaltException ex) {
@@ -40,7 +41,7 @@ public class GuestController {
     public static Route getGuestsByUserId = (request, response) -> {
         Long userId = parseLong(request.params("id"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.USER);
             response.status(200);
             return guestService.getGuestsByUserId(userId);
         } catch (HaltException ex) {
@@ -61,7 +62,7 @@ public class GuestController {
     public static Route deleteGuest = (request, response) -> {
         Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         try {
-            AuthorizationController.authorize(request);
+            AuthorizationController.authorize(request, Role.ADMIN);
             response.status(200);
             return result;
         } catch (HaltException ex) {
