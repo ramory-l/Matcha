@@ -16,7 +16,7 @@
         <result property="createTs" column="create_ts"/>
         <result property="updateTs" column="update_ts"/>
         <result property="deleteTs" column="delete_ts"/>
-        <association property="form" column="id" javaType="ru.school.matcha.domain.Form"
+        <association property="form" column="form_id" javaType="ru.school.matcha.domain.Form"
                      select="ru.school.matcha.dao.FormMapper.getFormById"/>
         <association property="avatar" column="avatar_id" javaType="ru.school.matcha.domain.Image"
                      select="ru.school.matcha.dao.ImageMapper.getImageById"/>
@@ -74,6 +74,9 @@
         <if test="form != null and form.id != null">
             form_id = #{form.id},
         </if>
+        <if test="avatar != null and avatar.id != null">
+            avatar_id = #{avatar.id},
+        </if>
         update_ts = now()
         WHERE username = #{username}
     </update>
@@ -101,25 +104,33 @@
         <if test="form != null and form.id != null">
             form_id = #{form.id},
         </if>
+        <if test="avatar != null and avatar.id != null">
+            avatar_id = #{avatar.id},
+        </if>
         update_ts = now()
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteUserById">
-        DELETE
-        FROM "user"
+    <update id="deleteUserById">
+        UPDATE "user"
+        SET is_active = false,
+            form_id   = null,
+            delete_ts = now()
         WHERE id = #{id}
-    </delete>
+    </update>
 
-    <delete id="deleteUserByUsername">
-        DELETE
-        FROM "user"
+    <update id="deleteUserByUsername">
+        UPDATE "user"
+        SET is_active = false,
+            form_id   = null,
+            delete_ts = now()
         WHERE username ILIKE #{username}
-    </delete>
+    </update>
 
     <select id="getAllUsers" resultMap="User">
         SELECT *
         FROM "user"
+        WHERE is_active = true
         ORDER BY id
     </select>
 
@@ -127,12 +138,13 @@
         SELECT *
         FROM "user"
         WHERE id = #{id}
+          and is_active = true
     </select>
 
     <select id="getUserByUsername" resultMap="User">
         SELECT *
         FROM "user"
-        WHERE username ILIKE #{username}
+        WHERE username ILIKE #{username} and is_active = true
     </select>
 
     <select id="getUserEncryptPasswordById" resultType="java.lang.String">

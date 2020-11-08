@@ -41,7 +41,7 @@
     <select id="getImageById" resultMap="Image">
         SELECT *
         FROM images
-        WHERE id = #{id}
+        WHERE id = #{id} and deleted = false
     </select>
 
     <select id="getAvatarByUserId" resultMap="Image">

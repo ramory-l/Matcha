@@ -20,6 +20,7 @@ public class ImageConverter extends Converter<ImageDto, Image> {
         result.setLink(source.getLink());
         result.setName(source.getName());
         result.setExternalId(source.getExternalId());
+        result.setUserId(source.getUserId());
         return result;
     }
 
@@ -32,6 +33,7 @@ public class ImageConverter extends Converter<ImageDto, Image> {
         result.setLink(source.getLink());
         result.setName(source.getName());
         result.setExternalId(source.getExternalId());
+        result.setUserId(source.getUserId());
         return result;
     }
 

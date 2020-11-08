@@ -3,6 +3,7 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
+import ru.school.matcha.services.interfaces.ImageService;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
 import ru.school.matcha.domain.Form;
@@ -20,9 +21,11 @@ import static java.util.Objects.nonNull;
 public class UserServiceImpl implements UserService {
 
     private static final FormService formService;
+    private static final ImageService imageService;
 
     static {
         formService = new FormServiceImpl();
+        imageService = new ImageServiceImpl();
     }
 
     @Override
@@ -59,7 +62,11 @@ public class UserServiceImpl implements UserService {
         log.info("Create new user");
         String username = user.getUsername();
         try {
-            getUserByUsername(username);
+            try {
+                getUserByUsername(username);
+                throw new MatchaException();
+            } catch (MatchaException ignored) {
+            }
             try {
                 user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
             } catch (Exception ex) {
@@ -144,6 +151,9 @@ public class UserServiceImpl implements UserService {
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (nonNull(user.getAvatar()) && nonNull(user.getAvatar().getId())) {
+                imageService.getImageById(user.getAvatar().getId());
+            }
             if (nonNull(user.getId())) {
                 log.info("Update user with id: {}", user.getId());
                 userMapper.updateUserById(user);
@@ -156,7 +166,7 @@ public class UserServiceImpl implements UserService {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
             }
-            throw new MatchaException("Error to update user");
+            throw new MatchaException("Error to update user. " + ex.getMessage());
         } finally {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
@@ -173,8 +183,8 @@ public class UserServiceImpl implements UserService {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             User user = getUserById(userId);
             userMapper.deleteUserById(userId);
-            sqlSession.commit();
             formService.deleteFormById(user.getForm().getId());
+            sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
@@ -196,8 +206,8 @@ public class UserServiceImpl implements UserService {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             User user = getUserByUsername(username);
             userMapper.deleteUserByUsername(username);
-            sqlSession.commit();
             formService.deleteFormById(user.getForm().getId());
+            sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
