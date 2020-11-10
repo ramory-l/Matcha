@@ -37,7 +37,7 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public List<Guest> getGuestsByUserId(Long userId) {
-        log.info("Get guests by user with id: {}", userId);
+        log.debug("Get guests by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             GuestMapper guestMapper = sqlSession.getMapper(GuestMapper.class);
             return guestMapper.getGuestsByUserId(userId);
@@ -46,7 +46,7 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public void deleteGuest(Long userId, Long guestId) {
-        log.info("Delete guest with id: {} for user with id: {}", guestId, userId);
+        log.debug("Delete guest with id: {} for user with id: {}", guestId, userId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();

@@ -7,7 +7,6 @@ import ru.school.matcha.domain.Tag;
 import ru.school.matcha.dto.TagDto;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.enums.Role;
-import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.TagServiceImpl;
 import ru.school.matcha.services.interfaces.TagService;
 import spark.HaltException;
@@ -22,20 +21,17 @@ public class TagController {
 
     private final static TagService tagService;
 
-    private final static Serializer<TagDto> tagDtoSerializer;
-
     static {
         tagConverter = new TagConverter();
         tagService = new TagServiceImpl();
-        tagDtoSerializer = new Serializer<>();
     }
 
     public static Route createTag = (request, response) -> {
+        String tagName = request.params("tagName");
+        Long userId = parseLong(request.params("userId"));
         try {
             AuthorizationController.authorize(request, Role.USER);
-            TagDto tagDto = tagDtoSerializer.deserialize(request.body(), TagDto.class);
-            Tag tag = tagConverter.convertFromDto(tagDto);
-            tagService.createTag(tag);
+            tagService.createUserRefTag(tagName, userId);
             response.status(204);
         } catch (HaltException ex) {
             response.status(ex.statusCode());
@@ -110,6 +106,28 @@ public class TagController {
             log.error("An unexpected error occurred while trying to delete tag with id: {}", id, ex);
             response.status(500);
             response.body(String.format("An unexpected error occurred while trying to delete tag with id: %d. %s", id, ex.getMessage()));
+        }
+        return response.body();
+    };
+
+    public static Route deleteTag = (request, response) -> {
+        String tagName = request.params("tagName");
+        Long userId = parseLong(request.params("userId"));
+        try {
+            AuthorizationController.authorize(request, Role.USER);
+            tagService.deleteUserRefTag(tagName, userId);
+            response.status(204);
+        } catch (HaltException ex) {
+            response.status(ex.statusCode());
+            response.body(ex.body());
+        } catch (MatchaException ex) {
+            log.error("Failed to delete tag with name: {} for user with id: {}", tagName, userId, ex);
+            response.status(400);
+            response.body(String.format("Failed to delete tag with name: %s for user with id: %d", tagName, userId));
+        } catch (Exception ex) {
+            log.error("An unexpected error occurred while trying to delete tag with name: {} for user with id: {}", tagName, userId, ex);
+            response.status(500);
+            response.body(String.format("An unexpected error occurred while trying to delete tag with name: %s for user with id: %d", tagName, userId));
         }
         return response.body();
     };

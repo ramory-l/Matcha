@@ -10,7 +10,9 @@ import ru.school.matcha.dto.UserFullDto;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.enums.Role;
 import ru.school.matcha.serializators.Serializer;
+import ru.school.matcha.services.TagServiceImpl;
 import ru.school.matcha.services.UserServiceImpl;
+import ru.school.matcha.services.interfaces.TagService;
 import ru.school.matcha.services.interfaces.UserService;
 import spark.HaltException;
 import spark.Route;
@@ -26,6 +28,7 @@ public class UserController {
     private final static Converter<UserDto, User> userConverter;
 
     private final static UserService userService;
+    private final static TagService tagService;
 
     private final static Serializer<UserFullDto> userFullDtoSerializer;
     private final static Serializer<UserDto> userDtoSerializer;
@@ -34,6 +37,7 @@ public class UserController {
         userFullConverter = new UserFullConverter();
         userConverter = new UserConverter();
         userService = new UserServiceImpl();
+        tagService = new TagServiceImpl();
         userFullDtoSerializer = new Serializer<>();
         userDtoSerializer = new Serializer<>();
     }
@@ -208,6 +212,27 @@ public class UserController {
             log.error("An unexpected error occurred while trying to delete user by username: {}", username, ex);
             response.status(500);
             response.body(String.format("An unexpected error occurred while trying to delete user by username: %s. %s", username, ex.getMessage()));
+        }
+        return response.body();
+    };
+
+    public static Route getUsersByTagName = (request, response) -> {
+        String tagName = request.params("tagName");
+        try {
+            AuthorizationController.authorize(request, Role.USER);
+            response.status(200);
+            return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId()));
+        } catch (HaltException ex) {
+            response.status(ex.statusCode());
+            response.body(ex.body());
+        } catch (MatchaException ex) {
+            log.error("Failed to get users by tag with name: {}", tagName, ex);
+            response.status(400);
+            response.body(String.format("Failed to get users by tag with name: %s. %s", tagName, ex.getMessage()));
+        } catch (Exception ex) {
+            log.error("An unexpected error occurred while trying to get users by tag with name: {}", tagName, ex);
+            response.status(500);
+            response.body(String.format("An unexpected error occurred while trying to get users by tag with name: %s. %s", tagName, ex.getMessage()));
         }
         return response.body();
     };

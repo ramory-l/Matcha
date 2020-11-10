@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        log.info("Get user by id: {}", id);
+        log.debug("Get user by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserById(id)
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        log.info("Get user by username: {}", username);
+        log.debug("Get user by username: {}", username);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserByUsername(username)
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(User user) {
-        log.info("Create new user");
+        log.debug("Create new user");
         String username = user.getUsername();
         try {
             try {
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void batchCreateUsers(List<User> users) {
-        log.info("Batch create users");
+        log.debug("Batch create users");
         SqlSession sqlSession = null;
         FormService formService = new FormServiceImpl();
         try {
@@ -155,10 +155,10 @@ public class UserServiceImpl implements UserService {
                 imageService.getImageById(user.getAvatar().getId());
             }
             if (nonNull(user.getId())) {
-                log.info("Update user with id: {}", user.getId());
+                log.debug("Update user with id: {}", user.getId());
                 userMapper.updateUserById(user);
             } else if (nonNull(user.getUsername())) {
-                log.info("Update user with username: {}", user.getUsername());
+                log.debug("Update user with username: {}", user.getUsername());
                 userMapper.updateUserByUsername(user);
             }
             sqlSession.commit();
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long userId) {
-        log.info("Delete user with id: {}", userId);
+        log.debug("Delete user with id: {}", userId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserByUsername(String username) {
-        log.info("Delete user with username: {}", username);
+        log.debug("Delete user with username: {}", username);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -225,6 +225,14 @@ public class UserServiceImpl implements UserService {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserEncryptPasswordById(id);
+        }
+    }
+
+    @Override
+    public List<User> getUsersByTagId(Long tagId) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.getUsersByTagId(tagId);
         }
     }
 

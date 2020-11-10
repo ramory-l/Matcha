@@ -1,12 +1,15 @@
 package ru.school.matcha.services.interfaces;
 
 import ru.school.matcha.domain.Tag;
+import ru.school.matcha.domain.User;
 
 import java.util.List;
 
 public interface TagService {
 
-    void createTag(Tag tag);
+    Long createTag(Tag tag);
+
+    void createUserRefTag(String tagName, Long userId);
 
     List<Tag> getTags();
 
@@ -16,10 +19,10 @@ public interface TagService {
 
     List<Tag> getTagsByUserId(Long userId);
 
-    void deleteTagsWithName(String name);
-
     void deleteTagById(Long id);
 
     void deleteUserTags(Long userId);
+
+    void deleteUserRefTag(String tagName, Long userId);
 
 }

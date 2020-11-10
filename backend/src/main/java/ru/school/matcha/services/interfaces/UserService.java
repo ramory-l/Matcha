@@ -12,6 +12,8 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
+    List<User> getUsersByTagId(Long tagId);
+
     void createUser(User user);
 
     void batchCreateUsers(List<User> users);

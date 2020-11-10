@@ -16,6 +16,8 @@ public interface UserMapper {
 
     Optional<User> getUserByUsername(String username);
 
+    List<User> getUsersByTagId(Long tagId);
+
     void createUser(@Param("user") User user, @Param("formId") Long formId);
 
     void createFullUser(User users);
