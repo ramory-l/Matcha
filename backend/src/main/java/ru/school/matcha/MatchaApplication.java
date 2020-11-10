@@ -31,6 +31,8 @@ public class MatchaApplication {
                 get("/:id/guests", GuestController.getGuestsByUserId, new JsonTransformer());
                 get("/:id/images", ImageController.getImagesByUserId, new JsonTransformer());
                 get("/:id/tags", TagController.getTagsByUserId, new JsonTransformer());
+                post("/:userId/tags/:tagName", TagController.createTag, new JsonTransformer());
+                delete("/:userId/tags/:tagName", TagController.deleteTag, new JsonTransformer());
                 put("/", UserController.updateUser, new JsonTransformer());
                 delete("/:id", UserController.deleteUserById, new JsonTransformer());
                 delete("/username/:username", UserController.deleteUserByUsername, new JsonTransformer());
@@ -43,8 +45,8 @@ public class MatchaApplication {
                     delete("/from/:from/to/:to", LikeController.deleteDislike, new JsonTransformer());
                 });
                 path("/tags", () -> {
-                    post("/", TagController.createTag, new JsonTransformer());
                     get("/", TagController.getTags, new JsonTransformer());
+                    get("/:tagId", UserController.getUsersByTagId, new JsonTransformer());
                     delete("/:id", TagController.deleteTagById, new JsonTransformer());
                 });
                 path("/guests", () -> {

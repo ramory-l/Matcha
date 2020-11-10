@@ -28,7 +28,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Long createImage(String base64, String fileName, Long userId) {
-        log.info("Create image");
+        log.debug("Create image");
         SqlSession sqlSession = null;
         try {
             ImageCoder.decodeImage(base64, fileName);
@@ -59,15 +59,15 @@ public class ImageServiceImpl implements ImageService {
         final String FILE_PATH = "backend/images/";
         File file = new File(FILE_PATH + fileName);
         if (file.delete()) {
-            log.info("Deleting file from server is success");
+            log.debug("Deleting file from server is success");
         } else {
-            log.info("Deleting file from server is failed");
+            log.debug("Deleting file from server is failed");
         }
     }
 
     @Override
     public Image getImageById(Long id) {
-        log.info("Get image by id: {}", id);
+        log.debug("Get image by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             return imageMapper.getImageById(id)
@@ -77,7 +77,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image getImageByExternalId(String externalId) {
-        log.info("Get image by external id: {}", externalId);
+        log.debug("Get image by external id: {}", externalId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             return imageMapper.getImageByExternalId(externalId)
@@ -87,7 +87,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image getAvatarByUserId(Long userId) {
-        log.info("Get avatar by user with id: {}", userId);
+        log.debug("Get avatar by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             userService.getUserById(userId);
@@ -98,7 +98,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public List<Image> getImagesByUserId(Long userId) {
-        log.info("Get images by user with id: {}", userId);
+        log.debug("Get images by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             userService.getUserById(userId);
@@ -108,7 +108,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void deleteImageById(Long id) {
-        log.info("Delete image by id: {}", id);
+        log.debug("Delete image by id: {}", id);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -129,7 +129,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void deleteImageByExternalId(String externalId) {
-        log.info("Delete image by external id: {}", externalId);
+        log.debug("Delete image by external id: {}", externalId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -150,7 +150,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void deleteAllImagesByUserId(Long userId) {
-        log.info("Delete all images by userId: {}", userId);
+        log.debug("Delete all images by userId: {}", userId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();

@@ -11,7 +11,6 @@ public class Tag {
 
     private Long id;
     private String tag;
-    private Long userId;
     private Date createTs;
 
 }

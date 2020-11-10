@@ -212,4 +212,25 @@ public class UserController {
         return response.body();
     };
 
+    public static Route getUsersByTagId = (request, response) -> {
+        Long tagId = parseLong(request.params("tagId"));
+        try {
+            AuthorizationController.authorize(request, Role.USER);
+            response.status(200);
+            return userConverter.createFromEntities(userService.getUsersByTagId(tagId));
+        } catch (HaltException ex) {
+            response.status(ex.statusCode());
+            response.body(ex.body());
+        } catch (MatchaException ex) {
+            log.error("Failed to get users by tag with id: {}", tagId, ex);
+            response.status(400);
+            response.body(String.format("Failed to get users by tag with id: %d. %s", tagId, ex.getMessage()));
+        } catch (Exception ex) {
+            log.error("An unexpected error occurred while trying to get users by tag with id: {}", tagId, ex);
+            response.status(500);
+            response.body(String.format("An unexpected error occurred while trying to get users by tag with id: %d. %s", tagId, ex.getMessage()));
+        }
+        return response.body();
+    };
+
 }

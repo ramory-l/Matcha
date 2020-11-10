@@ -9,6 +9,5 @@ public class TagDto {
 
     private Long id;
     private String tag;
-    private Long userId;
 
 }

@@ -59,7 +59,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public List<Long> getLikesByUserId(Long userId, Boolean isLike, Boolean outgoing) {
-        log.info("Get likes/dislikes by user with id: {}", userId);
+        log.debug("Get likes/dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
             return likeMapper.getLikes(userId, isLike, outgoing);
@@ -68,7 +68,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Map<String, List<Long>> getLikesByUserId(Long userId, Boolean outgoing) {
-        log.info("Get likes and dislikes by user with id: {}", userId);
+        log.debug("Get likes and dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
             Map<String, List<Long>> likes = new HashMap<>();
@@ -80,7 +80,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void deleteLike(Long from, Long to, boolean isLike) {
-        log.info("Delete like/dislike from {} to {}", from, to);
+        log.debug("Delete like/dislike from {} to {}", from, to);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();

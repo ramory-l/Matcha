@@ -18,7 +18,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public List<Form> getAllForms() {
-        log.info("Get all forms");
+        log.debug("Get all forms");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
             return formMapper.getAllForms();
@@ -27,7 +27,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public Form getFormById(Long id) {
-        log.info("Get form by id: {}", id);
+        log.debug("Get form by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
             return formMapper.getFormById(id)
@@ -37,7 +37,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public Long createForm(Form form) {
-        log.info("Create new form");
+        log.debug("Create new form");
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -62,7 +62,7 @@ public class FormServiceImpl implements FormService {
         if (isNull(form.getId())) {
             throw new MatchaException("The update could not be completed because the identifier was not specified");
         }
-        log.info("Update form by id: {}", form.getId());
+        log.debug("Update form by id: {}", form.getId());
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -83,7 +83,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public void deleteFormById(Long id) {
-        log.info("Delete form by id: {}", id);
+        log.debug("Delete form by id: {}", id);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -104,7 +104,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public void deleteAllInactiveForms() {
-        log.info("Delete all inactive forms");
+        log.debug("Delete all inactive forms");
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();

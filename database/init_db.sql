@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS "likes";
 DROP TABLE IF EXISTS guests;
 DROP TABLE IF EXISTS images;
+DROP TABLE IF EXISTS user_ref_tags;
 DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS "user";
 DROP TABLE IF EXISTS form;
@@ -53,8 +54,14 @@ create table tags
     id        bigserial primary key                     not null,
     tag       varchar(255)                              not null,
     create_ts timestamp without time zone default now() not null,
-    user_id   bigint references "user" (id),
-    unique (tag, user_id)
+    unique (tag)
+);
+
+create table user_ref_tags
+(
+    tag_id  bigint not null references tags (id),
+    user_id bigint not null references "user" (id),
+    unique (tag_id, user_id)
 );
 
 create table guests

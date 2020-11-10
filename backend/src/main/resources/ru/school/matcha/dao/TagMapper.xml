@@ -4,20 +4,17 @@
     <resultMap id="Tag" type="ru.school.matcha.domain.Tag">
         <id property="id" column="id"/>
         <result property="tag" column="tag"/>
-        <result property="userId" column="user_id"/>
         <result property="createTs" column="create_ts"/>
     </resultMap>
 
     <insert id="createTag">
-        INSERT INTO tags(tag, user_id)
-        VALUES (#{tag}, #{userId})
+        INSERT INTO tags(tag)
+        VALUES (#{tag})
     </insert>
 
-    <delete id="deleteTagsWithName">
-        DELETE
-        FROM tags
-        WHERE tag = #{name}
-    </delete>
+    <insert id="createUserRefTag">
+        INSERT INTO user_ref_tags(tag_id, user_id) VALUES (#{tagId}, #{userId})
+    </insert>
 
     <delete id="deleteTagById">
         DELETE
@@ -28,7 +25,11 @@
     <delete id="deleteUserTags">
         DELETE
         FROM tags
-        WHERE user_id = #{userId}
+        WHERE id IN (SELECT tag_id FROM user_ref_tags WHERE user_id = #{userId})
+    </delete>
+
+    <delete id="deleteUserRefTag">
+        DELETE FROM user_ref_tags WHERE user_id = #{userId} AND tag_id = #{tagId}
     </delete>
 
     <select id="getTags" resultMap="Tag">
@@ -39,7 +40,7 @@
     <select id="getTagsByUserId" resultMap="Tag">
         SELECT *
         FROM tags
-        WHERE user_id = #{userId}
+        WHERE id IN (SELECT tag_id FROM user_ref_tags WHERE user_id = #{userId})
     </select>
 
     <select id="getTagByName" resultMap="Tag">
