@@ -9,7 +9,7 @@ import { getUser } from "../services/userService";
 const ProfilePage = (props) => {
   const [user, setUser] = useState(null);
   let username = props.match.params.username;
-  let isMe = username === "me" ? true : false;
+  let isMe = !username ? true : false;
   const [editMode, setEditMode] = useState(false);
 
   const handleEditModeChange = () => {
@@ -18,8 +18,9 @@ const ProfilePage = (props) => {
 
   useEffect(() => {
     async function fetchUser() {
-      let username = props.match.params.username;
-      if (username === "me") username = auth.getCurrentUser().sub;
+      const username = props.match.params.username
+        ? props.match.params.username
+        : auth.getCurrentUser().sub;
       const { data: user } = await getUser(username);
       setUser(user);
     }
@@ -33,7 +34,9 @@ const ProfilePage = (props) => {
           <div className="col-3">
             <figure className="figure">
               <img
-                src="/default-avatar.png"
+                src={
+                  user.avatar?.url ? user.avatar?.url : "/default-avatar.png"
+                }
                 className="figure-img img-fluid rounded"
                 alt="avatar"
               />
@@ -50,14 +53,7 @@ const ProfilePage = (props) => {
                 Edit profile
               </button>
             ) : (
-              <Link
-                to={{
-                  pathname: `/messages/${user.username}`,
-                  state: {
-                    recipient: user,
-                  },
-                }}
-              >
+              <Link to={`/messages/${user.username}`}>
                 <button type="button" className="btn btn-primary">
                   Send a message
                 </button>

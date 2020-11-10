@@ -22,7 +22,7 @@ const NavBar = ({ user }) => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
-            <NavLink className="nav-link" to="/profile/me">
+            <NavLink className="nav-link" to="/profile">
               My Profile
             </NavLink>
           </li>
@@ -32,13 +32,13 @@ const NavBar = ({ user }) => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="/photos">
-              Photos
+            <NavLink className="nav-link" to="/settings">
+              Settings
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="/settings">
-              Settings
+            <NavLink className="nav-link" to="/search">
+              Search
             </NavLink>
           </li>
         </ul>
