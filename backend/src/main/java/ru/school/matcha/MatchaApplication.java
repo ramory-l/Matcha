@@ -46,7 +46,7 @@ public class MatchaApplication {
                 });
                 path("/tags", () -> {
                     get("/", TagController.getTags, new JsonTransformer());
-                    get("/:tagId", UserController.getUsersByTagId, new JsonTransformer());
+                    get("/:tagName", UserController.getUsersByTagName, new JsonTransformer());
                     delete("/:id", TagController.deleteTagById, new JsonTransformer());
                 });
                 path("/guests", () -> {

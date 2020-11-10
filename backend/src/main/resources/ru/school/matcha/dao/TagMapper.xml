@@ -7,7 +7,7 @@
         <result property="createTs" column="create_ts"/>
     </resultMap>
 
-    <insert id="createTag">
+    <insert id="createTag" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
         INSERT INTO tags(tag)
         VALUES (#{tag})
     </insert>
