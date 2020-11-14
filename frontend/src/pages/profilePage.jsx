@@ -4,7 +4,7 @@ import ListGroup from "../components/common/listGroup";
 import Loading from "../components/common/loading";
 import ProfileForm from "../components/profileForm";
 import auth from "../services/authService";
-import { getUser } from "../services/userService";
+import { getUser, getUserTags } from "../services/userService";
 
 const ProfilePage = (props) => {
   const [user, setUser] = useState(null);
@@ -22,6 +22,7 @@ const ProfilePage = (props) => {
         ? props.match.params.username
         : auth.getCurrentUser().sub;
       const { data: user } = await getUser(username);
+      // const { data: tags } = await getUserTags(user.id);
       setUser(user);
     }
     fetchUser();
