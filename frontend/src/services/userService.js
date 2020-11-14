@@ -56,7 +56,7 @@ export function updateUser(user) {
 }
 
 export function getUserTags(userId) {
-  return http.get(`${apiEndpoint}/${userId}/tags/`, {
+  return http.get(`${apiEndpoint}/${userId}/tags`, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }

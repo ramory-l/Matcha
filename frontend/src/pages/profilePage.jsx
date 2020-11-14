@@ -22,7 +22,8 @@ const ProfilePage = (props) => {
         ? props.match.params.username
         : auth.getCurrentUser().sub;
       const { data: user } = await getUser(username);
-      // const { data: tags } = await getUserTags(user.id);
+      const { data: tags } = await getUserTags(user.id);
+      user.tags = tags;
       setUser(user);
     }
     fetchUser();

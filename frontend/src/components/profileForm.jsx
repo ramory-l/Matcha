@@ -4,6 +4,7 @@ import Form from "./common/form";
 import * as userService from "../services/userService";
 import moment from "moment";
 import { toast } from "react-toastify";
+import TagInput from "./tagInput";
 
 class ProfileForm extends Form {
   state = {
@@ -13,6 +14,7 @@ class ProfileForm extends Form {
       gender: "",
       birthday: "",
       description: "",
+      tags: [],
     },
     errors: {},
   };
@@ -38,6 +40,7 @@ class ProfileForm extends Form {
       gender: user.gender || "",
       birthday: moment(user.birthday).format("YYYY-MM-DD") || "",
       description: user.description || "",
+      tags: user.tags,
     };
   }
 
@@ -47,6 +50,7 @@ class ProfileForm extends Form {
     gender: Joi.string().optional(),
     birthday: Joi.any().optional(),
     description: Joi.any().optional(),
+    tags: Joi.array().optional(),
   });
 
   doSubmit = async () => {
@@ -56,24 +60,39 @@ class ProfileForm extends Form {
   };
 
   render() {
-    const readonly = !(this.props.editMode && this.props.isMe);
+    const { editMode, isMe } = this.props;
+    const readonly = !(editMode && isMe);
     const { firstName, lastName } = this.state.data;
     return (
       <form onSubmit={this.handleSubmit}>
-        <h1>
-          {this.props.editMode ? "Editing profile" : firstName + " " + lastName}
-        </h1>
-        {this.props.editMode
+        <h1>{editMode ? "Editing profile" : firstName + " " + lastName}</h1>
+        {editMode
           ? this.renderInput("firstName", "First Name", readonly)
           : null}
-        {this.props.editMode
-          ? this.renderInput("lastName", "Last Name", readonly)
-          : null}
+        {editMode ? this.renderInput("lastName", "Last Name", readonly) : null}
         {this.renderDatePicker("birthday", "Birthday", readonly)}
         {readonly
           ? this.renderInput("gender", "Gender", readonly)
           : this.renderSelect("gender", "Gender", ["woman", "man"])}
         {this.renderTextArea("description", "Description", readonly)}
+        <TagInput
+          tags={[
+            "kek",
+            "sex",
+            "gay",
+            "suck",
+            "bitch",
+            "big ass",
+            "jojo",
+            "anime",
+            "nasvai",
+            "gay porn",
+            "erotic",
+            "suka",
+            "zaebalsya",
+          ]}
+          editMode={editMode}
+        />
         {readonly ? null : this.renderButton("Save")}
       </form>
     );
