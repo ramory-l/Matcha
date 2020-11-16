@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../components/common/pagination";
-import * as userService from "../services/userService";
-import { paginate } from "../utils/paginate";
-import auth from "../services/authService";
 import Users from "../components/users";
 import WithLoading from "../components/common/withLoading";
+import queryString from "query-string";
+import auth from "../services/authService";
+import { paginate } from "../utils/paginate";
+import * as userService from "../services/userService";
+import { getUsersWithTag } from "../services/tagsService";
 
 const UsersWithLoading = WithLoading(Users);
 
-const HomePage = () => {
+const HomePage = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,12 +24,18 @@ const HomePage = () => {
         "likesDislikes",
         true
       );
+      const { tag } = queryString.parse(props.location.search);
       setLikesDislikes(likesDislikes);
-      setUsers(users);
+      if (tag) {
+        const { data: usersWithTag } = await getUsersWithTag(tag);
+        setUsers(usersWithTag);
+      } else {
+        setUsers(users);
+      }
       setIsLoading(false);
     }
     fetchUsers();
-  }, []);
+  }, [props.location.search]);
 
   const filtered = users.filter((user) => {
     if (likesDislikes["like"].includes(user.id)) user.isLiked = true;

@@ -4,7 +4,7 @@ import Form from "./common/form";
 import * as userService from "../services/userService";
 import moment from "moment";
 import { toast } from "react-toastify";
-import TagInput from "./tagInput";
+import TagForm from "./tagForm";
 
 class ProfileForm extends Form {
   state = {
@@ -14,7 +14,6 @@ class ProfileForm extends Form {
       gender: "",
       birthday: "",
       description: "",
-      tags: [],
     },
     errors: {},
   };
@@ -40,7 +39,6 @@ class ProfileForm extends Form {
       gender: user.gender || "",
       birthday: moment(user.birthday).format("YYYY-MM-DD") || "",
       description: user.description || "",
-      tags: user.tags,
     };
   }
 
@@ -50,7 +48,6 @@ class ProfileForm extends Form {
     gender: Joi.string().optional(),
     birthday: Joi.any().optional(),
     description: Joi.any().optional(),
-    tags: Joi.array().optional(),
   });
 
   doSubmit = async () => {
@@ -60,7 +57,7 @@ class ProfileForm extends Form {
   };
 
   render() {
-    const { editMode, isMe } = this.props;
+    const { editMode, isMe, user } = this.props;
     const readonly = !(editMode && isMe);
     const { firstName, lastName } = this.state.data;
     return (
@@ -75,24 +72,7 @@ class ProfileForm extends Form {
           ? this.renderInput("gender", "Gender", readonly)
           : this.renderSelect("gender", "Gender", ["woman", "man"])}
         {this.renderTextArea("description", "Description", readonly)}
-        <TagInput
-          tags={[
-            "kek",
-            "sex",
-            "gay",
-            "suck",
-            "bitch",
-            "big ass",
-            "jojo",
-            "anime",
-            "nasvai",
-            "gay porn",
-            "erotic",
-            "suka",
-            "zaebalsya",
-          ]}
-          editMode={editMode}
-        />
+        <TagForm userId={user.id} editMode={editMode} />
         {readonly ? null : this.renderButton("Save")}
       </form>
     );

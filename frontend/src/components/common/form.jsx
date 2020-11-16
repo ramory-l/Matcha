@@ -5,6 +5,7 @@ import Select from "./select";
 import TextArea from "./textArea";
 import DatePicker from "./datePicker";
 import Joi from "joi";
+import InputWithButton from "./inputWithButton";
 
 class Form extends Component {
   state = {
@@ -114,6 +115,22 @@ class Form extends Component {
         value={data[name]}
         readonly={readonly}
         onChange={this.handleChange}
+      />
+    );
+  }
+
+  renderInputWithButton(name, placeholder, buttonLabel, event, type = "text") {
+    const { data, errors } = this.state;
+    return (
+      <InputWithButton
+        name={name}
+        value={data[name]}
+        placeholder={placeholder}
+        buttonLabel={buttonLabel}
+        type={type}
+        onChange={this.handleChange}
+        onClick={event}
+        error={errors[name]}
       />
     );
   }
