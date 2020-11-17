@@ -18,18 +18,21 @@ class ProfileForm extends Form {
     errors: {},
   };
 
-  populateProfileForm() {
-    this.setState({
-      data: this.mapToViewModel(this.props.user),
-    });
+  updateToNextProfile() {
+    this.setState({ data: this.mapToViewModel(this.props.user) });
+  }
+
+  updateCurrentProfile() {
+    this.setState({ data: this.mapToViewModel(this.state.data) });
   }
 
   componentDidMount() {
-    this.populateProfileForm();
+    this.updateToNextProfile();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props !== prevProps) this.populateProfileForm();
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props !== prevProps) this.updateToNextProfile();
+    if (this.state !== prevState) this.updateCurrentProfile();
   }
 
   mapToViewModel(user) {
@@ -37,7 +40,8 @@ class ProfileForm extends Form {
       firstName: user.firstName,
       lastName: user.lastName,
       gender: user.gender || "",
-      birthday: moment(user.birthday).format("YYYY-MM-DD") || "",
+      birthday:
+        (user.birthday && moment(user.birthday).format("YYYY-MM-DD")) || "",
       description: user.description || "",
     };
   }
@@ -54,6 +58,7 @@ class ProfileForm extends Form {
     await userService.updateUser(this.state.data);
     toast.success("Changes successfully saved!");
     this.props.onEditModeChange();
+    this.updateCurrentProfile();
   };
 
   render() {

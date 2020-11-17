@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import ListGroup from "../components/common/listGroup";
-import Loading from "../components/common/loading";
-import ProfileForm from "../components/profileForm";
+import WithLoading from "../components/common/withLoading";
+import User from "../components/user";
 import auth from "../services/authService";
 import { getUser } from "../services/userService";
 
+const UserWithLoading = WithLoading(User);
+
 const ProfilePage = (props) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
-  let username = props.match.params.username;
-  let isMe = !username ? true : false;
+  let isMe = !props.match.params.username ? true : false;
   const [editMode, setEditMode] = useState(false);
 
   const handleEditModeChange = () => {
@@ -23,62 +23,19 @@ const ProfilePage = (props) => {
         : auth.getCurrentUser().sub;
       const { data: user } = await getUser(username);
       setUser(user);
+      setIsLoading(false);
     }
     fetchUser();
   }, [props]);
 
   return (
-    <>
-      {user ? (
-        <div className="row">
-          <div className="col-3">
-            <figure className="figure">
-              <img
-                src={
-                  user.avatar?.url ? user.avatar?.url : "/default-avatar.png"
-                }
-                className="figure-img img-fluid rounded"
-                alt="avatar"
-              />
-              <figcaption className="figure-caption text-center">
-                Fame rating: <strong>{user.rate}</strong>
-              </figcaption>
-            </figure>
-            {isMe ? (
-              <button
-                onClick={handleEditModeChange}
-                type="button"
-                className="btn btn-primary"
-              >
-                Edit profile
-              </button>
-            ) : (
-              <Link to={`/messages/${user.username}`}>
-                <button type="button" className="btn btn-primary">
-                  Send a message
-                </button>
-              </Link>
-            )}
-          </div>
-          <div className="col-6">
-            <ProfileForm
-              {...props}
-              user={user}
-              isMe={isMe}
-              editMode={editMode}
-              onEditModeChange={handleEditModeChange}
-            />
-          </div>
-          <div className="col-2">
-            <ListGroup
-              items={["Who viewed my profile", "Who liked me", "My matches"]}
-            />
-          </div>
-        </div>
-      ) : (
-        <Loading />
-      )}
-    </>
+    <UserWithLoading
+      isLoading={isLoading}
+      user={user}
+      isMe={isMe}
+      editMode={editMode}
+      onEditModeChange={handleEditModeChange}
+    />
   );
 };
 
