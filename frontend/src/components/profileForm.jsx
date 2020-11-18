@@ -30,9 +30,9 @@ class ProfileForm extends Form {
     this.updateToNextProfile();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props !== prevProps) this.updateToNextProfile();
-    if (this.state !== prevState) this.updateCurrentProfile();
+  componentDidUpdate(prevProps) {
+    if (this.props.user.username !== prevProps.user.username)
+      this.updateToNextProfile();
   }
 
   mapToViewModel(user) {
