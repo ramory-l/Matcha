@@ -5,6 +5,7 @@ import * as userService from "../services/userService";
 import moment from "moment";
 import { toast } from "react-toastify";
 import TagForm from "./tagForm";
+import ProfileImages from "./profileImages";
 
 class ProfileForm extends Form {
   state = {
@@ -68,6 +69,7 @@ class ProfileForm extends Form {
     return (
       <form onSubmit={this.handleSubmit}>
         <h1>{editMode ? "Editing profile" : firstName + " " + lastName}</h1>
+        <ProfileImages modalTitle={`${firstName}'s photos`} />
         {editMode
           ? this.renderInput("firstName", "First Name", readonly)
           : null}
