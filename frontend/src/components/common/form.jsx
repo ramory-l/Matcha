@@ -23,6 +23,30 @@ class Form extends Component {
     return errors;
   };
 
+  inputNeedConfirm = ({ name }) => {
+    if (name.startsWith("to_") || name.endsWith("_confirm")) {
+      let isTo = name.startsWith("to_") ? true : false;
+      let pureName = isTo ? name.slice(3) : name.slice(0, -8);
+      return [pureName, isTo];
+    }
+    return null;
+  };
+
+  validateRefs = ([name, isTo], input) => {
+    const { value } = input;
+    const TO = `to_${name}`;
+    const CONFIRM = `${name}_confirm`;
+    const obj = isTo
+      ? { [TO]: value, [CONFIRM]: this.state.data[CONFIRM] }
+      : { [TO]: this.state.data[TO], [CONFIRM]: value };
+    const schema = Joi.object({
+      [TO]: this.schema.extract(TO),
+      [CONFIRM]: this.schema.extract(CONFIRM),
+    });
+    const { error } = schema.validate(obj);
+    return error ? error.details[0].message : null;
+  };
+
   validateProperty = ({ name, value }) => {
     const obj = { [name]: value };
     const schema = Joi.object({ [name]: this.schema.extract(name) });
@@ -42,10 +66,20 @@ class Form extends Component {
 
   handleChange = ({ currentTarget: input }) => {
     const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(input);
+    const inputName = this.inputNeedConfirm(input);
+    const errorMessage = inputName
+      ? this.validateRefs(inputName, input)
+      : this.validateProperty(input);
 
     if (errorMessage) errors[input.name] = errorMessage;
-    else delete errors[input.name];
+    else {
+      if (inputName) {
+        const to = `to_${inputName[0]}`;
+        const confirm = `${inputName[0]}_confirm`;
+        delete errors[to];
+        delete errors[confirm];
+      } else delete errors[input.name];
+    }
 
     const data = { ...this.state.data };
     data[input.name] = input.value;

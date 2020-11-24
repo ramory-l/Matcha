@@ -13,7 +13,8 @@ class RegisterForm extends Form {
       firstName: "",
       lastName: "",
       email: "",
-      password: "",
+      to_password: "",
+      password_confirm: "",
     },
     errors: {},
   };
@@ -26,15 +27,19 @@ class RegisterForm extends Form {
       .email({ tlds: false })
       .required()
       .label("Email address"),
-    password: Joi.string().required().label("Password"),
+    to_password: Joi.string().required().label("Password"),
+    password_confirm: Joi.any()
+      .equal(Joi.ref("to_password"))
+      .required()
+      .label("Confirm password")
+      .options({
+        messages: { "any.only": '"Password" and {{#label}} does not match' },
+      }),
   });
 
   doSubmit = async () => {
-    const test = { ...this.state.data };
-    delete test.firstName;
-    delete test.lastName;
     try {
-      const response = await userService.register(test);
+      const response = await userService.register(this.state.data);
       auth.loginWithJwt(response.headers["x-auth-token"]);
       window.location = "/";
     } catch (ex) {
@@ -54,7 +59,13 @@ class RegisterForm extends Form {
         {this.renderInput("firstName", "First Name")}
         {this.renderInput("lastName", "Last Name")}
         {this.renderInput("email", "Email address")}
-        {this.renderInput("password", "Password", false, "password")}
+        {this.renderInput("to_password", "Password", false, "password")}
+        {this.renderInput(
+          "password_confirm",
+          "Password Confirm",
+          false,
+          "password"
+        )}
         <div className="RegisterForm-Buttons">
           {this.renderButton("Register")}
           <Link to="/auth/login">
