@@ -2,6 +2,7 @@ package ru.school.matcha.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
+import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.FormMapper;
 import ru.school.matcha.domain.Form;
@@ -30,13 +31,12 @@ public class FormServiceImpl implements FormService {
         log.debug("Get form by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
-            return formMapper.getFormById(id)
-                    .orElseThrow(() -> new MatchaException(String.format("Form with id: %s doesn't exist", id)));
+            return formMapper.getFormById(id).orElseThrow(NotFoundException::new);
         }
     }
 
     @Override
-    public Long createForm(Form form) {
+    public Form createForm(Form form) {
         log.debug("Create new form");
         SqlSession sqlSession = null;
         try {
@@ -44,7 +44,7 @@ public class FormServiceImpl implements FormService {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
             formMapper.createForm(form);
             sqlSession.commit();
-            return form.getId();
+            return form;
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();

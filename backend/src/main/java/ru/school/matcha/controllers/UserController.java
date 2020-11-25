@@ -7,14 +7,15 @@ import ru.school.matcha.converters.UserFullConverter;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.dto.UserFullDto;
-import ru.school.matcha.exceptions.MatchaException;
-import ru.school.matcha.security.enums.Role;
+import ru.school.matcha.enums.Location;
+import ru.school.matcha.enums.Path;
+import ru.school.matcha.enums.Response;
+import ru.school.matcha.enums.Role;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.TagServiceImpl;
 import ru.school.matcha.services.UserServiceImpl;
 import ru.school.matcha.services.interfaces.TagService;
 import ru.school.matcha.services.interfaces.UserService;
-import spark.HaltException;
 import spark.Route;
 
 import java.util.List;
@@ -43,198 +44,80 @@ public class UserController {
     }
 
     public static Route createUser = (request, response) -> {
-        try {
-            UserFullDto userFullDto = userFullDtoSerializer.deserialize(request.body(), UserFullDto.class);
-            User user = userFullConverter.convertFromDto(userFullDto);
-            userService.createUser(user);
-            response.status(204);
-            return response.body();
-        } catch (MatchaException ex) {
-            log.error("Failed to create user", ex);
-            response.status(400);
-            response.body(String.format("Failed to create user. %s", ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to create user", ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to create user. %s", ex.getMessage()));
-        }
+        UserFullDto userFullDto = userFullDtoSerializer.deserialize(request.body(), UserFullDto.class);
+        User user = userFullConverter.convertFromDto(userFullDto);
+        userService.createUser(user);
+        response.status(Response.POST.getStatus());
+        response.header(Location.HEADER, Location.USERS.getUrl() + user.getId());
         return response.body();
     };
 
     public static Route batchUsersCreate = (request, response) -> {
-        try {
-            AuthorizationController.authorize(request, Role.ADMIN);
-            Serializer<UserFullDto> serializer = new Serializer<>();
-            List<UserFullDto> userFullDtoList = serializer.deserializeList(request.body(), UserFullDto.class);
-            List<User> users = userFullConverter.createFromDtos(userFullDtoList);
-            userService.batchCreateUsers(users);
-            response.status(204);
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to batch create users", ex);
-            response.status(400);
-            response.body(String.format("Failed to batch create users. %s", ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to batch create users", ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to batch create users. %s", ex.getMessage()));
-        }
+        AuthorizationController.authorize(request, Role.ADMIN);
+        Serializer<UserFullDto> serializer = new Serializer<>();
+        List<UserFullDto> userFullDtoList = serializer.deserializeList(request.body(), UserFullDto.class);
+        List<User> users = userFullConverter.createFromDtos(userFullDtoList);
+        userService.batchCreateUsers(users);
+        response.status(Response.POST.getStatus());
         return response.body();
     };
 
     public static Route getAllUsers = (request, response) -> {
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            List<User> users = userService.getAllUsers();
-            List<UserDto> result = userConverter.createFromEntities(users);
-            response.status(200);
-            return result;
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to get all users", ex);
-            response.status(400);
-            response.body(String.format("Failed to get all users. %s", ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to get all users", ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to get all users. %s", ex.getMessage()));
-        }
-        return response.body();
+        AuthorizationController.authorize(request, Role.USER);
+        List<User> users = userService.getAllUsers();
+        List<UserDto> result = userConverter.createFromEntities(users);
+        response.status(Response.GET.getStatus());
+        return result;
     };
 
     public static Route getUserById = (request, response) -> {
         Long id = parseLong(request.params("id"));
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            User user = userService.getUserById(id);
-            UserDto result = userConverter.convertFromEntity(user);
-            response.status(200);
-            return result;
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to get user by id: {}", id, ex);
-            response.status(400);
-            response.body(String.format("Failed to get user by id: %d. %s", id, ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to get user by id: {}", id, ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to get user by id: %d. %s", id, ex.getMessage()));
-        }
-        return response.body();
+        AuthorizationController.authorize(request, Role.USER);
+        User user = userService.getUserById(id);
+        UserDto result = userConverter.convertFromEntity(user);
+        response.status(Response.GET.getStatus());
+        return result;
     };
 
     public static Route getUserByUsername = (request, response) -> {
         String username = request.params("username");
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            User user = userService.getUserByUsername(username);
-            UserDto result = userConverter.convertFromEntity(user);
-            response.status(200);
-            return result;
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to get user by username: {}", username, ex);
-            response.status(400);
-            response.body(String.format("Failed to get user by username: %s. %s", username, ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to get user by username: {}", username, ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to get user by username: %s. %s", username, ex.getMessage()));
-        }
-        return response.body();
+        AuthorizationController.authorize(request, Role.USER);
+        User user = userService.getUserByUsername(username);
+        UserDto result = userConverter.convertFromEntity(user);
+        response.status(Response.GET.getStatus());
+        return result;
     };
 
     public static Route updateUser = (request, response) -> {
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            UserDto userDto = userDtoSerializer.deserialize(request.body(), UserDto.class);
-            User user = userConverter.convertFromDto(userDto);
-            userService.updateUser(user);
-            response.status(204);
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to update user", ex);
-            response.status(400);
-            response.body(String.format("Failed to update user. %s", ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to update user", ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to update user. %s", ex.getMessage()));
-        }
+        AuthorizationController.authorize(request, Role.USER);
+        UserDto userDto = userDtoSerializer.deserialize(request.body(), UserDto.class);
+        User user = userConverter.convertFromDto(userDto);
+        userService.updateUser(user);
+        response.status(Response.PUT.getStatus());
         return response.body();
     };
 
     public static Route deleteUserById = (request, response) -> {
         Long id = parseLong(request.params("id"));
-        try {
-            AuthorizationController.authorize(request, Role.ADMIN);
-            userService.deleteUserById(id);
-            response.status(204);
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to delete user by id: {}", id, ex);
-            response.status(400);
-            response.body(String.format("Failed to delete user by id: %d", id));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to delete user by id: {}", id, ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to delete user by id: %d", id));
-        }
+        AuthorizationController.authorize(request, Role.ADMIN);
+        userService.deleteUserById(id);
+        response.status(Response.DELETE.getStatus());
         return response.body();
     };
 
     public static Route deleteUserByUsername = (request, response) -> {
         String username = request.params("username");
-        try {
-            AuthorizationController.authorize(request, Role.ADMIN);
-            userService.deleteUserByUsername(username);
-            response.status(204);
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to delete user by username: {}", username, ex);
-            response.status(400);
-            response.body(String.format("Failed to delete user by username: %s. %s", username, ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to delete user by username: {}", username, ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to delete user by username: %s. %s", username, ex.getMessage()));
-        }
+        AuthorizationController.authorize(request, Role.ADMIN);
+        userService.deleteUserByUsername(username);
+        response.status(Response.DELETE.getStatus());
         return response.body();
     };
 
     public static Route getUsersByTagName = (request, response) -> {
         String tagName = request.params("tagName");
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            response.status(200);
-            return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId()));
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to get users by tag with name: {}", tagName, ex);
-            response.status(400);
-            response.body(String.format("Failed to get users by tag with name: %s. %s", tagName, ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to get users by tag with name: {}", tagName, ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to get users by tag with name: %s. %s", tagName, ex.getMessage()));
-        }
-        return response.body();
+        AuthorizationController.authorize(request, Role.USER);
+        response.status(Response.GET.getStatus());
+        return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId()));
     };
 
 }

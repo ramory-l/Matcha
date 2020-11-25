@@ -2,7 +2,7 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.exceptions.JwtAuthenticationException;
-import ru.school.matcha.security.enums.Role;
+import ru.school.matcha.enums.Role;
 import ru.school.matcha.services.AuthorizationServiceImpl;
 import ru.school.matcha.services.interfaces.AuthorizationService;
 import spark.Request;

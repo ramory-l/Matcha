@@ -3,6 +3,7 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
+import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.services.interfaces.ImageService;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
@@ -42,8 +43,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Get user by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getUserById(id)
-                    .orElseThrow(() -> new MatchaException(String.format("User with id: %d doesn't exist", id)));
+            return userMapper.getUserById(id).orElseThrow(NotFoundException::new);
         }
     }
 
@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Get user by username: {}", username);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getUserByUsername(username)
-                    .orElseThrow(() -> new MatchaException(String.format("User with username: %s doesn't exist", username)));
+            return userMapper.getUserByUsername(username).orElseThrow(NotFoundException::new);
         }
     }
 
@@ -92,7 +91,7 @@ public class UserServiceImpl implements UserService {
                 newUser.setFirstName(user.getFirstName());
                 newUser.setLastName(user.getLastName());
                 newUser.setRate(0L);
-                defaultForm.setId(formService.createForm(defaultForm));
+                defaultForm.setId(formService.createForm(defaultForm).getId());
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
                 sqlSession.commit();
@@ -122,7 +121,7 @@ public class UserServiceImpl implements UserService {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession(ExecutorType.BATCH);
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             users.forEach(user -> {
-                user.getForm().setId(formService.createForm(user.getForm()));
+                user.getForm().setId(formService.createForm(user.getForm()).getId());
                 try {
                     user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
                 } catch (Exception ex) {

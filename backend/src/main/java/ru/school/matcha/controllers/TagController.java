@@ -5,11 +5,11 @@ import ru.school.matcha.converters.Converter;
 import ru.school.matcha.converters.TagConverter;
 import ru.school.matcha.domain.Tag;
 import ru.school.matcha.dto.TagDto;
-import ru.school.matcha.exceptions.MatchaException;
-import ru.school.matcha.security.enums.Role;
+import ru.school.matcha.enums.Location;
+import ru.school.matcha.enums.Response;
+import ru.school.matcha.enums.Role;
 import ru.school.matcha.services.TagServiceImpl;
 import ru.school.matcha.services.interfaces.TagService;
-import spark.HaltException;
 import spark.Route;
 
 import static java.lang.Long.parseLong;
@@ -29,106 +29,40 @@ public class TagController {
     public static Route createTag = (request, response) -> {
         String tagName = request.params("tagName");
         Long userId = parseLong(request.params("userId"));
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            tagService.createUserRefTag(tagName, userId);
-            response.status(204);
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to create tag", ex);
-            response.status(400);
-            response.body(String.format("Failed to create tag. %s", ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to create tag", ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to create tag. %s", ex.getMessage()));
-        }
+        AuthorizationController.authorize(request, Role.USER);
+        tagService.createUserRefTag(tagName, userId);
+        response.header(Location.HEADER, Location.TAGS.getUrl() + userId + "/tags");
+        response.status(Response.POST.getStatus());
         return response.body();
     };
 
     public static Route getTags = (request, response) -> {
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            response.status(200);
-            return tagConverter.createFromEntities(tagService.getTags());
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to get tags", ex);
-            response.status(400);
-            response.body(String.format("Failed to get tags. %s", ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to tags", ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to get tags. %s", ex.getMessage()));
-        }
-        return response.body();
+        AuthorizationController.authorize(request, Role.USER);
+        response.status(Response.GET.getStatus());
+        return tagConverter.createFromEntities(tagService.getTags());
     };
 
     public static Route getTagsByUserId = (request, response) -> {
         Long userId = parseLong(request.params("id"));
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            response.status(200);
-            return tagConverter.createFromEntities(tagService.getTagsByUserId(userId));
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to get tags by user with id: {}", userId, ex);
-            response.status(400);
-            response.body(String.format("Failed to get tags by user with id: %d. %s", userId, ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to get tags by user with id: {}", userId, ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to get tags by user with id: %d. %s", userId, ex.getMessage()));
-        }
-        return response.body();
+        AuthorizationController.authorize(request, Role.USER);
+        response.status(Response.GET.getStatus());
+        return tagConverter.createFromEntities(tagService.getTagsByUserId(userId));
     };
 
     public static Route deleteTagById = (request, response) -> {
         Long id = parseLong(request.params("id"));
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            tagService.deleteTagById(id);
-            response.status(204);
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to delete tag with id: {}", id, ex);
-            response.status(400);
-            response.body(String.format("Failed to delete tag with id: %d. %s", id, ex.getMessage()));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to delete tag with id: {}", id, ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to delete tag with id: %d. %s", id, ex.getMessage()));
-        }
+        AuthorizationController.authorize(request, Role.USER);
+        tagService.deleteTagById(id);
+        response.status(Response.DELETE.getStatus());
         return response.body();
     };
 
     public static Route deleteTag = (request, response) -> {
         String tagName = request.params("tagName");
         Long userId = parseLong(request.params("userId"));
-        try {
-            AuthorizationController.authorize(request, Role.USER);
-            tagService.deleteUserRefTag(tagName, userId);
-            response.status(204);
-        } catch (HaltException ex) {
-            response.status(ex.statusCode());
-            response.body(ex.body());
-        } catch (MatchaException ex) {
-            log.error("Failed to delete tag with name: {} for user with id: {}", tagName, userId, ex);
-            response.status(400);
-            response.body(String.format("Failed to delete tag with name: %s for user with id: %d", tagName, userId));
-        } catch (Exception ex) {
-            log.error("An unexpected error occurred while trying to delete tag with name: {} for user with id: {}", tagName, userId, ex);
-            response.status(500);
-            response.body(String.format("An unexpected error occurred while trying to delete tag with name: %s for user with id: %d", tagName, userId));
-        }
+        AuthorizationController.authorize(request, Role.USER);
+        tagService.deleteUserRefTag(tagName, userId);
+        response.status(Response.DELETE.getStatus());
         return response.body();
     };
 

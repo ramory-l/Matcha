@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.dao.ImageMapper;
 import ru.school.matcha.domain.Image;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.services.interfaces.ImageService;
 import ru.school.matcha.services.interfaces.UserService;
 import ru.school.matcha.utils.GoogleDrive;
@@ -42,7 +43,7 @@ public class ImageServiceImpl implements ImageService {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             imageMapper.createImage(image);
             sqlSession.commit();
-                return image.getId();
+            return image.getId();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
@@ -70,8 +71,7 @@ public class ImageServiceImpl implements ImageService {
         log.debug("Get image by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
-            return imageMapper.getImageById(id)
-                    .orElseThrow(() -> new MatchaException(String.format("Image with id: %d doesn't exist", id)));
+            return imageMapper.getImageById(id).orElseThrow(NotFoundException::new);
         }
     }
 
@@ -80,8 +80,7 @@ public class ImageServiceImpl implements ImageService {
         log.debug("Get image by external id: {}", externalId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
-            return imageMapper.getImageByExternalId(externalId)
-                    .orElseThrow(() -> new MatchaException(String.format("Image with external id: %s doesn't exist", externalId)));
+            return imageMapper.getImageByExternalId(externalId).orElseThrow(NotFoundException::new);
         }
     }
 
@@ -91,8 +90,7 @@ public class ImageServiceImpl implements ImageService {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             userService.getUserById(userId);
-            return imageMapper.getAvatarByUserId(userId)
-                    .orElseThrow(() -> new MatchaException(String.format("Avatar by user with id: %d doesn't exist", userId)));
+            return imageMapper.getAvatarByUserId(userId).orElseThrow(NotFoundException::new);
         }
     }
 
