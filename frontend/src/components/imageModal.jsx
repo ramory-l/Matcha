@@ -12,7 +12,7 @@ const ImageModal = ({ images, modalTitle, modalTarget, carouselTarget }) => {
               key={index}
               data-target={`#${carouselTarget}`}
               data-slide-to={index}
-              class={index === 0 ? "active" : ""}
+              className={index === 0 ? "active" : ""}
             ></li>
           ))}
         </ol>
@@ -23,7 +23,7 @@ const ImageModal = ({ images, modalTitle, modalTarget, carouselTarget }) => {
               className={index === 0 ? `carousel-item active` : `carousel-item`}
             >
               <img
-                alt={`${index}`}
+                alt={`${modalTitle.slice(0, -9)} ${index}`}
                 className="d-block w-100"
                 src={`${image}`}
               />

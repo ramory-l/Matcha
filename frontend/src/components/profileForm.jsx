@@ -69,7 +69,10 @@ class ProfileForm extends Form {
     return (
       <form onSubmit={this.handleSubmit}>
         <h1>{editMode ? "Editing profile" : firstName + " " + lastName}</h1>
-        <ProfileImages modalTitle={`${firstName}'s photos`} />
+        <ProfileImages
+          modalTitle={`${firstName}'s photos`}
+          editMode={editMode}
+        />
         {editMode
           ? this.renderInput("firstName", "First Name", readonly)
           : null}

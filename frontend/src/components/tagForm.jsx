@@ -2,8 +2,8 @@ import React from "react";
 import Form from "./common/form";
 import Joi from "joi";
 import { createTag, deleteTag } from "../services/tagsService";
-import "./styles/tagInput.scss";
 import { getUserTags } from "../services/userService";
+import "./styles/tagInput.scss";
 
 class TagForm extends Form {
   state = {
@@ -31,17 +31,6 @@ class TagForm extends Form {
     tagName: Joi.string().alphanum().min(2).max(16).required(),
   });
 
-  doSubmit = async () => {
-    const tags = [...this.state.data.tags];
-    const { tagName } = this.state.data;
-    await createTag(tagName);
-
-    const lastTagId = tags[tags.length - 1].id + 1;
-    const newTag = { id: lastTagId, tag: tagName };
-    tags.push(newTag);
-    this.setState({ data: { tags, tagName: "" } });
-  };
-
   handleTagClick = async (e, editMode) => {
     if (editMode) {
       e.preventDefault();
@@ -51,6 +40,17 @@ class TagForm extends Form {
       const filteredTags = tags.filter((tag) => tag.tag !== tagName);
       this.setState({ data: { tags: filteredTags, tagName: "" } });
     }
+  };
+
+  doSubmit = async () => {
+    const tags = [...this.state.data.tags];
+    const { tagName } = this.state.data;
+    await createTag(tagName);
+
+    const lastTagId = tags.length !== 0 ? tags[tags.length - 1].id + 1 : 0;
+    const newTag = { id: lastTagId, tag: tagName };
+    tags.push(newTag);
+    this.setState({ data: { tags, tagName: "" } });
   };
 
   render() {

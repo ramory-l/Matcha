@@ -1,4 +1,5 @@
 import React from "react";
+import CloseButton from "./closeButton";
 
 const Modal = ({ children, modalTarget, modalTitle }) => {
   return (
@@ -13,24 +14,11 @@ const Modal = ({ children, modalTarget, modalTitle }) => {
         <div className="modal-content bg-dark text-light">
           <div className="modal-header">
             <h5 className="modal-title">{modalTitle}</h5>
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span className="text-light" aria-hidden="true">&times;</span>
-            </button>
+            <CloseButton color="light" />
           </div>
           <div className="modal-body">{children}</div>
           <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
+            <CloseButton type={1} />
           </div>
         </div>
       </div>
