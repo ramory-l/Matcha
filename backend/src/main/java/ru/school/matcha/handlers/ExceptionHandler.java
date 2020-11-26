@@ -2,6 +2,7 @@ package ru.school.matcha.handlers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.enums.Response;
+import ru.school.matcha.exceptions.MailException;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.exceptions.NotFoundException;
 import spark.HaltException;
@@ -19,6 +20,7 @@ public class ExceptionHandler {
         exception(MatchaException.class, matcha);
         exception(NumberFormatException.class, numberFormat);
         exception(AuthenticationException.class, authentication);
+        exception(MailException.class, mail);
         exception(Exception.class, exception);
     }
 
@@ -30,6 +32,12 @@ public class ExceptionHandler {
     public static spark.ExceptionHandler<HaltException> halt = (ex, request, response) -> {
         response.status(ex.statusCode());
         response.body(ex.body());
+    };
+
+    public static spark.ExceptionHandler<MailException> mail = (ex, request, response) -> {
+        log.error(ex.getMessage());
+        response.status(Response.MAIL_EXCEPTION.getStatus());
+        response.body(ex.getMessage());
     };
 
     public static spark.ExceptionHandler<NotFoundException> notFound = (ex, request, response) -> {

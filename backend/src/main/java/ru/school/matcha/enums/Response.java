@@ -15,6 +15,7 @@ public enum Response {
     NUMBER_FORMAT_EXCEPTION(org.eclipse.jetty.server.Response.SC_BAD_REQUEST, "Invalid number is passed"),
     NOT_FOUND_EXCEPTION(org.eclipse.jetty.server.Response.SC_NOT_FOUND, "Resource not found"),
     MATCHA_EXCEPTION(org.eclipse.jetty.server.Response.SC_BAD_REQUEST, "Bad request"),
+    MAIL_EXCEPTION(org.eclipse.jetty.server.Response.SC_BAD_REQUEST, null),
     EXCEPTION(org.eclipse.jetty.server.Response.SC_INTERNAL_SERVER_ERROR, "An unexpected error on server");
 
     private final int status;

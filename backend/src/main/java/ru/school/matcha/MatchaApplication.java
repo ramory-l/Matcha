@@ -8,6 +8,7 @@ import ru.school.matcha.enums.Path;
 import ru.school.matcha.handlers.ChatWebSocketHandler;
 import ru.school.matcha.handlers.ExceptionHandler;
 import ru.school.matcha.utils.GoogleDrive;
+import ru.school.matcha.utils.MailUtil;
 
 import static spark.Spark.*;
 
@@ -20,6 +21,7 @@ public class MatchaApplication {
         enableCORS();
         ExceptionHandler.enable();
         GoogleDrive.run();
+        MailUtil.initMail();
         path(Path.API.getUrl(), () -> {
             path(Path.AUTH.getUrl(), () ->
                     post("/login", AuthenticateController.authenticate, new JsonTransformer()));
