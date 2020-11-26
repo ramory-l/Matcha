@@ -8,7 +8,6 @@ import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.dto.UserFullDto;
 import ru.school.matcha.enums.Location;
-import ru.school.matcha.enums.Path;
 import ru.school.matcha.enums.Response;
 import ru.school.matcha.enums.Role;
 import ru.school.matcha.serializators.Serializer;
@@ -46,10 +45,10 @@ public class UserController {
     public static Route createUser = (request, response) -> {
         UserFullDto userFullDto = userFullDtoSerializer.deserialize(request.body(), UserFullDto.class);
         User user = userFullConverter.convertFromDto(userFullDto);
-        userService.createUser(user);
+        Long userId = userService.createUser(user);
         response.status(Response.POST.getStatus());
-        response.header(Location.HEADER, Location.USERS.getUrl() + user.getId());
-        return response.body();
+        response.header(Location.HEADER, Location.USERS.getUrl() + userId);
+        return "";
     };
 
     public static Route batchUsersCreate = (request, response) -> {
@@ -59,7 +58,7 @@ public class UserController {
         List<User> users = userFullConverter.createFromDtos(userFullDtoList);
         userService.batchCreateUsers(users);
         response.status(Response.POST.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route getAllUsers = (request, response) -> {
@@ -94,7 +93,7 @@ public class UserController {
         User user = userConverter.convertFromDto(userDto);
         userService.updateUser(user);
         response.status(Response.PUT.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route deleteUserById = (request, response) -> {
@@ -102,7 +101,7 @@ public class UserController {
         AuthorizationController.authorize(request, Role.ADMIN);
         userService.deleteUserById(id);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route deleteUserByUsername = (request, response) -> {
@@ -110,7 +109,7 @@ public class UserController {
         AuthorizationController.authorize(request, Role.ADMIN);
         userService.deleteUserByUsername(username);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route getUsersByTagName = (request, response) -> {

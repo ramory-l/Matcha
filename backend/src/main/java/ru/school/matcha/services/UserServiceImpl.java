@@ -57,15 +57,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(User user) {
+    public Long createUser(User user) {
         log.debug("Create new user");
         String username = user.getUsername();
         try {
-            try {
-                getUserByUsername(username);
-                throw new MatchaException();
-            } catch (MatchaException ignored) {
-            }
             try {
                 user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
             } catch (Exception ex) {
@@ -95,6 +90,7 @@ public class UserServiceImpl implements UserService {
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
                 sqlSession.commit();
+                return newUser.getId();
             } catch (Exception ex) {
                 if (nonNull(sqlSession)) {
                     sqlSession.rollback();
@@ -108,7 +104,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
         } catch (MatchaException ex) {
-            throw new MatchaException(String.format("User with username %s already exist", username));
+            throw new MatchaException("User already exist");
         }
     }
 

@@ -33,7 +33,7 @@ public class TagController {
         tagService.createUserRefTag(tagName, userId);
         response.header(Location.HEADER, Location.TAGS.getUrl() + userId + "/tags");
         response.status(Response.POST.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route getTags = (request, response) -> {
@@ -54,7 +54,7 @@ public class TagController {
         AuthorizationController.authorize(request, Role.USER);
         tagService.deleteTagById(id);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route deleteTag = (request, response) -> {
@@ -63,7 +63,7 @@ public class TagController {
         AuthorizationController.authorize(request, Role.USER);
         tagService.deleteUserRefTag(tagName, userId);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
 }

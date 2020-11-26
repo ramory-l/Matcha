@@ -55,7 +55,7 @@ public class LikeController {
         likeService.like(from, to, true);
         response.header(Location.HEADER, Location.LIKES.getUrl() + to + "/likes");
         response.status(Response.POST.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route createDislike = (request, response) -> {
@@ -64,7 +64,7 @@ public class LikeController {
         likeService.like(from, to, false);
         response.header(Location.HEADER, Location.DISLIKES.getUrl() + to + "/dislikes");
         response.status(Response.POST.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route deleteLike = (request, response) -> {
@@ -72,7 +72,7 @@ public class LikeController {
         AuthorizationController.authorize(request, Role.USER);
         likeService.deleteLike(from, to, true);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route deleteDislike = (request, response) -> {
@@ -80,7 +80,7 @@ public class LikeController {
         AuthorizationController.authorize(request, Role.USER);
         likeService.deleteLike(from, to, false);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
 }

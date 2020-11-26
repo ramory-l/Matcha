@@ -34,10 +34,10 @@ public class ImageController {
     public static Route createImage = (request, response) -> {
         AuthorizationController.authorize(request, Role.USER);
         ImageBase64Dto imageBase64Dto = imageBase64DtoSerializer.deserialize(request.body(), ImageBase64Dto.class);
-        Long id = imageService.createImage(imageBase64Dto.getBase64(), imageBase64Dto.getName() + ".jpg", imageBase64Dto.getUserId());
-        response.header(Location.HEADER, Location.IMAGES.getUrl() + id);
+        Long imageId = imageService.createImage(imageBase64Dto.getBase64(), imageBase64Dto.getName() + ".jpg", imageBase64Dto.getUserId());
+        response.header(Location.HEADER, Location.IMAGES.getUrl() + imageId);
         response.status(Response.POST.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route getImageById = (request, response) -> {
@@ -59,7 +59,7 @@ public class ImageController {
         AuthorizationController.authorize(request, Role.USER);
         imageService.deleteImageById(id);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
 }

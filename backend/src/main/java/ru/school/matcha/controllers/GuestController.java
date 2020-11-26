@@ -34,7 +34,7 @@ public class GuestController {
         guestService.createGuest(to, from);
         response.header(Location.HEADER, Location.GUESTS.getUrl() + to + "/guests");
         response.status(Response.POST.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route getGuestsByUserId = (request, response) -> {
@@ -49,7 +49,7 @@ public class GuestController {
         AuthorizationController.authorize(request, Role.ADMIN);
         guestService.deleteGuest(to, from);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
 }

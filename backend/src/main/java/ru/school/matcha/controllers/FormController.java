@@ -39,7 +39,7 @@ public class FormController {
         Form result = formService.createForm(form);
         response.header(Location.HEADER, Location.FORMS.getUrl() + result.getId());
         response.status(Response.GET.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route getAllForms = (request, response) -> {
@@ -65,7 +65,7 @@ public class FormController {
         Form form = formConverter.convertFromDto(formDto);
         formService.updateForm(form);
         response.status(Response.PUT.getStatus());
-        return response.body();
+        return "";
     };
 
     public static Route deleteFormById = (request, response) -> {
@@ -73,7 +73,7 @@ public class FormController {
         AuthorizationController.authorize(request, Role.ADMIN);
         formService.deleteFormById(id);
         response.status(Response.DELETE.getStatus());
-        return response.body();
+        return "";
     };
 
 }
