@@ -3,6 +3,7 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
+import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.services.interfaces.ImageService;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
@@ -42,8 +43,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Get user by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getUserById(id)
-                    .orElseThrow(() -> new MatchaException(String.format("User with id: %d doesn't exist", id)));
+            return userMapper.getUserById(id).orElseThrow(NotFoundException::new);
         }
     }
 
@@ -52,21 +52,15 @@ public class UserServiceImpl implements UserService {
         log.debug("Get user by username: {}", username);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getUserByUsername(username)
-                    .orElseThrow(() -> new MatchaException(String.format("User with username: %s doesn't exist", username)));
+            return userMapper.getUserByUsername(username).orElseThrow(NotFoundException::new);
         }
     }
 
     @Override
-    public void createUser(User user) {
+    public Long createUser(User user) {
         log.debug("Create new user");
         String username = user.getUsername();
         try {
-            try {
-                getUserByUsername(username);
-                throw new MatchaException();
-            } catch (MatchaException ignored) {
-            }
             try {
                 user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
             } catch (Exception ex) {
@@ -92,10 +86,11 @@ public class UserServiceImpl implements UserService {
                 newUser.setFirstName(user.getFirstName());
                 newUser.setLastName(user.getLastName());
                 newUser.setRate(0L);
-                defaultForm.setId(formService.createForm(defaultForm));
+                defaultForm.setId(formService.createForm(defaultForm).getId());
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
                 sqlSession.commit();
+                return newUser.getId();
             } catch (Exception ex) {
                 if (nonNull(sqlSession)) {
                     sqlSession.rollback();
@@ -109,7 +104,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
         } catch (MatchaException ex) {
-            throw new MatchaException(String.format("User with username %s already exist", username));
+            throw new MatchaException("User already exist");
         }
     }
 
@@ -122,7 +117,7 @@ public class UserServiceImpl implements UserService {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession(ExecutorType.BATCH);
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             users.forEach(user -> {
-                user.getForm().setId(formService.createForm(user.getForm()));
+                user.getForm().setId(formService.createForm(user.getForm()).getId());
                 try {
                     user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
                 } catch (Exception ex) {

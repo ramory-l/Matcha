@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.io.Resources;
 import ru.school.matcha.exceptions.JwtAuthenticationException;
-import ru.school.matcha.security.enums.Role;
+import ru.school.matcha.enums.Role;
 
 import java.io.IOException;
 import java.util.Arrays;

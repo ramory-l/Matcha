@@ -22,7 +22,7 @@
                      select="ru.school.matcha.dao.ImageMapper.getImageById"/>
     </resultMap>
 
-    <insert id="createUser">
+    <insert id="createUser" keyProperty="user.id" useGeneratedKeys="true" keyColumn="id">
         INSERT INTO "user"(username, email, password, first_name, last_name, is_active, form_id, rate, create_ts)
         VALUES (#{user.username},
                 #{user.email},

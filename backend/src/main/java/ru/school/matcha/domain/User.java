@@ -2,7 +2,7 @@ package ru.school.matcha.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.school.matcha.security.enums.Role;
+import ru.school.matcha.enums.Role;
 
 import java.util.Date;
 

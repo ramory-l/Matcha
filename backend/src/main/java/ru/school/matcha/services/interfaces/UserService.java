@@ -14,7 +14,7 @@ public interface UserService {
 
     List<User> getUsersByTagId(Long tagId);
 
-    void createUser(User user);
+    Long createUser(User user);
 
     void batchCreateUsers(List<User> users);
 

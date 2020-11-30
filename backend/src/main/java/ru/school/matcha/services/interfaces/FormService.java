@@ -11,7 +11,7 @@ public interface FormService {
 
     Form getFormById(Long id);
 
-    Long createForm(Form form);
+    Form createForm(Form form);
 
     void updateForm(Form form);
 
