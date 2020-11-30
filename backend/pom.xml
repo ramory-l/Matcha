@@ -25,6 +25,11 @@
         <postgres.version>42.2.18</postgres.version>
         <flywaycore.version>7.0.3</flywaycore.version>
         <mavenassemblyplugin.version>3.3.0</mavenassemblyplugin.version>
+        <javaxmail.version>1.4</javaxmail.version>
+        <commonsio.version>2.6</commonsio.version>
+        <googleapiclient.version>1.30.11</googleapiclient.version>
+        <googleoauthclientjetty.version>1.31.1</googleoauthclientjetty.version>
+        <googleapiservicesdrive.version>v3-rev197-1.25.0</googleapiservicesdrive.version>
     </properties>
 
     <dependencies>
@@ -101,26 +106,33 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>${jaxbruntime.version}</version>
         </dependency>
-
+        <!-- Google Drive -->
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
-            <version>1.30.11</version>
+            <version>${googleapiclient.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client-jetty</artifactId>
-            <version>1.31.1</version>
+            <version>${googleoauthclientjetty.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-drive</artifactId>
-            <version>v3-rev197-1.25.0</version>
+            <version>${googleapiservicesdrive.version}</version>
         </dependency>
+        <!-- Commons-IO -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>${commonsio.version}</version>
+        </dependency>
+        <!-- Mail -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${javaxmail.version}</version>
         </dependency>
 
     </dependencies>
