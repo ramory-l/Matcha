@@ -25,7 +25,7 @@ const ImageModal = ({ images, modalTitle, modalTarget, carouselTarget }) => {
               <img
                 alt={`${modalTitle.slice(0, -9)} ${index}`}
                 className="d-block w-100"
-                src={`${image}`}
+                src={`${image.link}`}
               />
             </div>
           ))}

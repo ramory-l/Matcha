@@ -1,27 +1,28 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { deleteUserImage, getUserImages } from "../services/imageService";
 import ImageModal from "./imageModal";
 import ProfileImage from "./profileImage";
 import "./styles/profileImages.scss";
 
-const ProfileImages = ({ modalTitle, editMode }) => {
+const ProfileImages = ({ userId, modalTitle, editMode }) => {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    const images = [
-      "/default-avatar.png",
-      "https://www.mirf.ru/wp-content/uploads/2018/05/Boku-no-Hero-Academia-1.jpg",
-      "https://cdnimg.rg.ru/img/content/153/10/69/1_d_850.jpg",
-      "https://lh3.googleusercontent.com/proxy/-wkNORYE6qZ-25xC99MOBqWdDflUh_3pPuXg31XNVzvher5IE-Vr5x4So2fG4054ckbWelfm8VaWGxJ4mUnPo3UVxsa5ufALBHMznX1fx81B9Se6L4x6aeSafvlpGKrNfXc-pN9ABeuHdo3YjUBzs0iGLT10vWw8Q90SaZfofapeBYNqKmnMrc4zzQ",
-    ];
-    setImages(images);
-  }, []);
+    async function fetchUserImages() {
+      const { data: images } = await getUserImages(userId);
+      console.log(images);
+      setImages(images);
+    }
+    fetchUserImages();
+  }, [userId]);
 
   const modalTarget = "profileImagesModal";
   const carouselTarget = "profileImagesCarousel";
 
-  const handleImageDelete = (index) => {
-    const newImages = images.filter((image, i) => i !== index);
+  const handleImageDelete = async (id) => {
+    const newImages = images.filter((image) => image.id !== id);
+    await deleteUserImage(id);
     setImages(newImages);
   };
 
@@ -37,7 +38,6 @@ const ProfileImages = ({ modalTitle, editMode }) => {
           <ProfileImage
             key={index}
             image={image}
-            index={index}
             onImageDelete={handleImageDelete}
             dataTarget={`#${carouselTarget}`}
             modalTitle={modalTitle}

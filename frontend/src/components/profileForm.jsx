@@ -70,6 +70,7 @@ class ProfileForm extends Form {
       <form onSubmit={this.handleSubmit}>
         <h1>{editMode ? "Editing profile" : firstName + " " + lastName}</h1>
         <ProfileImages
+          userId={user.id}
           modalTitle={`${firstName}'s photos`}
           editMode={editMode}
         />

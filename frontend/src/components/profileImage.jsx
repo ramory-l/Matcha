@@ -3,7 +3,6 @@ import CloseButton from "./common/closeButton";
 import "./styles/profileImage.scss";
 
 const ProfileImage = ({
-  index,
   dataTarget,
   image,
   modalTitle,
@@ -14,15 +13,15 @@ const ProfileImage = ({
     <div
       className="col-12 col-sm-6 col-lg-3"
       data-target={dataTarget}
-      data-slide-to={index}
+      data-slide-to={image.id}
     >
       {editMode ? (
-        <CloseButton onClick={() => onImageDelete(index)} color="black" />
+        <CloseButton onClick={() => onImageDelete(image.id)} color="black" />
       ) : null}
       <img
-        alt={`${modalTitle.slice(0, -9)} ${index}`}
+        alt={`${modalTitle.slice(0, -9)} ${image.id}`}
         className="w-100"
-        src={`${image}`}
+        src={`${image.link}`}
       />
     </div>
   );

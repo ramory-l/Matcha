@@ -11,7 +11,7 @@ export function register(user) {
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
-    password: user.password,
+    password: user.to_password,
   });
 }
 
