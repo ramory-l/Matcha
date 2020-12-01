@@ -23,7 +23,7 @@ const BasePage = () => {
       <NavBar user={user} />
       <main className="container">
         <Switch>
-          <Route path="/profile/:username?" component={ProfilePage} />
+          <Route path="/profile/:username" component={ProfilePage} />
           <Route path="/messages/:username?" component={MessagesPage} />
           <Route path="/search" component={SearchPage} />
           <Route path="/settings" component={SettingsPage} />

@@ -11,7 +11,6 @@ const ProfileImages = ({ userId, modalTitle, editMode }) => {
   useEffect(() => {
     async function fetchUserImages() {
       const { data: images } = await getUserImages(userId);
-      console.log(images);
       setImages(images);
     }
     fetchUserImages();
