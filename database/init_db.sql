@@ -69,7 +69,8 @@ create table guests
     id        bigserial primary key                     not null,
     guest_id  bigint references "user" (id),
     user_id   bigint references "user" (id),
-    create_ts timestamp without time zone default now() not null
+    date_ts timestamp without time zone default now() not null,
+    unique (guest_id, user_id)
 );
 
 create table images
