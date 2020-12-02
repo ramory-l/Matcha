@@ -5,12 +5,13 @@ import RecipientDescription from "../components/recipientDescription";
 import { getUser } from "../services/userService";
 
 const MessagesPage = (props) => {
+  console.log(props);
   const [recipient, setRecipient] = useState(null);
 
   useEffect(() => {
     async function fetchRecipient() {
       const recipientUsername = props.match.params.username;
-      if (recipientUsername) {
+      if (recipientUsername !== "me") {
         const { data: recipient } = await getUser(recipientUsername);
         setRecipient(recipient);
       }
@@ -22,7 +23,13 @@ const MessagesPage = (props) => {
     <div className="row">
       <div className="col-3">
         <h2>Your Messages:</h2>
-        <ListGroup items={["John Conor", "Putin", "Gaben"]} />
+        <ListGroup
+          items={[
+            { title: "Putin", path: "#" },
+            { title: "Putin", path: "me/guests" },
+            { title: "Putin", path: "me/guests" },
+          ]}
+        />
       </div>
       <div className="col-6">
         <ChatBox />

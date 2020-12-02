@@ -22,12 +22,12 @@ const NavBar = ({ user }) => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
-            <NavLink className="nav-link" exact to="/profile/me">
+            <NavLink className="nav-link" to="/profile/me">
               My Profile
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="/messages">
+            <NavLink className="nav-link" to="/messages/me">
               Messages
             </NavLink>
           </li>

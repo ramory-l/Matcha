@@ -43,24 +43,25 @@ const UserCard = (props) => {
   };
 
   return (
-    <div className="UserCard my-2">
-      <div className="UserCard-Creds">
-        <Link to={`/profile/${user.username}`}>
-          <span className="UserCard-FirstName">{user.firstName}</span>
-          <span className="UserCard-LastName">{user.lastName}</span>
-        </Link>
-      </div>
+    <div className="card my-2">
       <img
-        className="UserCard-Avatar"
         src={user.img ? user.img : "/default-avatar.png"}
-        alt="avatar"
+        className="card-img-top"
+        alt={user.username}
       />
-      <RateButtons
-        userLiked={user.isLiked}
-        userDisliked={user.isDisliked}
-        onRateChange={handleRateChange}
-      />
-      <span>Rating: {rate}</span>
+      <div className="card-body">
+        <Link to={`/profile/${user.username}`} style={{ color: "Indigo" }}>
+          <h6 className="card-title text-center">
+            {user.firstName} {user.lastName}
+          </h6>
+        </Link>
+        <p className="card-text text-center">Rating: {rate}</p>
+        <RateButtons
+          userLiked={user.isLiked}
+          userDisliked={user.isDisliked}
+          onRateChange={handleRateChange}
+        />
+      </div>
     </div>
   );
 };

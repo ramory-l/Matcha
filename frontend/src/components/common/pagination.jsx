@@ -42,6 +42,7 @@ const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
             <Link
               to="#"
               className="page-link"
+              style={{ color: "black" }}
               onClick={() => onPageChange(page)}
             >
               {page}

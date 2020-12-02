@@ -28,6 +28,7 @@ const User = (props) => {
       <div className="col-2">
         <ListGroup
           items={[
+            { title: "My data", path: "me" },
             { title: "My guests", path: "me/guests" },
             { title: "My likes", path: "me/likes" },
             { title: "My matches", path: "me/matches" },

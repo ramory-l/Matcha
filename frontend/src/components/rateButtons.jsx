@@ -2,26 +2,28 @@ import React from "react";
 import "./styles/rateButtons.scss";
 
 const RateButtons = ({ userLiked, userDisliked, onRateChange }) => {
-  const userLikeValue = userLiked ? " RateButtons-Like_active" : "";
-  const userDislikeValue = userDisliked ? " RateButtons-Dislike_active" : "";
+  const userLikeValue = userLiked ? "active" : "";
+  const userDislikeValue = userDisliked ? "active" : "";
   return (
     <div className="RateButtons">
-      <span
+      <button
         onClick={() => onRateChange("like")}
-        role="img"
-        aria-label="like-button"
-        className={`RateButtons-Like${userLikeValue}`}
+        type="button"
+        className={`btn btn-outline-success ${userLikeValue}`}
       >
-        &#128077;
-      </span>
-      <span
+        <span role="img" aria-label="like">
+          &#128077;
+        </span>
+      </button>
+      <button
         onClick={() => onRateChange("dislike")}
-        role="img"
-        aria-label="dislike-button"
-        className={`RateButtons-Dislike${userDislikeValue}`}
+        type="button"
+        className={`btn btn-outline-danger ${userDislikeValue}`}
       >
-        &#128078;
-      </span>
+        <span role="img" aria-label="dislike">
+          &#128078;
+        </span>
+      </button>
     </div>
   );
 };
