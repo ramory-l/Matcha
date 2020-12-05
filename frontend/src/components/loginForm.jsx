@@ -34,6 +34,10 @@ class LoginForm extends Form {
     }
   };
 
+  handleRememberMe() {
+    console.log("remember me");
+  }
+
   render() {
     if (auth.getCurrentUser()) return <Redirect to="/" />;
     return (
@@ -41,7 +45,11 @@ class LoginForm extends Form {
         <h1>Login Form</h1>
         {this.renderInput("username", "Username")}
         {this.renderInput("password", "Password", false, "password")}
-        {this.renderCheckbox("rememberme", "Remember me")}
+        {this.renderCheckbox(
+          "rememberme",
+          "Remember me",
+          this.handleRememberMe
+        )}
         <div className="LoginForm-Buttons">
           {this.renderButton("Login")}
           <Link to="/auth/register">

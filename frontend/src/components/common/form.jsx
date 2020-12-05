@@ -94,8 +94,8 @@ class Form extends Component {
     );
   }
 
-  renderCheckbox(name, label) {
-    return <CheckBox label={label} name={name} />;
+  renderCheckbox(name, label, onChange) {
+    return <CheckBox label={label} name={name} onChange={onChange} />;
   }
 
   renderInput(name, label, readonly = false, type = "text") {
