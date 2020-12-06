@@ -13,6 +13,8 @@
         <result property="isActive" column="is_active"/>
         <result property="rate" column="rate"/>
         <result property="role" column="role"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
         <result property="createTs" column="create_ts"/>
         <result property="updateTs" column="update_ts"/>
         <result property="deleteTs" column="delete_ts"/>
@@ -77,6 +79,12 @@
         <if test="avatar != null and avatar.id != null">
             avatar_id = #{avatar.id},
         </if>
+        <if test="latitude != null">
+            latitude = #{latitude},
+        </if>
+        <if test="longitude != null">
+            longitude = #{longitude},
+        </if>
         update_ts = now()
         WHERE username = #{username}
     </update>
@@ -106,6 +114,12 @@
         </if>
         <if test="avatar != null and avatar.id != null">
             avatar_id = #{avatar.id},
+        </if>
+        <if test="latitude != null">
+            latitude = #{latitude},
+        </if>
+        <if test="longitude != null">
+            longitude = #{longitude},
         </if>
         update_ts = now()
         WHERE id = #{id}
@@ -144,7 +158,8 @@
     <select id="getUserByUsername" resultMap="User">
         SELECT *
         FROM "user"
-        WHERE username ILIKE #{username} and is_active = true
+        WHERE username ILIKE #{username}
+          and is_active = true
     </select>
 
     <select id="getUserEncryptPasswordById" resultType="java.lang.String">
@@ -154,7 +169,10 @@
     </select>
 
     <select id="getUsersByTagId" resultMap="User">
-        SELECT u.* FROM "user" u INNER JOIN user_ref_tags t on u.id = t.user_id WHERE t.tag_id = #{tagId}
+        SELECT u.*
+        FROM "user" u
+                 INNER JOIN user_ref_tags t on u.id = t.user_id
+        WHERE t.tag_id = #{tagId}
     </select>
 
 </mapper>
