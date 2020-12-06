@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class Guest {
 
-    private Long userId;
+    private User user;
     private Date date;
 
 }

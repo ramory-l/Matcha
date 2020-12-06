@@ -14,6 +14,8 @@ public interface UserMapper {
 
     Optional<User> getUserById(Long id);
 
+    Optional<User> getUserWithMinimumInfo(Long id);
+
     Optional<User> getUserByUsername(String username);
 
     List<User> getUsersByTagId(Long tagId);

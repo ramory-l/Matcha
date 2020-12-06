@@ -2,13 +2,15 @@
 <mapper namespace="ru.school.matcha.dao.GuestMapper">
 
     <resultMap id="Guest" type="ru.school.matcha.domain.Guest">
-        <result property="userId" column="guest_id"/>
-        <result property="date" column="create_ts"/>
+        <result property="date" column="date_ts"/>
+        <association property="user" column="guest_id" javaType="ru.school.matcha.domain.User"
+                     select="ru.school.matcha.dao.UserMapper.getUserWithMinimumInfo"/>
     </resultMap>
 
     <insert id="createGuest">
         INSERT INTO guests(guest_id, user_id)
         VALUES (#{guestId}, #{userId})
+        ON CONFLICT (guest_id, user_id) DO UPDATE SET date_ts = now()
     </insert>
 
     <delete id="deleteGuest">
@@ -19,7 +21,7 @@
     </delete>
 
     <select id="getGuestsByUserId" resultMap="Guest">
-        SELECT guest_id, create_ts
+        SELECT guest_id, date_ts
         FROM guests
         WHERE user_id = #{userId}
     </select>

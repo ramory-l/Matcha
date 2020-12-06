@@ -33,6 +33,8 @@ create table "user"
     rate        bigint                      default 0      not null,
     avatar_id   bigint,
     role        varchar(64)                 default 'USER' not null,
+    latitude    bigint                      default 0,
+    longitude   bigint                      default 0,
     create_ts   timestamp without time zone default now()  not null,
     update_ts   timestamp without time zone,
     delete_ts   timestamp without time zone,
@@ -66,10 +68,11 @@ create table user_ref_tags
 
 create table guests
 (
-    id        bigserial primary key                     not null,
-    guest_id  bigint references "user" (id),
-    user_id   bigint references "user" (id),
-    create_ts timestamp without time zone default now() not null
+    id       bigserial primary key                     not null,
+    guest_id bigint references "user" (id),
+    user_id  bigint references "user" (id),
+    date_ts  timestamp without time zone default now() not null,
+    unique (guest_id, user_id)
 );
 
 create table images

@@ -39,6 +39,8 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setForm(formConverter.convertFromEntity(source.getForm()));
         result.setRate(source.getRate());
         result.setAvatar(imageConverter.convertFromEntity(source.getAvatar()));
+        result.setLatitude(source.getLatitude());
+        result.setLongitude(source.getLongitude());
         return result;
     }
 
@@ -58,6 +60,8 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setForm(formConverter.convertFromDto(source.getForm()));
         result.setRate(source.getRate());
         result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
+        result.setLatitude(source.getLatitude());
+        result.setLongitude(source.getLongitude());
         return result;
     }
 

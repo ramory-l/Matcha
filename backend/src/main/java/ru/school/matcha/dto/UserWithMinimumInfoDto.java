@@ -7,20 +7,12 @@ import java.util.Date;
 
 @Data
 @JsonAutoDetect
-public class UserDto {
+public class UserWithMinimumInfoDto {
 
     private Long id;
     private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
     private String gender;
     private Date birthday;
-    private String description;
-    private FormDto form;
-    private Long rate;
     private ImageDto avatar;
-    private Long latitude;
-    private Long longitude;
 
 }
