@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import * as userService from "../services/userService";
-import { getUserForm } from "../services/formService";
-import "swiper/swiper.scss";
-import "./styles/searchPage.scss";
 import SearchUsers from "../components/searchUsers";
 import WithLoading from "../components/common/withLoading";
-import { shallowEqual } from "../utils/equal";
+import * as userService from "../services/userService";
+import { findSimilarityInForms } from "../utils/equal";
+import { getUserForm } from "../services/formService";
+import "./styles/searchPage.scss";
+import "swiper/swiper.scss";
 
 const SearchUsersWithLoading = WithLoading(SearchUsers);
 
@@ -19,11 +19,7 @@ const SearchPage = () => {
       const { data: users } = await userService.getUsers();
       const { data: userForm } = await getUserForm();
       const filteredUsers = users.filter((user) => {
-        const tempUser1Form = { ...user.form };
-        const tempUser2Form = { ...userForm };
-        delete tempUser1Form.id;
-        delete tempUser2Form.id;
-        return shallowEqual(tempUser1Form, tempUser2Form);
+        return findSimilarityInForms(userForm, user);
       });
       setUserForm(userForm);
       setUsers(filteredUsers);
@@ -32,11 +28,21 @@ const SearchPage = () => {
     fetchUsers();
   }, []);
 
+  const handleSearchButtonClick = async () => {
+    const { data: users } = await userService.getUsers();
+    const { data: userForm } = await getUserForm();
+    const filteredUsers = users.filter((user) => {
+      return findSimilarityInForms(userForm, user);
+    });
+    setUsers(filteredUsers);
+  };
+
   return (
     <SearchUsersWithLoading
       users={users}
       userForm={userForm}
       isLoading={isLoading}
+      onSearchButtonClick={handleSearchButtonClick}
     />
   );
 };

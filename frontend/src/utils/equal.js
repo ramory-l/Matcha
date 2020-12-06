@@ -41,3 +41,21 @@ export function deepEqual(object1, object2) {
 function isObject(object) {
   return object != null && typeof object === "object";
 }
+
+export function findSimilarityInForms(userForm, anotherUser) {
+  if (userForm.id === anotherUser.form.id) return false;
+
+  const userFormKeys = Object.keys(userForm);
+
+  let neededGender = [];
+  if (userForm.man) neededGender.push("man");
+  if (userForm.woman) neededGender.push("woman");
+
+  if (neededGender.length === 0) return false;
+  if (anotherUser.gender in neededGender) return true;
+
+  for (const key of userFormKeys) {
+    if (userForm[key] === true && anotherUser.form[key] === true) return true;
+  }
+  return false;
+}

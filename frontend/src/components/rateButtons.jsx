@@ -9,7 +9,7 @@ const RateButtons = ({ userLiked, userDisliked, onRateChange }) => {
       <button
         onClick={() => onRateChange("like")}
         type="button"
-        className={`btn btn-outline-success ${userLikeValue}`}
+        className={`btn btn-sm btn-outline-success ${userLikeValue}`}
       >
         <span role="img" aria-label="like">
           &#128077;
@@ -18,7 +18,7 @@ const RateButtons = ({ userLiked, userDisliked, onRateChange }) => {
       <button
         onClick={() => onRateChange("dislike")}
         type="button"
-        className={`btn btn-outline-danger ${userDislikeValue}`}
+        className={`btn btn-sm btn-outline-danger ${userDislikeValue}`}
       >
         <span role="img" aria-label="dislike">
           &#128078;
