@@ -2,8 +2,9 @@
 <mapper namespace="ru.school.matcha.dao.GuestMapper">
 
     <resultMap id="Guest" type="ru.school.matcha.domain.Guest">
-        <result property="userId" column="guest_id"/>
         <result property="date" column="date_ts"/>
+        <association property="user" column="guest_id" javaType="ru.school.matcha.domain.User"
+                     select="ru.school.matcha.dao.UserMapper.getUserWithMinimumInfo"/>
     </resultMap>
 
     <insert id="createGuest">

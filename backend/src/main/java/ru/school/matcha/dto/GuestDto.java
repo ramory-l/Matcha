@@ -9,7 +9,7 @@ import java.util.Date;
 @JsonAutoDetect
 public class GuestDto {
 
-    private Long userId;
+    private UserWithMinimumInfoDto user;
     private Date date;
 
 }
