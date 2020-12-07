@@ -1,18 +1,18 @@
 package ru.school.matcha.converters;
 
 import ru.school.matcha.domain.Guest;
-import ru.school.matcha.domain.User;
+import ru.school.matcha.domain.Image;
 import ru.school.matcha.dto.GuestDto;
-import ru.school.matcha.dto.UserMinInfoDto;
+import ru.school.matcha.dto.ImageDto;
 
 import static java.util.Objects.isNull;
 
 public class GuestConverter extends Converter<GuestDto, Guest> {
 
-    private static final Converter<UserMinInfoDto, User> userWithMinimumInfoConverter;
+    private static final Converter<ImageDto, Image> imageConverter;
 
     static {
-        userWithMinimumInfoConverter = new UserMinInfoConverter();
+        imageConverter = new ImageConverter();
     }
 
     public GuestConverter() {
@@ -24,7 +24,8 @@ public class GuestConverter extends Converter<GuestDto, Guest> {
             return null;
         }
         GuestDto result = new GuestDto();
-        result.setUser(userWithMinimumInfoConverter.convertFromEntity(source.getUser()));
+        result.setUsername(source.getUsername());
+        result.setAvatar(imageConverter.convertFromEntity(source.getAvatar()));
         result.setDate(source.getDate());
         return result;
     }
@@ -34,8 +35,9 @@ public class GuestConverter extends Converter<GuestDto, Guest> {
             return null;
         }
         Guest result = new Guest();
-        result.setUser(userWithMinimumInfoConverter.convertFromDto(source.getUser()));
-        result.setDate(source.getDate());
+        result.setUsername(source.getUsername());
+        result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
+        result.setDate(result.getDate());
         return result;
     }
 

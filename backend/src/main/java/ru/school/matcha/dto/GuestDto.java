@@ -2,6 +2,7 @@ package ru.school.matcha.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
+import ru.school.matcha.domain.Image;
 
 import java.util.Date;
 
@@ -9,7 +10,8 @@ import java.util.Date;
 @JsonAutoDetect
 public class GuestDto {
 
-    private UserMinInfoDto user;
+    private ImageDto avatar;
+    private String username;
     private Date date;
 
 }

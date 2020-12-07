@@ -3,8 +3,9 @@
 
     <resultMap id="Guest" type="ru.school.matcha.domain.Guest">
         <result property="date" column="date_ts"/>
-        <association property="user" column="guest_id" javaType="ru.school.matcha.domain.User"
-                     select="ru.school.matcha.dao.UserMapper.getUserWithMinimumInfo"/>
+        <result property="username" column="username"/>
+        <association property="avatar" column="avatar_id" javaType="ru.school.matcha.domain.Image"
+                     select="ru.school.matcha.dao.ImageMapper.getImageById"/>
     </resultMap>
 
     <insert id="createGuest">
@@ -21,8 +22,8 @@
     </delete>
 
     <select id="getGuestsByUserId" resultMap="Guest">
-        SELECT guest_id, date_ts
-        FROM guests
+        SELECT date_ts, avatar_id, username
+        FROM guests INNER JOIN "user" u on guests.guest_id = u.id
         WHERE user_id = #{userId}
     </select>
 
