@@ -4,9 +4,10 @@ import ProfileLeftSide from "./profileLeftSide";
 import ProfileForm from "./profileForm";
 import UsersTable from "./usersTable";
 import ListGroup from "./common/listGroup";
+import SettingForm from "./settingsForm";
 
 const User = (props) => {
-  const { isMe, match } = props;
+  const { isMe, match, editMode, onEditModeChange } = props;
   return (
     <div className="row">
       <div className="col-3">
@@ -17,6 +18,12 @@ const User = (props) => {
           {isMe ? (
             <Route path={`${match.path}/guests`} component={UsersTable} />
           ) : null}
+          {isMe ? (
+            <Route
+              path={`${match.path}/settings`}
+              render={() => <SettingForm {...props} />}
+            />
+          ) : null}
           <Route
             exact
             path={`${match.path}`}
@@ -25,16 +32,21 @@ const User = (props) => {
           <Redirect to="/not-found" />
         </Switch>
       </div>
-      <div className="col-2">
-        <ListGroup
-          items={[
-            { title: "My data", path: "me" },
-            { title: "My guests", path: "me/guests" },
-            { title: "My likes", path: "me/likes" },
-            { title: "My matches", path: "me/matches" },
-          ]}
-        />
-      </div>
+      {isMe ? (
+        <div className="col-2">
+          <ListGroup
+            editMode={editMode}
+            onEditModeChange={onEditModeChange}
+            items={[
+              { title: "My data", path: "/profile/me" },
+              { title: "My guests", path: "/profile/me/guests" },
+              { title: "My likes", path: "/profile/me/likes" },
+              { title: "My matches", path: "/profile/me/matches" },
+              { title: "Settings", path: "/profile/me/settings" },
+            ]}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

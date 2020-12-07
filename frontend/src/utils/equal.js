@@ -52,10 +52,13 @@ export function findSimilarityInForms(userForm, anotherUser) {
   if (userForm.woman) neededGender.push("woman");
 
   if (neededGender.length === 0) return false;
-  if (anotherUser.gender in neededGender) return true;
 
-  for (const key of userFormKeys) {
-    if (userForm[key] === true && anotherUser.form[key] === true) return true;
+  if (neededGender.includes(anotherUser.gender)) {
+    for (const key of userFormKeys) {
+      if (userForm[key] === true && anotherUser.form[key] === true) {
+        return true;
+      }
+    }
   }
   return false;
 }

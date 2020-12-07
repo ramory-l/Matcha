@@ -5,13 +5,12 @@ import RecipientDescription from "../components/recipientDescription";
 import { getUser } from "../services/userService";
 
 const MessagesPage = (props) => {
-  console.log(props);
   const [recipient, setRecipient] = useState(null);
 
   useEffect(() => {
     async function fetchRecipient() {
       const recipientUsername = props.match.params.username;
-      if (recipientUsername !== "me") {
+      if (recipientUsername) {
         const { data: recipient } = await getUser(recipientUsername);
         setRecipient(recipient);
       }

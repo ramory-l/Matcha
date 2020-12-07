@@ -5,7 +5,7 @@ import UsersCarousel from "./usersCarousel";
 const SearchUsers = ({ users, userForm, onSearchButtonClick }) => {
   return (
     <>
-      <div className="row">
+      <div className="row justify-content-center">
         <UsersCarousel users={users} />
       </div>
       <div className="row">

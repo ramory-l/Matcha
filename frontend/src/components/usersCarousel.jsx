@@ -1,4 +1,5 @@
 import React from "react";
+import "./styles/usersCarousel.scss";
 
 const UsersCarousel = ({ users }) => {
   return (
@@ -6,6 +7,7 @@ const UsersCarousel = ({ users }) => {
       id="carouselExampleControls"
       className="carousel slide"
       data-ride="carousel"
+      data-interval="false"
     >
       <div className="carousel-inner">
         {users.map((user, index) => (

@@ -7,6 +7,7 @@ const FileInput = ({ name, label, userId }) => {
 
   const handleChange = async (e) => {
     const file = e.target.files[0];
+    if (!file) return;
     const filename = file.name.split(".")[0];
     try {
       const imageBase64 = await toBase64(file);
@@ -16,7 +17,6 @@ const FileInput = ({ name, label, userId }) => {
         userId: userId,
       };
       setImage(image);
-      console.log(image);
     } catch (ex) {
       console.log(ex);
     }
@@ -24,6 +24,7 @@ const FileInput = ({ name, label, userId }) => {
 
   const handleUploadButtonClick = async (e) => {
     try {
+      console.log(image);
       await uploadImage(image);
     } catch (ex) {
       console.log(ex);

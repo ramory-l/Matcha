@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import FileInput from "./common/fileInput";
 
-const ProfileLeftSide = ({ user, isMe, editMode, onEditModeChange }) => {
+const ProfileLeftSide = (props) => {
+  const { user, isMe, editMode, onEditModeChange, location } = props;
   return (
     <div className="ProfileLeftSide">
       <figure className="figure">
@@ -24,13 +25,15 @@ const ProfileLeftSide = ({ user, isMe, editMode, onEditModeChange }) => {
               label="Load images"
             />
           ) : null}
-          <button
-            onClick={onEditModeChange}
-            type="button"
-            className="btn btn-primary"
-          >
-            Edit profile
-          </button>
+          {location.pathname === "/profile/me" ? (
+            <button
+              onClick={onEditModeChange}
+              type="button"
+              className="btn btn-primary"
+            >
+              Edit profile
+            </button>
+          ) : null}
         </div>
       ) : (
         <Link to={`/messages/${user.username}`}>

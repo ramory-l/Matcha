@@ -44,18 +44,20 @@ const UserCard = (props) => {
 
   return (
     <div className="card my-2">
-      <img
-        src={user.img ? user.img : "/default-avatar.png"}
-        className="card-img-top"
-        alt={user.username}
-      />
-      <div className="card-body">
+      <div className="card-image">
+        <img
+          src={user.img ? user.img : "/default-avatar.png"}
+          className="card-img-top"
+          alt={user.username}
+        />
+      </div>
+      <div className="card-body d-flex align-items-center flex-column">
         <Link to={`/profile/${user.username}`} style={{ color: "Indigo" }}>
-          <h6 className="card-title text-center">
+          <h6 className="card-title">
             {user.firstName} {user.lastName}
           </h6>
         </Link>
-        <p className="card-text text-center">Rating: {rate}</p>
+        <p className="card-text">Rating: {rate}</p>
         <RateButtons
           userLiked={user.isLiked}
           userDisliked={user.isDisliked}

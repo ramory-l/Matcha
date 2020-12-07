@@ -7,7 +7,6 @@ import ProfilePage from "../pages/profilePage";
 import MessagesPage from "./messagesPage";
 import NotFound from "../components/notFound";
 import SearchPage from "./searchPage";
-import SettingsPage from "./settingsPage";
 import auth from "../services/authService";
 
 const BasePage = () => {
@@ -24,9 +23,8 @@ const BasePage = () => {
       <main className="container">
         <Switch>
           <Route path="/profile/:username" component={ProfilePage} />
-          <Route path="/messages/:username" component={MessagesPage} />
+          <Route path="/messages/:username?" component={MessagesPage} />
           <Route path="/search" component={SearchPage} />
-          <Route path="/settings" component={SettingsPage} />
           <Route path="/logout" component={Logout} />
           <Route path="/not-found" component={NotFound} />
           <Route path="/" exact component={HomePage} />
