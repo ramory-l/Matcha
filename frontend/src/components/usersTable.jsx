@@ -22,7 +22,16 @@ const UsersTable = (props) => {
   }, []);
 
   const columns = [
-    { path: "avatar", label: "Avatar" },
+    {
+      path: "avatar",
+      label: "Avatar",
+      content: (avatar) => (
+        <img
+          style={{ width: "5vw" }}
+          src={`${avatar?.url ? avatar.url : "/default-avatar.png"}`}
+        />
+      ),
+    },
     { path: "username", label: "Username" },
     { path: "gender", label: "Gender" },
     { path: "birthday", label: "Birthday" },
