@@ -13,16 +13,10 @@ public interface ImageMapper {
 
     Optional<Image> getImageById(Long id);
 
-    Optional<Image> getImageByExternalId(String externalId);
-
     Optional<Image> getAvatarByUserId(Long userId);
 
     List<Image> getImagesByUserId(Long userId);
 
     void deleteImageById(Long id);
-
-    void deleteImageByExternalId(String externalId);
-
-    void deleteAllImagesByUserId(Long userId);
 
 }
