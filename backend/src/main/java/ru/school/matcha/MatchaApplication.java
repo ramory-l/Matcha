@@ -37,6 +37,8 @@ public class MatchaApplication {
                 get("/:id/guests", GuestController.getGuestsByUserId, new JsonTransformer());
                 get("/:id/images", ImageController.getImagesByUserId, new JsonTransformer());
                 get("/:id/tags", TagController.getTagsByUserId, new JsonTransformer());
+                get("/password/:hash", UserController.editPassword, new JsonTransformer());
+                put("/password/reset", UserController.resetPassword, new JsonTransformer());
                 post("/:userId/tags/:tagName", TagController.createTag, new JsonTransformer());
                 delete("/:userId/tags/:tagName", TagController.deleteTag, new JsonTransformer());
                 put("/", UserController.updateUser, new JsonTransformer());

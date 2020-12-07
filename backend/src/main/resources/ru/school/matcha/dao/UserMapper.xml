@@ -150,6 +150,13 @@
         WHERE username ILIKE #{username}
     </update>
 
+    <update id="updatePasswordByUserId">
+        UPDATE "user"
+        SET update_ts = now(),
+            password  = #{newPassword}
+        WHERE id = #{userId}
+    </update>
+
     <select id="getAllUsers" resultMap="User">
         SELECT *
         FROM "user"
@@ -185,7 +192,9 @@
     </select>
 
     <select id="getUserWithMinimumInfo" resultMap="UserWithMinimumInfo">
-        SELECT id, username, gender, birthday, avatar_id FROM "user" WHERE id = #{id}
+        SELECT id, username, gender, birthday, avatar_id
+        FROM "user"
+        WHERE id = #{id}
     </select>
 
 </mapper>

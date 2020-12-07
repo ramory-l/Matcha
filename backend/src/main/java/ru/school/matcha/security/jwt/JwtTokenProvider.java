@@ -19,6 +19,7 @@ public class JwtTokenProvider {
 
     private final String secret;
     private final long validityInMilliseconds;
+    private final long validityInMillisecondsForPasswordToken;
 
     public JwtTokenProvider() {
         Properties properties;
@@ -30,6 +31,7 @@ public class JwtTokenProvider {
 
         this.secret = Arrays.toString(Base64.getEncoder().encode(properties.getProperty("jwt.token.secret").getBytes()));
         this.validityInMilliseconds = parseLong(properties.getProperty("jwt.token.expired"));
+        this.validityInMillisecondsForPasswordToken = parseLong(properties.getProperty("jwt.password.token.expired"));
     }
 
     public String createToken(Long id, String username, Role role) {
@@ -38,6 +40,20 @@ public class JwtTokenProvider {
         claims.put("role", role.name());
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
+        return Jwts
+                .builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
+    public String createPasswordToken(String password, Long id) {
+        Claims claims = Jwts.claims().setSubject(password);
+        claims.put("id", id);
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + validityInMillisecondsForPasswordToken);
         return Jwts
                 .builder()
                 .setClaims(claims)
@@ -61,6 +77,16 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException ex) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
+    }
+
+    public String getPasswordFromPasswordToken(String passwordToken) {
+        Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(passwordToken);
+        return claims.getBody().getSubject();
+    }
+
+    public Long getUserIdFromPasswordToken(String passwordToken) {
+        Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(passwordToken);
+        return parseLong(claims.getBody().get("id").toString());
     }
 
     public String getUsernameFromToken(String token) {

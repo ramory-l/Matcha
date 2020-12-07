@@ -34,4 +34,6 @@ public interface UserMapper {
 
     String getUserEncryptPasswordById(Long id);
 
+    void updatePasswordByUserId(@Param("userId") Long userId, @Param("newPassword") String newPassword);
+
 }
