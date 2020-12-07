@@ -1,13 +1,19 @@
 package ru.school.matcha.converters;
 
-import ru.school.matcha.domain.Form;
+import ru.school.matcha.domain.Image;
 import ru.school.matcha.domain.Like;
-import ru.school.matcha.dto.FormDto;
+import ru.school.matcha.dto.ImageDto;
 import ru.school.matcha.dto.LikeDto;
 
 import static java.util.Objects.isNull;
 
 public class LikeConverter extends Converter<LikeDto, Like> {
+
+    private static final Converter<ImageDto, Image> imageConverter;
+
+    static {
+        imageConverter = new ImageConverter();
+    }
 
     public LikeConverter() {
         super(LikeConverter::convertToEntity, LikeConverter::convertToDto);
@@ -18,7 +24,9 @@ public class LikeConverter extends Converter<LikeDto, Like> {
             return null;
         }
         LikeDto result = new LikeDto();
-
+        result.setId(source.getId());
+        result.setUsername(source.getUsername());
+        result.setAvatar(imageConverter.convertFromEntity(source.getAvatar()));
         return result;
     }
 
@@ -27,7 +35,9 @@ public class LikeConverter extends Converter<LikeDto, Like> {
             return null;
         }
         Like result = new Like();
-
+        result.setId(source.getId());
+        result.setUsername(source.getUsername());
+        result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
         return result;
     }
 
