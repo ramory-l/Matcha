@@ -24,6 +24,15 @@
                      select="ru.school.matcha.dao.ImageMapper.getImageById"/>
     </resultMap>
 
+    <resultMap id="UserWithMinimumInfo" type="ru.school.matcha.domain.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="gender" column="gender"/>
+        <result property="birthday" column="birthday"/>
+        <association property="avatar" column="avatar_id" javaType="ru.school.matcha.domain.Image"
+                     select="ru.school.matcha.dao.ImageMapper.getImageById"/>
+    </resultMap>
+
     <insert id="createUser" keyProperty="user.id" useGeneratedKeys="true" keyColumn="id">
         INSERT INTO "user"(username, email, password, first_name, last_name, is_active, form_id, rate, create_ts)
         VALUES (#{user.username},
@@ -173,6 +182,10 @@
         FROM "user" u
                  INNER JOIN user_ref_tags t on u.id = t.user_id
         WHERE t.tag_id = #{tagId}
+    </select>
+
+    <select id="getUserWithMinimumInfo" resultMap="UserWithMinimumInfo">
+        SELECT id, username, gender, birthday, avatar_id FROM "user" WHERE id = #{id}
     </select>
 
 </mapper>

@@ -1,11 +1,19 @@
 package ru.school.matcha.converters;
 
 import ru.school.matcha.domain.Guest;
+import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.GuestDto;
+import ru.school.matcha.dto.UserWithMinimumInfoDto;
 
 import static java.util.Objects.isNull;
 
 public class GuestConverter extends Converter<GuestDto, Guest> {
+
+    private static final Converter<UserWithMinimumInfoDto, User> userWithMinimumInfoConverter;
+
+    static {
+        userWithMinimumInfoConverter = new UserWithMinimumInfoConverter();
+    }
 
     public GuestConverter() {
         super(GuestConverter::convertToEntity, GuestConverter::convertToDto);
@@ -16,7 +24,7 @@ public class GuestConverter extends Converter<GuestDto, Guest> {
             return null;
         }
         GuestDto result = new GuestDto();
-        result.setUserId(source.getUserId());
+        result.setUser(userWithMinimumInfoConverter.convertFromEntity(source.getUser()));
         result.setDate(source.getDate());
         return result;
     }
@@ -26,7 +34,7 @@ public class GuestConverter extends Converter<GuestDto, Guest> {
             return null;
         }
         Guest result = new Guest();
-        result.setUserId(source.getUserId());
+        result.setUser(userWithMinimumInfoConverter.convertFromDto(source.getUser()));
         result.setDate(source.getDate());
         return result;
     }
