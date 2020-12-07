@@ -14,8 +14,6 @@ public class Image {
     private String link;
     private String externalId;
     private Long userId;
-    private Boolean deleted;
     private Date createTs;
-    private Date deleteTs;
 
 }

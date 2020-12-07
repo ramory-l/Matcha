@@ -3,13 +3,12 @@ package ru.school.matcha.dto;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 @JsonAutoDetect
-public class GuestDto {
+public class PassResetDto {
 
-    private UserMinInfoDto user;
-    private Date date;
+    private String oldPass;
+    private String newPass;
+    private Long id;
 
 }

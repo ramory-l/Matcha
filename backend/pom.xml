@@ -27,9 +27,7 @@
         <mavenassemblyplugin.version>3.3.0</mavenassemblyplugin.version>
         <javaxmail.version>1.4</javaxmail.version>
         <commonsio.version>2.6</commonsio.version>
-        <googleapiclient.version>1.30.11</googleapiclient.version>
-        <googleoauthclientjetty.version>1.31.1</googleoauthclientjetty.version>
-        <googleapiservicesdrive.version>v3-rev197-1.25.0</googleapiservicesdrive.version>
+        <cloudinary.version>1.27.0</cloudinary.version>
     </properties>
 
     <dependencies>
@@ -106,22 +104,6 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>${jaxbruntime.version}</version>
         </dependency>
-        <!-- Google Drive -->
-        <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>${googleapiclient.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.oauth-client</groupId>
-            <artifactId>google-oauth-client-jetty</artifactId>
-            <version>${googleoauthclientjetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-drive</artifactId>
-            <version>${googleapiservicesdrive.version}</version>
-        </dependency>
         <!-- Commons-IO -->
         <dependency>
             <groupId>commons-io</groupId>
@@ -134,7 +116,12 @@
             <artifactId>mail</artifactId>
             <version>${javaxmail.version}</version>
         </dependency>
-
+        <!-- Cloudinary -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>${cloudinary.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

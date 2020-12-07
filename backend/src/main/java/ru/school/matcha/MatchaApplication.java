@@ -7,7 +7,7 @@ import ru.school.matcha.enums.Cors;
 import ru.school.matcha.enums.Path;
 import ru.school.matcha.handlers.ChatWebSocketHandler;
 import ru.school.matcha.handlers.ExceptionHandler;
-import ru.school.matcha.utils.GoogleDrive;
+import ru.school.matcha.utils.CloudinaryAPI;
 import ru.school.matcha.utils.MailUtil;
 
 import static spark.Spark.*;
@@ -20,8 +20,8 @@ public class MatchaApplication {
         webSocket(Path.SOCKET.getUrl(), ChatWebSocketHandler.class);
         enableCORS();
         ExceptionHandler.enable();
-        GoogleDrive.run();
         MailUtil.initMail();
+        CloudinaryAPI.init();
         path(Path.API.getUrl(), () -> {
             path(Path.AUTH.getUrl(), () ->
                     post("/login", AuthenticateController.authenticate, new JsonTransformer()));
@@ -37,6 +37,8 @@ public class MatchaApplication {
                 get("/:id/guests", GuestController.getGuestsByUserId, new JsonTransformer());
                 get("/:id/images", ImageController.getImagesByUserId, new JsonTransformer());
                 get("/:id/tags", TagController.getTagsByUserId, new JsonTransformer());
+                get("/password/:hash", UserController.editPassword, new JsonTransformer());
+                put("/password/reset", UserController.resetPassword, new JsonTransformer());
                 post("/:userId/tags/:tagName", TagController.createTag, new JsonTransformer());
                 delete("/:userId/tags/:tagName", TagController.deleteTag, new JsonTransformer());
                 put("/", UserController.updateUser, new JsonTransformer());

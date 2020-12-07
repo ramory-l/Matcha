@@ -82,8 +82,6 @@ create table images
     link        text                                      not null,
     external_id text                                      not null,
     user_id     bigint references "user" (id)             not null,
-    deleted     boolean                     default false not null,
-    delete_ts   timestamp without time zone,
     create_ts   timestamp without time zone default now() not null
 );
 

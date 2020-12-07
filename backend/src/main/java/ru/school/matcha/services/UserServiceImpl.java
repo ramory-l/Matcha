@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.exceptions.NotFoundException;
+import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.services.interfaces.ImageService;
+import ru.school.matcha.utils.MailUtil;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
 import ru.school.matcha.domain.Form;
@@ -14,8 +16,11 @@ import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -23,15 +28,17 @@ public class UserServiceImpl implements UserService {
 
     private static final FormService formService;
     private static final ImageService imageService;
+    private static final JwtTokenProvider jwtTokenProvider;
 
     static {
         formService = new FormServiceImpl();
         imageService = new ImageServiceImpl();
+        jwtTokenProvider = new JwtTokenProvider();
     }
 
     @Override
     public List<User> getAllUsers() {
-        log.info("Get all users");
+        log.debug("Get all users");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getAllUsers();
@@ -229,6 +236,54 @@ public class UserServiceImpl implements UserService {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUsersByTagId(tagId);
         }
+    }
+
+    @Override
+    public void updatePassword(String hash) {
+        if (!jwtTokenProvider.validateToken(hash)) {
+            throw new MatchaException("Link expired");
+        }
+        Long userId = jwtTokenProvider.getUserIdFromPasswordToken(hash);
+        String newPassword;
+        try {
+            newPassword = PasswordCipher.generateStrongPasswordHash(jwtTokenProvider.getPasswordFromPasswordToken(hash));
+        } catch (Exception ex) {
+            throw new MatchaException("Encrypt password error");
+        }
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.updatePasswordByUserId(userId, newPassword);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to update password. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public void formingEmail(Long id, String oldPass, String newPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        if (isNull(id) || isNull(oldPass) || isNull(newPass)) {
+            throw new NotFoundException("Fields are not filled");
+        }
+        String encryptedPassword = getUserEncryptPasswordById(id);
+        if (!PasswordCipher.validatePassword(oldPass, encryptedPassword)) {
+            throw new MatchaException("Old password is wrong");
+        }
+        String passwordToken = jwtTokenProvider.createPasswordToken(newPass, id);
+        User user = getUserById(id);
+        MailUtil.send(user.getEmail(), "Password change",
+                "Hello, " + user.getUsername() + "<br><br> Please Click " +
+                        "<a href='http://localhost:8080/api/users/password/" + passwordToken + "'>" +
+                        "<strong>here</strong></a> to reset your password. The link works " +
+                        "within 24 hours. <br><br><br> Thanks!");
     }
 
 }

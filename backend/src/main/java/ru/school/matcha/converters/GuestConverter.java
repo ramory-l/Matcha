@@ -3,16 +3,16 @@ package ru.school.matcha.converters;
 import ru.school.matcha.domain.Guest;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.GuestDto;
-import ru.school.matcha.dto.UserWithMinimumInfoDto;
+import ru.school.matcha.dto.UserMinInfoDto;
 
 import static java.util.Objects.isNull;
 
 public class GuestConverter extends Converter<GuestDto, Guest> {
 
-    private static final Converter<UserWithMinimumInfoDto, User> userWithMinimumInfoConverter;
+    private static final Converter<UserMinInfoDto, User> userWithMinimumInfoConverter;
 
     static {
-        userWithMinimumInfoConverter = new UserWithMinimumInfoConverter();
+        userWithMinimumInfoConverter = new UserMinInfoConverter();
     }
 
     public GuestConverter() {
