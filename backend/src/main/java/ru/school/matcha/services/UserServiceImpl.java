@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        log.info("Get all users");
+        log.debug("Get all users");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getAllUsers();
