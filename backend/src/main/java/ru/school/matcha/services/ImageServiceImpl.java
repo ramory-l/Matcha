@@ -33,7 +33,7 @@ public class ImageServiceImpl implements ImageService {
         SqlSession sqlSession = null;
         try {
             ImageCoder.decodeImage(base64, fileName);
-            Image image = CloudinaryAPI.createFile("test.jpg");
+            Image image = CloudinaryAPI.createFile(fileName);
             if (isNull(image)) {
                 throw new MatchaException("Failed to create image in Cloudinary");
             }
