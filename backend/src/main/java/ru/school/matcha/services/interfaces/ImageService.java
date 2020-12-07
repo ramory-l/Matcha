@@ -10,16 +10,10 @@ public interface ImageService {
 
     Image getImageById(Long id);
 
-    Image getImageByExternalId(String externalId);
-
     Image getAvatarByUserId(Long userId);
 
     List<Image> getImagesByUserId(Long userId);
 
     void deleteImageById(Long id);
-
-    void deleteImageByExternalId(String externalId);
-
-    void deleteAllImagesByUserId(Long userId);
 
 }

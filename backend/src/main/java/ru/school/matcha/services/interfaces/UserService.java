@@ -2,6 +2,8 @@ package ru.school.matcha.services.interfaces;
 
 import ru.school.matcha.domain.User;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 public interface UserService {
@@ -19,6 +21,10 @@ public interface UserService {
     void batchCreateUsers(List<User> users);
 
     void updateUser(User user);
+
+    void updatePassword(String hash);
+
+    void formingEmail(Long id, String oldPass, String newPass) throws InvalidKeySpecException, NoSuchAlgorithmException;
 
     void deleteUserById(Long id);
 

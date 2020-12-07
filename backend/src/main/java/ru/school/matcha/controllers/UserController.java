@@ -5,6 +5,7 @@ import ru.school.matcha.converters.Converter;
 import ru.school.matcha.converters.UserConverter;
 import ru.school.matcha.converters.UserFullConverter;
 import ru.school.matcha.domain.User;
+import ru.school.matcha.dto.PassResetDto;
 import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.dto.UserFullDto;
 import ru.school.matcha.enums.Location;
@@ -32,6 +33,7 @@ public class UserController {
 
     private final static Serializer<UserFullDto> userFullDtoSerializer;
     private final static Serializer<UserDto> userDtoSerializer;
+    private static final Serializer<PassResetDto> passResetSerializer;
 
     static {
         userFullConverter = new UserFullConverter();
@@ -40,6 +42,7 @@ public class UserController {
         tagService = new TagServiceImpl();
         userFullDtoSerializer = new Serializer<>();
         userDtoSerializer = new Serializer<>();
+        passResetSerializer = new Serializer<>();
     }
 
     public static Route createUser = (request, response) -> {
@@ -92,6 +95,20 @@ public class UserController {
         UserDto userDto = userDtoSerializer.deserialize(request.body(), UserDto.class);
         User user = userConverter.convertFromDto(userDto);
         userService.updateUser(user);
+        response.status(Response.PUT.getStatus());
+        return "";
+    };
+
+    public static Route editPassword = (request, response) -> {
+        String hash = request.params("hash");
+        userService.updatePassword(hash);
+        response.status(Response.GET.getStatus());
+        return "";
+    };
+
+    public static Route resetPassword = (request, response) -> {
+        PassResetDto passResetDto = passResetSerializer.deserialize(request.body(), PassResetDto.class);
+        userService.formingEmail(passResetDto.getId(), passResetDto.getOldPass(), passResetDto.getNewPass());
         response.status(Response.PUT.getStatus());
         return "";
     };

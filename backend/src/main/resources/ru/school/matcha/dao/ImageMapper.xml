@@ -7,9 +7,7 @@
         <result property="link" column="link"/>
         <result property="externalId" column="external_id"/>
         <result property="userId" column="user_id"/>
-        <result property="deleted" column="deleted"/>
         <result property="createTs" column="create_ts"/>
-        <result property="deleteTs" column="delete_ts"/>
     </resultMap>
 
     <insert id="createImage" keyProperty="id" useGeneratedKeys="true">
@@ -18,30 +16,15 @@
     </insert>
 
     <update id="deleteImageById">
-        UPDATE "images"
-        SET deleted   = true,
-            delete_ts = now()
+        DELETE
+        FROM "images"
         WHERE id = #{id}
     </update>
-
-    <update id="deleteAllImagesByUserId">
-        UPDATE "images"
-        SET deleted   = true,
-            delete_ts = now()
-        WHERE user_id = #{userId}
-    </update>
-
-    <delete id="deleteImageByExternalId">
-        UPDATE "images"
-        SET deleted   = true,
-            delete_ts = now()
-        WHERE external_id = #{externalId}
-    </delete>
 
     <select id="getImageById" resultMap="Image">
         SELECT *
         FROM images
-        WHERE id = #{id} and deleted = false
+        WHERE id = #{id}
     </select>
 
     <select id="getAvatarByUserId" resultMap="Image">
@@ -53,13 +36,7 @@
     <select id="getImagesByUserId" resultMap="Image">
         SELECT *
         FROM images
-        WHERE user_id = #{id} and deleted = false
-    </select>
-
-    <select id="getImageByExternalId" resultMap="Image">
-        SELECT *
-        FROM images
-        WHERE external_id = #{externalId}
+        WHERE user_id = #{id}
     </select>
 
 </mapper>

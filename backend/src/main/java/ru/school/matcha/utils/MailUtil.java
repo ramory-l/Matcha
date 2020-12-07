@@ -43,7 +43,7 @@ public class MailUtil {
             message.setFrom(new InternetAddress(properties.getProperty("mail.smtps.user")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
-            message.setText(text);
+            message.setContent(text, "text/html; charset=utf-8");
             return message;
         } catch (MessagingException ex) {
             throw new MailException("Failed to forming message");
