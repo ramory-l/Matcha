@@ -6,7 +6,7 @@ import ru.school.matcha.dto.*;
 
 import static java.util.Objects.isNull;
 
-public class UserWithMinimumInfoConverter extends Converter<UserWithMinimumInfoDto, User> {
+public class UserMinInfoConverter extends Converter<UserMinInfoDto, User> {
 
     private static final Converter<ImageDto, Image> imageConverter;
 
@@ -14,15 +14,15 @@ public class UserWithMinimumInfoConverter extends Converter<UserWithMinimumInfoD
         imageConverter = new ImageConverter();
     }
 
-    public UserWithMinimumInfoConverter() {
-        super(UserWithMinimumInfoConverter::convertToEntity, UserWithMinimumInfoConverter::convertToDto);
+    public UserMinInfoConverter() {
+        super(UserMinInfoConverter::convertToEntity, UserMinInfoConverter::convertToDto);
     }
 
-    private static UserWithMinimumInfoDto convertToDto(User source) {
+    private static UserMinInfoDto convertToDto(User source) {
         if (isNull(source)) {
             return null;
         }
-        UserWithMinimumInfoDto result = new UserWithMinimumInfoDto();
+        UserMinInfoDto result = new UserMinInfoDto();
         result.setId(source.getId());
         result.setUsername(source.getUsername());
         result.setGender(source.getGender());
@@ -31,7 +31,7 @@ public class UserWithMinimumInfoConverter extends Converter<UserWithMinimumInfoD
         return result;
     }
 
-    private static User convertToEntity(UserWithMinimumInfoDto source) {
+    private static User convertToEntity(UserMinInfoDto source) {
         if (isNull(source)) {
             return null;
         }

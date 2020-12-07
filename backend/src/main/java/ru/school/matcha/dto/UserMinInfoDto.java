@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @JsonAutoDetect
-public class UserWithMinimumInfoDto {
+public class UserMinInfoDto {
 
     private Long id;
     private String username;
