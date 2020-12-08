@@ -57,6 +57,10 @@ const UsersTable = (props) => {
       data={guests}
       onSort={handleSort}
       sortColumn={sortColumn}
+      style={{
+        tableStyle: "table table-striped",
+        tableHeaderStyle: "thead-dark",
+      }}
     />
   ) : (
     <Loading />

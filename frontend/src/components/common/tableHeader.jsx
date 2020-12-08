@@ -23,7 +23,7 @@ const TableHeader = (props) => {
   };
 
   return (
-    <thead>
+    <thead className={props.className}>
       <tr>
         {props.columns.map((column) => (
           <th

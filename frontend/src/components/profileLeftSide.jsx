@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ImageFileInput from "./imageFileInput";
+import "./styles/profileLeftSide.scss";
 
 const ProfileLeftSide = (props) => {
   const { user, isMe, editMode, onEditModeChange, location } = props;
@@ -12,7 +13,7 @@ const ProfileLeftSide = (props) => {
           className="figure-img img-fluid rounded"
           alt="avatar"
         />
-        <figcaption className="figure-caption text-center">
+        <figcaption className="figure-caption text-center text-dark">
           Fame rating: <strong>{user.rate}</strong>
         </figcaption>
       </figure>
@@ -29,7 +30,7 @@ const ProfileLeftSide = (props) => {
             <button
               onClick={onEditModeChange}
               type="button"
-              className="btn btn-primary"
+              className="btn btn-info"
             >
               Edit profile
             </button>

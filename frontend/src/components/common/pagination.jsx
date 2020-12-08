@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import _ from "lodash";
-import { Link } from "react-router-dom";
+import "./styles/pagination.scss";
 
 const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
   const [startRange, setStartRange] = useState(1);

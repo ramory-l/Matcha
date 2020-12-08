@@ -6,6 +6,7 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import TagForm from "./tagForm";
 import ProfileImages from "./profileImages";
+import "./styles/profileForm.scss";
 
 class ProfileForm extends Form {
   state = {
@@ -67,7 +68,7 @@ class ProfileForm extends Form {
     const readonly = !(editMode && isMe);
     const { firstName, lastName } = this.state.data;
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form className="ProfileForm" onSubmit={this.handleSubmit}>
         <h1>{editMode ? "Editing profile" : firstName + " " + lastName}</h1>
         <ProfileImages
           userId={user.id}
