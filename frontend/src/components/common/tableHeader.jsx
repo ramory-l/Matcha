@@ -1,7 +1,9 @@
 import React from "react";
 
 const TableHeader = (props) => {
-  const raiseSort = (path) => {
+  const raiseSort = (column) => {
+    const { path, noSort } = column;
+    if (noSort) return;
     const sortColumn = { ...props.sortColumn };
     if (sortColumn.path === path)
       sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
@@ -13,6 +15,7 @@ const TableHeader = (props) => {
   };
 
   const renderSortIcon = (column) => {
+    if (column.noSort) return null;
     const { sortColumn } = props;
     if (column.path !== sortColumn.path) return null;
     if (sortColumn.order === "asc") return <i className="fa fa-sort-asc"></i>;
@@ -26,7 +29,7 @@ const TableHeader = (props) => {
           <th
             className="clickable"
             key={column.path || column.key}
-            onClick={() => raiseSort(column.path)}
+            onClick={() => raiseSort(column)}
           >
             {column.label} {renderSortIcon(column)}
           </th>

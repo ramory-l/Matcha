@@ -3,6 +3,7 @@ import { getGuests } from "../services/guestService";
 import Loading from "./common/loading";
 import Table from "./common/table";
 import _ from "lodash";
+import moment from "moment";
 
 const UsersTable = (props) => {
   const [sortColumn, setSortColumn] = useState({
@@ -14,11 +15,20 @@ const UsersTable = (props) => {
   useEffect(() => {
     async function fetchGuests() {
       const { data: guests } = await getGuests();
-      const sorted = _.orderBy(guests, [sortColumn.path], [sortColumn.order]);
+      const modifiedGuests = guests.map((guest) => {
+        const newGuest = { ...guest };
+        newGuest.date = moment(newGuest.date).format("YYYY-MM-DD, h:mm:ss a");
+        return newGuest;
+      });
+      const sorted = _.orderBy(
+        modifiedGuests,
+        [sortColumn.path],
+        [sortColumn.order]
+      );
       setGuests(sorted);
     }
     fetchGuests();
-  }, []);
+  }, [sortColumn]);
 
   const columns = [
     {
@@ -26,10 +36,12 @@ const UsersTable = (props) => {
       label: "Avatar",
       content: (avatar) => (
         <img
+          alt={avatar.url}
           style={{ width: "5vw" }}
           src={`${avatar?.url ? avatar.url : "/default-avatar.png"}`}
         />
       ),
+      noSort: true,
     },
     { path: "username", label: "Username" },
     { path: "date", label: "Date" },
@@ -37,8 +49,6 @@ const UsersTable = (props) => {
 
   const handleSort = (sortColumn) => {
     setSortColumn(sortColumn);
-    const sorted = _.orderBy(guests, [sortColumn.path], [sortColumn.order]);
-    setGuests(sorted);
   };
 
   return guests ? (

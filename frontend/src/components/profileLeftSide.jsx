@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import FileInput from "./common/fileInput";
+import ImageFileInput from "./imageFileInput";
 
 const ProfileLeftSide = (props) => {
   const { user, isMe, editMode, onEditModeChange, location } = props;
@@ -19,10 +19,10 @@ const ProfileLeftSide = (props) => {
       {isMe ? (
         <div className="ProfileLeftSide-Buttons">
           {editMode ? (
-            <FileInput
+            <ImageFileInput
               userId={user.id}
               name="imageLoader"
-              label="Load images"
+              label="Load image"
             />
           ) : null}
           {location.pathname === "/profile/me" ? (

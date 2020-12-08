@@ -50,13 +50,19 @@ const HomePage = (props) => {
 
   return (
     <>
-      <UsersWithLoading isLoading={isLoading} users={paginatedUsers} />
-      <Pagination
-        itemsCount={users.length}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+      {paginatedUsers.length === 0 && !isLoading ? (
+        <h1>No users found</h1>
+      ) : (
+        <>
+          <UsersWithLoading isLoading={isLoading} users={paginatedUsers} />
+          <Pagination
+            itemsCount={users.length}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
     </>
   );
 };

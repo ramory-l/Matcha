@@ -1,12 +1,13 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { deleteUserImage, getUserImages } from "../services/imageService";
+import React, { useState, useEffect, useContext } from "react";
 import ImageModal from "./imageModal";
 import ProfileImage from "./profileImage";
+import { deleteUserImage, getUserImages } from "../services/imageService";
 import "./styles/profileImages.scss";
+import UserContext from "../contexts/userContext";
 
 const ProfileImages = ({ userId, modalTitle, editMode }) => {
   const [images, setImages] = useState([]);
+  const userContext = useContext(UserContext);
 
   useEffect(() => {
     async function fetchUserImages() {
@@ -14,7 +15,7 @@ const ProfileImages = ({ userId, modalTitle, editMode }) => {
       setImages(images);
     }
     fetchUserImages();
-  }, [userId]);
+  }, [userId, userContext.images]);
 
   const modalTarget = "profileImagesModal";
   const carouselTarget = "profileImagesCarousel";
