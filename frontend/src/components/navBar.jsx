@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
+import "./styles/navBar.scss";
 
 const NavBar = ({ user }) => {
   return (
@@ -38,12 +39,6 @@ const NavBar = ({ user }) => {
           </li>
         </ul>
         <form className="form-inline my-2 my-lg-0">
-          <input
-            className="form-control mr-sm-2"
-            type="search"
-            placeholder="Search for user"
-            aria-label="Search User"
-          />
           <Link to="/logout">
             <button type="button" className="btn btn-danger mx-2">
               Logout

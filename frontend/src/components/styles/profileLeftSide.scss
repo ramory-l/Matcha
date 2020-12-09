@@ -5,4 +5,18 @@
   background-color: rgba(0, 0, 0, 0.219);
   border-radius: 5px;
   padding: 0 0 10px 0;
+
+  .figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      margin-top: 15px;
+      width: 15vw;
+      height: 17vw;
+      object-fit: cover;
+      box-shadow: 0 0 10px 3px white;
+    }
+  }
 }

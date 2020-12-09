@@ -1,6 +1,18 @@
 #gallery {
   img {
-    height: 13vw;
+    margin-left: 10px;
+    height: 9vw;
     object-fit: cover;
+    cursor: pointer;
+    width: 9vw;
+  }
+}
+
+@media (max-width: 500px) {
+  #gallery {
+    img {
+      height: 15vh;
+      width: 20vw;
+    }
   }
 }

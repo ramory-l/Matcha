@@ -7,10 +7,18 @@ import ListGroup from "./common/listGroup";
 import SettingForm from "./settingsForm";
 import UserContext from "../contexts/userContext";
 import { getUserImages } from "../services/imageService";
+// import { updateUser } from "../services/userService";
 
 const User = (props) => {
   const [images, setImages] = useState([]);
   const { isMe, match, editMode, onEditModeChange, user } = props;
+  const [userAvatar, setUserAvatar] = useState(user.avatar);
+
+  const handleUserAvatarUpdate = async (newSrc) => {
+    setUserAvatar(newSrc);
+    user.avatar = newSrc;
+    // await updateUser(user);
+  };
 
   const handleNewImages = async () => {
     const { data: images } = await getUserImages(user.id);
@@ -19,12 +27,25 @@ const User = (props) => {
   };
 
   return (
-    <UserContext.Provider value={{ images, handleNewImages }}>
+    <UserContext.Provider
+      value={{ userAvatar, handleUserAvatarUpdate, images, handleNewImages }}
+    >
       <div className="row">
-        <div className="col-3">
+        <div className="col">
           <ProfileLeftSide {...props} />
+          <ListGroup
+            editMode={editMode}
+            onEditModeChange={onEditModeChange}
+            items={[
+              { title: "My data", path: "/profile/me" },
+              { title: "My guests", path: "/profile/me/guests" },
+              { title: "My likes", path: "/profile/me/likes" },
+              { title: "My matches", path: "/profile/me/matches" },
+              { title: "Settings", path: "/profile/me/settings" },
+            ]}
+          />
         </div>
-        <div className="col-6">
+        <div className="col">
           <Switch>
             {isMe ? (
               <Route path={`${match.path}/guests`} component={UsersTable} />
@@ -43,21 +64,6 @@ const User = (props) => {
             <Redirect to="/not-found" />
           </Switch>
         </div>
-        {isMe ? (
-          <div className="col-2">
-            <ListGroup
-              editMode={editMode}
-              onEditModeChange={onEditModeChange}
-              items={[
-                { title: "My data", path: "/profile/me" },
-                { title: "My guests", path: "/profile/me/guests" },
-                { title: "My likes", path: "/profile/me/likes" },
-                { title: "My matches", path: "/profile/me/matches" },
-                { title: "Settings", path: "/profile/me/settings" },
-              ]}
-            />
-          </div>
-        ) : null}
       </div>
     </UserContext.Provider>
   );

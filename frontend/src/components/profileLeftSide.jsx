@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import UserContext from "../contexts/userContext";
 import ImageFileInput from "./imageFileInput";
 import "./styles/profileLeftSide.scss";
 
 const ProfileLeftSide = (props) => {
   const { user, isMe, editMode, onEditModeChange, location } = props;
+  const userContext = useContext(UserContext);
   return (
     <div className="ProfileLeftSide">
       <figure className="figure">
         <img
-          src={user.avatar?.url ? user.avatar?.url : "/default-avatar.png"}
+          src={
+            userContext.userAvatar
+              ? userContext.userAvatar
+              : "/default-avatar.png"
+          }
           className="figure-img img-fluid rounded"
           alt="avatar"
         />

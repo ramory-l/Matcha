@@ -36,6 +36,7 @@ const ProfileImages = ({ userId, modalTitle, editMode }) => {
       >
         {images.map((image, index) => (
           <ProfileImage
+            index={index}
             key={index}
             image={image}
             onImageDelete={handleImageDelete}

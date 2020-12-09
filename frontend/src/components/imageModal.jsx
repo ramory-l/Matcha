@@ -1,11 +1,36 @@
 import React from "react";
+import { useContext } from "react";
+import UserContext from "../contexts/userContext";
 import Modal from "./common/modal";
 import "./styles/imageModal.scss";
 
 const ImageModal = ({ images, modalTitle, modalTarget, carouselTarget }) => {
+  const userContext = useContext(UserContext);
   return (
-    <Modal modalTarget={modalTarget} modalTitle={modalTitle}>
-      <div id={carouselTarget} className="carousel slide" data-ride="carousel">
+    <Modal
+      modalTarget={modalTarget}
+      modalTitle={modalTitle}
+      buttonsArray={[
+        <button
+          key={0}
+          className="btn btn-primary"
+          onClick={(e) => {
+            e.preventDefault();
+            const item = document.querySelector(".carousel-item.active");
+            const newAvatar = item.firstChild.src;
+            userContext.handleUserAvatarUpdate(newAvatar);
+          }}
+        >
+          Make as avatar
+        </button>,
+      ]}
+    >
+      <div
+        id={carouselTarget}
+        className="carousel slide"
+        data-ride="carousel"
+        data-interval="false"
+      >
         <ol className="carousel-indicators">
           {images.map((image, index) => (
             <li
