@@ -7,7 +7,9 @@ const RecipientDescription = (props) => {
     <div className="RecipientDescription">
       <h5>Recipient:</h5>
       <img
-        src={recipient.img ? recipient.img : "/default-avatar.png"}
+        src={
+          recipient.avatar?.link ? recipient.avatar.link : "/default-avatar.png"
+        }
         alt="Recipient avatar"
       />
       <span>{recipient.firstName}</span>

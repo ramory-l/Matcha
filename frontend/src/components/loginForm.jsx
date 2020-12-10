@@ -45,11 +45,6 @@ class LoginForm extends Form {
         <h1>Login Form</h1>
         {this.renderInput("username", "Username")}
         {this.renderInput("password", "Password", false, "password")}
-        {this.renderCheckbox(
-          "rememberme",
-          "Remember me",
-          this.handleRememberMe
-        )}
         <div className="LoginForm-Buttons">
           {this.renderButton("Login")}
           <Link to="/auth/register">

@@ -1,10 +1,12 @@
 #gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
   img {
-    margin-left: 10px;
-    height: 9vw;
+    height: 10vw;
     object-fit: cover;
     cursor: pointer;
-    width: 9vw;
+    width: 11vw;
   }
 }
 

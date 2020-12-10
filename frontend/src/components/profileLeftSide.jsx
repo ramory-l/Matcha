@@ -12,8 +12,8 @@ const ProfileLeftSide = (props) => {
       <figure className="figure">
         <img
           src={
-            userContext.userAvatar
-              ? userContext.userAvatar
+            userContext.userAvatar?.link
+              ? userContext.userAvatar.link
               : "/default-avatar.png"
           }
           className="figure-img img-fluid rounded"
@@ -44,7 +44,7 @@ const ProfileLeftSide = (props) => {
         </div>
       ) : (
         <Link to={`/messages/${user.username}`}>
-          <button type="button" className="btn btn-primary">
+          <button type="button" className="btn btn-info">
             Send a message
           </button>
         </Link>

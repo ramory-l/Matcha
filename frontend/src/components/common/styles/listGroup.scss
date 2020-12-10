@@ -2,8 +2,21 @@
 
 .list-group {
   font-family: "Cinzel Decorative", cursive;
+  a {
+    padding: 12px;
+    background-color: transparent;
+  }
   a.active {
     background-color: #c0f6ff8a;
     border-color: lightblue;
+  }
+}
+
+@media (max-width: 500px) {
+  .list-group {
+    font-size: 9pt;
+    a {
+      padding: 5px;
+    }
   }
 }

@@ -17,7 +17,10 @@ const ImageModal = ({ images, modalTitle, modalTarget, carouselTarget }) => {
           onClick={(e) => {
             e.preventDefault();
             const item = document.querySelector(".carousel-item.active");
-            const newAvatar = item.firstChild.src;
+            const newAvatar = {
+              id: +item.firstChild.alt.slice(-1),
+              link: item.firstChild.src,
+            };
             userContext.handleUserAvatarUpdate(newAvatar);
           }}
         >
@@ -48,7 +51,7 @@ const ImageModal = ({ images, modalTitle, modalTarget, carouselTarget }) => {
               className={index === 0 ? `carousel-item active` : `carousel-item`}
             >
               <img
-                alt={`${modalTitle.slice(0, -9)} ${index}`}
+                alt={`${modalTitle.slice(0, -9)} ${image.id}`}
                 className="d-block w-100"
                 src={`${image.link}`}
               />

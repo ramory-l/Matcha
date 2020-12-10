@@ -7,17 +7,22 @@ import ListGroup from "./common/listGroup";
 import SettingForm from "./settingsForm";
 import UserContext from "../contexts/userContext";
 import { getUserImages } from "../services/imageService";
-// import { updateUser } from "../services/userService";
+import { updateUser } from "../services/userService";
+import { useEffect } from "react";
 
 const User = (props) => {
   const [images, setImages] = useState([]);
   const { isMe, match, editMode, onEditModeChange, user } = props;
-  const [userAvatar, setUserAvatar] = useState(user.avatar);
+  const [userAvatar, setUserAvatar] = useState({});
 
-  const handleUserAvatarUpdate = async (newSrc) => {
-    setUserAvatar(newSrc);
-    user.avatar = newSrc;
-    // await updateUser(user);
+  useEffect(() => {
+    setUserAvatar(user.avatar);
+  }, [user.avatar]);
+
+  const handleUserAvatarUpdate = async (newAvatar) => {
+    setUserAvatar(newAvatar);
+    user.avatar = newAvatar;
+    await updateUser(user);
   };
 
   const handleNewImages = async () => {
@@ -31,19 +36,21 @@ const User = (props) => {
       value={{ userAvatar, handleUserAvatarUpdate, images, handleNewImages }}
     >
       <div className="row">
-        <div className="col">
+        <div className="col-3">
           <ProfileLeftSide {...props} />
-          <ListGroup
-            editMode={editMode}
-            onEditModeChange={onEditModeChange}
-            items={[
-              { title: "My data", path: "/profile/me" },
-              { title: "My guests", path: "/profile/me/guests" },
-              { title: "My likes", path: "/profile/me/likes" },
-              { title: "My matches", path: "/profile/me/matches" },
-              { title: "Settings", path: "/profile/me/settings" },
-            ]}
-          />
+          {isMe ? (
+            <ListGroup
+              editMode={editMode}
+              onEditModeChange={onEditModeChange}
+              items={[
+                { title: "My data", path: "/profile/me" },
+                { title: "My guests", path: "/profile/me/guests" },
+                { title: "My likes", path: "/profile/me/likes" },
+                { title: "My matches", path: "/profile/me/matches" },
+                { title: "Settings", path: "/profile/me/settings" },
+              ]}
+            />
+          ) : null}
         </div>
         <div className="col">
           <Switch>

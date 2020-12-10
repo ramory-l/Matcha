@@ -46,7 +46,7 @@ const UserCard = (props) => {
     <div className="card my-2">
       <div className="card-image">
         <img
-          src={user.img ? user.img : "/default-avatar.png"}
+          src={user.avatar?.link ? user.avatar.link : "/default-avatar.png"}
           className="card-img-top"
           alt={user.username}
         />

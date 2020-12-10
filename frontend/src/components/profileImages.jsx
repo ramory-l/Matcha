@@ -30,7 +30,6 @@ const ProfileImages = ({ userId, modalTitle, editMode }) => {
     <>
       <div
         id="gallery"
-        className="row"
         data-toggle={editMode ? null : "modal"}
         data-target={editMode ? null : `#${modalTarget}`}
       >

@@ -4,7 +4,7 @@ import "./styles/navBar.scss";
 
 const NavBar = ({ user }) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light mb-3">
+    <nav className="navbar navbar-expand-lg navbar-light mb-3">
       <NavLink className="navbar-brand" to="/">
         Matcha
       </NavLink>
@@ -40,7 +40,7 @@ const NavBar = ({ user }) => {
         </ul>
         <form className="form-inline my-2 my-lg-0">
           <Link to="/logout">
-            <button type="button" className="btn btn-danger mx-2">
+            <button type="button" className="btn btn-danger">
               Logout
             </button>
           </Link>
