@@ -1,6 +1,7 @@
 import React from "react";
 import Joi from "joi";
 import Form from "./common/form";
+import "./styles/settingsForm.scss";
 
 class SettingForm extends Form {
   state = {
@@ -53,7 +54,7 @@ class SettingForm extends Form {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form className="SettingsForm" onSubmit={this.handleSubmit}>
         <h1>Settings</h1>
         {this.renderInput("email", "Email address")}
         {this.renderInput("to_new_password", "New Password", false, "password")}

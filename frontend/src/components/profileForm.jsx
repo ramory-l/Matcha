@@ -16,6 +16,8 @@ class ProfileForm extends Form {
       gender: "",
       birthday: "",
       description: "",
+      latitude: 0,
+      longitude: 0,
     },
     errors: {},
   };
@@ -45,6 +47,8 @@ class ProfileForm extends Form {
       birthday:
         (user.birthday && moment(user.birthday).format("YYYY-MM-DD")) || "",
       description: user.description || "",
+      latitude: +user.latitude,
+      longitude: +user.longitude,
     };
   }
 
@@ -54,13 +58,27 @@ class ProfileForm extends Form {
     gender: Joi.string().optional(),
     birthday: Joi.any().optional(),
     description: Joi.any().optional(),
+    latitude: Joi.number().required().label("Latitude"),
+    longitude: Joi.number().required().label("Longitude"),
   });
 
   doSubmit = async () => {
-    await userService.updateUser(this.state.data);
+    await userService.updateUser(this.mapToViewModel(this.state.data));
     toast.success("Changes successfully saved!");
     this.props.onEditModeChange();
     this.updateCurrentProfile();
+  };
+
+  handleGetCoordsButton = (e) => {
+    e.preventDefault();
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const user = { ...this.state.data };
+      user.latitude = latitude;
+      user.longitude = longitude;
+      this.setState({ data: user });
+    });
   };
 
   render() {
@@ -84,8 +102,18 @@ class ProfileForm extends Form {
           ? this.renderInput("gender", "Gender", readonly)
           : this.renderSelect("gender", "Gender", ["woman", "man"])}
         {this.renderTextArea("description", "Description", readonly)}
+        {this.renderInput("latitude", "Latitude", readonly)}
+        {this.renderInput("longitude", "Longitude", readonly)}
         <TagForm userId={user.id} editMode={editMode} />
         {readonly ? null : this.renderButton("Save")}
+        {readonly ? null : (
+          <button
+            onClick={(e) => this.handleGetCoordsButton(e)}
+            className="btn btn-warning"
+          >
+            Get My Coordinates
+          </button>
+        )}
       </form>
     );
   }

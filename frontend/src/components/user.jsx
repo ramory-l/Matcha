@@ -30,7 +30,6 @@ const User = (props) => {
     setImages(images);
     onEditModeChange();
   };
-
   return (
     <UserContext.Provider
       value={{ userAvatar, handleUserAvatarUpdate, images, handleNewImages }}
