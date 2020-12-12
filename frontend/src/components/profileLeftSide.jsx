@@ -29,7 +29,7 @@ const ProfileLeftSide = (props) => {
             <ImageFileInput
               userId={user.id}
               name="imageLoader"
-              label="Load image"
+              label="Choose a file"
             />
           ) : null}
           {location.pathname === "/profile/me" ? (

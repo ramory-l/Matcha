@@ -67,7 +67,7 @@ class RegisterForm extends Form {
           "password"
         )}
         <div className="RegisterForm-Buttons">
-          {this.renderButton("Register")}
+          {this.renderButton("Register", "btn btn-dark")}
           <Link to="/auth/login">
             <button className="btn btn-warning">Already a member?</button>
           </Link>
