@@ -24,8 +24,8 @@ public class UserFullDto {
     private ImageDto avatar;
     private Role role;
     private Boolean isActive;
-    private Long latitude;
-    private Long longitude;
+    private Double latitude;
+    private Double longitude;
     private Date createTs;
     private Date updateTs;
     private Date deleteTs;

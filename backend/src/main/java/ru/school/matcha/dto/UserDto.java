@@ -20,7 +20,7 @@ public class UserDto {
     private FormDto form;
     private Long rate;
     private ImageDto avatar;
-    private Long latitude;
-    private Long longitude;
+    private Double latitude;
+    private Double longitude;
 
 }
