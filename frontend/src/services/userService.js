@@ -15,6 +15,13 @@ export function register(user) {
   });
 }
 
+export function resetPassword(user) {
+  return http.put(`${apiEndpoint}/password/reset`, {
+    email: user.email,
+    newPass: user.to_new_password,
+  });
+}
+
 export function getUsers() {
   return http.get(`${apiEndpoint}/`, {
     headers: { "x-auth-token": "T_" + auth.getJwt() },

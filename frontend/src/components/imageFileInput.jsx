@@ -4,6 +4,7 @@ import { toBase64 } from "../utils/fileToBase64";
 import { uploadImage } from "../services/imageService";
 import UserContext from "../contexts/userContext";
 import "./styles/imageFileInput.scss";
+import { toast } from "react-toastify";
 
 const ImageFileInput = ({ name, label, userId }) => {
   const [newLabel, setNewLabel] = useState(label);
@@ -13,7 +14,9 @@ const ImageFileInput = ({ name, label, userId }) => {
   const handleChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setNewLabel(file.name);
+      file.name.length > 13
+        ? setNewLabel(file.name.slice(0, 10) + "...")
+        : setNewLabel(file.name);
       const filename = file.name.split(".")[0];
       const imageBase64 = await toBase64(file);
       const image = {
@@ -27,8 +30,11 @@ const ImageFileInput = ({ name, label, userId }) => {
 
   const handleUploadButtonClick = async () => {
     if (image) {
-      await uploadImage(image);
-      userContext.handleNewImages();
+      try {
+        await uploadImage(image);
+        userContext.handleNewImages();
+        toast.success("Successfully added new image!");
+      } catch (ex) {}
     }
   };
 

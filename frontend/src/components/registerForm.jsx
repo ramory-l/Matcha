@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Form from "./common/form";
+import LinkButton from "./common/linkButton";
 import Joi from "joi";
 import auth from "../services/authService";
 import * as userService from "../services/userService";
@@ -66,12 +66,14 @@ class RegisterForm extends Form {
           false,
           "password"
         )}
-        <div className="RegisterForm-Buttons">
-          {this.renderButton("Register", "btn btn-dark")}
-          <Link to="/auth/login">
-            <button className="btn btn-warning">Already a member?</button>
-          </Link>
-        </div>
+        {this.renderButton("Register", "btn btn-dark")}
+        <LinkButton
+          onClick={(e) => e.preventDefault()}
+          to="/auth/login"
+          className="btn btn-warning ml-0"
+        >
+          Already a member?
+        </LinkButton>
       </form>
     );
   }

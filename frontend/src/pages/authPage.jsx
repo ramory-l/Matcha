@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import LoginForm from "../components/loginForm";
 import RegisterForm from "../components/registerForm";
+import ResetPasswordForm from "../components/resetPasswordForm";
 import ParticlesBg from "particles-bg";
 import icon from "./files/icon";
 import "./styles/authPage.scss";
@@ -27,6 +28,7 @@ const AuthPage = () => {
       <Switch>
         <Route path="/auth/login" component={LoginForm} />
         <Route path="/auth/register" component={RegisterForm} />
+        <Route path="/auth/reset" component={ResetPasswordForm} />
         <Redirect to="/not-found" />
       </Switch>
       <ParticlesBg type="custom" config={config} bg={true} />

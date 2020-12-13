@@ -14,25 +14,12 @@
   text-shadow: 0px 0px 5px black;
 }
 
-%login-form-buttons {
-  display: flex;
-  justify-content: space-between;
-}
-
 .LoginForm {
   @extend %auth-form;
 }
 
-.LoginForm-Buttons {
-  @extend %login-form-buttons;
-}
-
 .RegisterForm {
   @extend %auth-form;
-}
-
-.RegisterForm-Buttons {
-  @extend %login-form-buttons;
 }
 
 .form-group {
