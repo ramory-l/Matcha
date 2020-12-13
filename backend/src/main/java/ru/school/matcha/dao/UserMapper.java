@@ -2,6 +2,7 @@ package ru.school.matcha.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.checkerframework.checker.nullness.Opt;
 import ru.school.matcha.domain.User;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface UserMapper {
     List<User> getAllUsers();
 
     Optional<User> getUserById(Long id);
+
+    Optional<User> getUserByEmail(String email);
 
     Optional<User> getUserWithMinimumInfo(Long id);
 

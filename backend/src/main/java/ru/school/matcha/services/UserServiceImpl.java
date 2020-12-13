@@ -55,6 +55,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.getUserByEmail(email).orElseThrow(NotFoundException::new);
+        }
+    }
+
+    @Override
     public User getUserByUsername(String username) {
         log.debug("Get user by username: {}", username);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
@@ -269,16 +277,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void formingEmail(Long id, String oldPass, String newPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        if (isNull(id) || isNull(oldPass) || isNull(newPass)) {
+    public void formingEmail(String email, String newPass) {
+        if (isNull(email) || isNull(newPass)) {
             throw new NotFoundException("Fields are not filled");
         }
-        String encryptedPassword = getUserEncryptPasswordById(id);
-        if (!PasswordCipher.validatePassword(oldPass, encryptedPassword)) {
-            throw new MatchaException("Old password is wrong");
-        }
-        String passwordToken = jwtTokenProvider.createPasswordToken(newPass, id);
-        User user = getUserById(id);
+        User user = getUserByEmail(email);
+        String passwordToken = jwtTokenProvider.createPasswordToken(newPass, user.getId());
         MailUtil.send(user.getEmail(), "Password change",
                 "Hello, " + user.getUsername() + "<br><br> Please Click " +
                         "<a href='http://localhost:8080/api/users/password/" + passwordToken + "'>" +

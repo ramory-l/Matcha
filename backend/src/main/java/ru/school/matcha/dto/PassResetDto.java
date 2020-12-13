@@ -7,8 +7,7 @@ import lombok.Data;
 @JsonAutoDetect
 public class PassResetDto {
 
-    private String oldPass;
     private String newPass;
-    private Long id;
+    private String email;
 
 }
