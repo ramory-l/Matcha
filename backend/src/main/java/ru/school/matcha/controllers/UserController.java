@@ -108,7 +108,7 @@ public class UserController {
 
     public static Route resetPassword = (request, response) -> {
         PassResetDto passResetDto = passResetSerializer.deserialize(request.body(), PassResetDto.class);
-        userService.formingEmail(passResetDto.getId(), passResetDto.getOldPass(), passResetDto.getNewPass());
+        userService.formingEmail(passResetDto.getEmail(), passResetDto.getNewPass());
         response.status(Response.PUT.getStatus());
         return "";
     };
