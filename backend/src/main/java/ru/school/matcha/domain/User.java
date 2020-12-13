@@ -24,8 +24,8 @@ public class User {
     private Long rate;
     private Image avatar;
     private Role role;
-    private Long latitude;
-    private Long longitude;
+    private Double latitude;
+    private Double longitude;
     private Date createTs;
     private Date updateTs;
     private Date deleteTs;
