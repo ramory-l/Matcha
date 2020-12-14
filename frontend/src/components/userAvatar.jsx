@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import UserContext from "../contexts/userContext";
+import LinkButton from "./common/linkButton";
 import ImageFileInput from "./imageFileInput";
-import "./styles/profileLeftSide.scss";
+import "./styles/userAvatar.scss";
 
-const ProfileLeftSide = (props) => {
+const UserAvatar = (props) => {
   const { user, isMe, editMode, onEditModeChange, location } = props;
   const userContext = useContext(UserContext);
   return (
-    <div className="ProfileLeftSide">
+    <div className="UserAvatar">
       <figure className="figure">
         <img
           src={
@@ -24,12 +24,16 @@ const ProfileLeftSide = (props) => {
         </figcaption>
       </figure>
       {isMe ? (
-        <div className="ProfileLeftSide-Buttons">
+        <div className="UserAvatar-Buttons">
           {editMode ? (
             <ImageFileInput
               userId={user.id}
               name="imageLoader"
-              label="Choose a file"
+              label={
+                <i className="fa fa-upload" aria-hidden="true">
+                  Choose a file
+                </i>
+              }
             />
           ) : null}
           {location.pathname === "/profile/me" ? (
@@ -43,14 +47,12 @@ const ProfileLeftSide = (props) => {
           ) : null}
         </div>
       ) : (
-        <Link to={`/messages/${user.username}`}>
-          <button type="button" className="btn btn-info">
-            Send a message
-          </button>
-        </Link>
+        <LinkButton className="btn btn-info" to={`/messages/${user.username}`}>
+          Send a message
+        </LinkButton>
       )}
     </div>
   );
 };
 
-export default ProfileLeftSide;
+export default UserAvatar;

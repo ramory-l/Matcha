@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import ProfileLeftSide from "./profileLeftSide";
+import UserAvatar from "./userAvatar";
 import ProfileForm from "./profileForm";
 import UsersTable from "./usersTable";
 import ListGroup from "./common/listGroup";
@@ -36,7 +36,7 @@ const User = (props) => {
     >
       <div className="row">
         <div className="col-3">
-          <ProfileLeftSide {...props} />
+          <UserAvatar {...props} />
           {isMe ? (
             <ListGroup
               editMode={editMode}

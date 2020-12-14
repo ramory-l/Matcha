@@ -1,4 +1,4 @@
-.ProfileLeftSide {
+.UserAvatar {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,8 +6,7 @@
 
   .figure {
     img {
-      margin-top: 15px;
-      width: 15vw;
+      width: 20vw;
       height: 17vw;
       object-fit: cover;
       box-shadow: 0 0 10px 3px white;
@@ -15,8 +14,15 @@
   }
 }
 
-.ProfileLeftSide-Buttons {
+.UserAvatar-Buttons {
+  width: 100px;
   display: flex;
   flex-direction: column;
-  width: 10vw;
+}
+
+@media (max-width: 450px) {
+  .UserAvatar-Buttons {
+    font-size: 8pt;
+    width: 65px;
+  }
 }

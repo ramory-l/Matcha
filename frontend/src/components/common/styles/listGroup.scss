@@ -12,11 +12,20 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 450px) {
   .list-group {
-    font-size: 9pt;
+    font-size: 8pt;
     a {
-      padding: 5px;
+      padding: 4px;
+    }
+  }
+}
+
+@media (max-width: 350px) {
+  .list-group {
+    font-size: 6pt;
+    a {
+      padding: 4px;
     }
   }
 }

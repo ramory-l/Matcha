@@ -1,11 +1,18 @@
 import React from "react";
+import { rateUser } from "../services/userService";
 import "./styles/usersCarousel.scss";
 
 const UsersCarousel = ({ users }) => {
+  const handleLikeDislike = async (action) => {
+    const activeUser = document.querySelector(".carousel-item.active");
+    const activeUserId = activeUser.firstChild.alt;
+    await rateUser(activeUserId, action);
+  };
+
   return (
     <div
       id="carouselExampleControls"
-      className="carousel slide"
+      className="carousel slide w-75"
       data-ride="carousel"
       data-interval="false"
     >
@@ -33,19 +40,25 @@ const UsersCarousel = ({ users }) => {
         className="carousel-control-prev"
         href="#carouselExampleControls"
         role="button"
-        data-slide="prev"
+        data-slide="next"
+        onClick={() => handleLikeDislike("like")}
       >
-        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span className="sr-only">Previous</span>
+        <i
+          className="fa fa-thumbs-up fa-5x text-success"
+          aria-hidden="true"
+        ></i>
       </a>
       <a
         className="carousel-control-next"
         href="#carouselExampleControls"
         role="button"
         data-slide="next"
+        onClick={() => handleLikeDislike("dislike")}
       >
-        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-        <span className="sr-only">Next</span>
+        <i
+          className="fa fa-thumbs-down fa-5x text-danger"
+          aria-hidden="true"
+        ></i>
       </a>
     </div>
   );

@@ -15,7 +15,7 @@ const ImageFileInput = ({ name, label, userId }) => {
     const file = e.target.files[0];
     if (file) {
       file.name.length > 13
-        ? setNewLabel(file.name.slice(0, 10) + "...")
+        ? setNewLabel(file.name.slice(0, 7) + "...")
         : setNewLabel(file.name);
       const filename = file.name.split(".")[0];
       const imageBase64 = await toBase64(file);
