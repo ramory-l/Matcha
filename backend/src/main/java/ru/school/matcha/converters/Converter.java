@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+
 public class Converter<T, U> {
 
     private final Function<T, U> fromDto;
@@ -24,10 +26,10 @@ public class Converter<T, U> {
     }
 
     public final List<U> createFromDtos(final Collection<T> dtos) {
-        return dtos.stream().map(this::convertFromDto).collect(Collectors.toList());
+        return isNull(dtos) ? null : dtos.stream().map(this::convertFromDto).collect(Collectors.toList());
     }
 
     public final List<T> createFromEntities(final Collection<U> entities) {
-        return entities.stream().map(this::convertFromEntity).collect(Collectors.toList());
+        return isNull(entities) ? null : entities.stream().map(this::convertFromEntity).collect(Collectors.toList());
     }
 }
