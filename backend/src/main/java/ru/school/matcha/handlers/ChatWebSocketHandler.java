@@ -7,10 +7,13 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import ru.school.matcha.exceptions.JwtAuthenticationException;
+import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static java.util.Objects.isNull;
 
 @Slf4j
 @WebSocket
@@ -21,8 +24,11 @@ public class ChatWebSocketHandler {
     @OnWebSocketConnect
     public void onConnect(Session session) {
         try {
+            if (isNull(session)) {
+                throw new MatchaException("Session not transferred");
+            }
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
-            String token = jwtTokenProvider.resolveToken(session.getUpgradeRequest().getParameterMap().get("x-auth-token").get(0));
+            String token = jwtTokenProvider.resolveToken(session.getUpgradeRequest().getParameterMap().get("token").get(0));
             if (!jwtTokenProvider.validateToken(token)) {
                 throw new JwtAuthenticationException("Credential are invalid");
             }
@@ -30,6 +36,8 @@ public class ChatWebSocketHandler {
             sessionUsernameMap.put(session, username);
         } catch (JwtAuthenticationException ex) {
             log.error("Credentials are invalid");
+        } catch (MatchaException ex) {
+            log.error(ex.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
