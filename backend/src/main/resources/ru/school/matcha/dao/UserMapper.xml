@@ -94,6 +94,9 @@
         <if test="longitude != null">
             longitude = #{longitude},
         </if>
+        <if test="password != null">
+            password = #{password},
+        </if>
         update_ts = now()
         WHERE username = #{username}
     </update>
@@ -129,6 +132,9 @@
         </if>
         <if test="longitude != null">
             longitude = #{longitude},
+        </if>
+        <if test="password != null">
+            password = #{password},
         </if>
         update_ts = now()
         WHERE id = #{id}
@@ -198,7 +204,9 @@
     </select>
 
     <select id="getUserByEmail" resultMap="User">
-        SELECT * FROM "user" WHERE email = #{email}
+        SELECT *
+        FROM "user"
+        WHERE email = #{email}
     </select>
 
 </mapper>

@@ -164,6 +164,13 @@ public class UserServiceImpl implements UserService {
             if (nonNull(user.getAvatar()) && nonNull(user.getAvatar().getId())) {
                 imageService.getImageById(user.getAvatar().getId());
             }
+            if (nonNull(user.getPassword()) && !user.getPassword().equals("")) {
+                try {
+                    user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
+                } catch (Exception ex) {
+                    throw new MatchaException("Encrypt password error");
+                }
+            }
             if (nonNull(user.getId())) {
                 log.debug("Update user with id: {}", user.getId());
                 userMapper.updateUserById(user);

@@ -92,8 +92,8 @@ public class UserController {
 
     public static Route updateUser = (request, response) -> {
         AuthorizationController.authorize(request, Role.USER);
-        UserDto userDto = userDtoSerializer.deserialize(request.body(), UserDto.class);
-        User user = userConverter.convertFromDto(userDto);
+        UserFullDto userFullDto = userFullDtoSerializer.deserialize(request.body(), UserFullDto.class);
+        User user = userFullConverter.convertFromDto(userFullDto);
         userService.updateUser(user);
         response.status(Response.PUT.getStatus());
         return "";
