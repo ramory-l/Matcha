@@ -28,7 +28,7 @@ public class ChatWebSocketHandler {
                 throw new MatchaException("Session not transferred");
             }
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
-            String token = jwtTokenProvider.resolveToken(session.getUpgradeRequest().getParameterMap().get("x-auth-token").get(0));
+            String token = jwtTokenProvider.resolveToken(session.getUpgradeRequest().getParameterMap().get("token").get(0));
             if (!jwtTokenProvider.validateToken(token)) {
                 throw new JwtAuthenticationException("Credential are invalid");
             }
