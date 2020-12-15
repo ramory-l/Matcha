@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 
-const MessageInput = () => {
+const MessageInput = ({ onMessageSend }) => {
+  const [message, setMessage] = useState("");
+
   return (
     <div className="input-group my-2">
       <input
         type="text"
         className="form-control"
         aria-label="Text input with segmented dropdown button"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
       />
       <div className="input-group-append">
-        <button type="button" className="btn btn-outline-secondary">
+        <button
+          onClick={() => onMessageSend(message)}
+          type="button"
+          className="btn btn-outline-secondary"
+        >
           Send
         </button>
         <button

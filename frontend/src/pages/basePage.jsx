@@ -9,6 +9,8 @@ import NotFound from "../components/notFound";
 import SearchPage from "./searchPage";
 import auth, { getJwt } from "../services/authService";
 import { ws } from "../config.json";
+import { toast } from "react-toastify";
+import BaseContext from "../contexts/baseContext";
 
 const BasePage = () => {
   const [user, setUser] = useState({});
@@ -16,24 +18,49 @@ const BasePage = () => {
 
   useEffect(() => {
     const user = auth.getCurrentUser();
-    setWebSocket(new WebSocket(`${ws}${getJwt()}`));
+    setWebSocket(new WebSocket(`${ws}T_${getJwt()}`));
     setUser(user);
   }, []);
 
+  useEffect(() => {
+    if (webSocket) {
+      webSocket.onopen = () => {
+        console.log("connected");
+      };
+
+      webSocket.onclose = () => {
+        console.log("closed");
+      };
+
+      webSocket.onmessage = (message) => {
+        const data = JSON.parse(message.data);
+
+        toast(data);
+      };
+
+      return () => {
+        webSocket.close();
+        console.log("closed");
+      };
+    }
+  }, [webSocket]);
+
   return (
     <>
-      <NavBar user={user} />
-      <main className="container">
-        <Switch>
-          <Route path="/profile/:username" component={ProfilePage} />
-          <Route path="/messages/:username?" component={MessagesPage} />
-          <Route path="/search" component={SearchPage} />
-          <Route path="/logout" component={Logout} />
-          <Route path="/not-found" component={NotFound} />
-          <Route path="/" exact component={HomePage} />
-          <Redirect to="/not-found" />
-        </Switch>
-      </main>
+      <BaseContext.Provider value={{ webSocket }}>
+        <NavBar user={user} />
+        <main className="container">
+          <Switch>
+            <Route path="/profile/:username" component={ProfilePage} />
+            <Route path="/messages/:username?" component={MessagesPage} />
+            <Route path="/search" component={SearchPage} />
+            <Route path="/logout" component={Logout} />
+            <Route path="/not-found" component={NotFound} />
+            <Route path="/" exact component={HomePage} />
+            <Redirect to="/not-found" />
+          </Switch>
+        </main>
+      </BaseContext.Provider>
     </>
   );
 };
