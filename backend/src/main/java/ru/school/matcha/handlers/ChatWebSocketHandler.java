@@ -35,7 +35,7 @@ public class ChatWebSocketHandler {
         }
     }
 
-    public static void sendMessage(String sender, String message) {
+    private static void sendMessage(String sender, String message) {
         sessionUsernameMap.keySet().stream().parallel().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(sender + ": " + message);
