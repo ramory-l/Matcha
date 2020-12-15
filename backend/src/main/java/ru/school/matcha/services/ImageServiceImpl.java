@@ -22,6 +22,7 @@ import static java.util.Objects.nonNull;
 public class ImageServiceImpl implements ImageService {
 
     private static final UserService userService;
+    private static final int limit = 5;
 
     static {
         userService = new UserServiceImpl();
@@ -30,6 +31,9 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Long createImage(String base64, String fileName, Long userId) {
         log.debug("Create image");
+        if (getCountImagesByUserId(userId) >= limit) {
+            throw new MatchaException("Photo limit reached (limit: " + limit + ")");
+        }
         SqlSession sqlSession = null;
         try {
             ImageCoder.decodeImage(base64, fileName);
@@ -53,6 +57,15 @@ public class ImageServiceImpl implements ImageService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
+        }
+    }
+
+    @Override
+    public Long getCountImagesByUserId(Long userId) {
+        log.debug("Get count images by user id: {}", userId);
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
+            return imageMapper.getCountImagesByUserId(userId);
         }
     }
 

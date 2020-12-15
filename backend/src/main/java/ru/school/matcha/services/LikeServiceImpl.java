@@ -2,6 +2,10 @@ package ru.school.matcha.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
+import ru.school.matcha.converters.Converter;
+import ru.school.matcha.converters.LikeConverter;
+import ru.school.matcha.domain.Like;
+import ru.school.matcha.dto.LikeDto;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.LikeMapper;
 import ru.school.matcha.exceptions.MatchaException;
@@ -20,8 +24,11 @@ public class LikeServiceImpl implements LikeService {
 
     private static final UserService userService;
 
+    private static final Converter<LikeDto, Like> likeConverter;
+
     static {
         userService = new UserServiceImpl();
+        likeConverter = new LikeConverter();
     }
 
     @Override
@@ -58,7 +65,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public List<Long> getLikesByUserId(Long userId, Boolean isLike, Boolean outgoing) {
+    public List<Like> getLikesByUserId(Long userId, Boolean isLike, Boolean outgoing) {
         log.debug("Get likes/dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
@@ -67,11 +74,11 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public Map<String, List<Long>> getLikesByUserId(Long userId, Boolean outgoing) {
+    public Map<String, List<Like>> getLikesByUserId(Long userId, Boolean outgoing) {
         log.debug("Get likes and dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
-            Map<String, List<Long>> likes = new HashMap<>();
+            Map<String, List<Like>> likes = new HashMap<>();
             likes.put("like", likeMapper.getLikes(userId, true, outgoing));
             likes.put("dislike", likeMapper.getLikes(userId, false, outgoing));
             return likes;

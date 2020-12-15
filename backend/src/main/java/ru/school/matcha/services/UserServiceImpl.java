@@ -16,8 +16,6 @@ import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -68,6 +66,15 @@ public class UserServiceImpl implements UserService {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserByUsername(username).orElseThrow(NotFoundException::new);
+        }
+    }
+
+    @Override
+    public List<User> getMatcha(Long id) {
+        log.debug("Get matcha");
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.getMatcha(id);
         }
     }
 
@@ -163,6 +170,13 @@ public class UserServiceImpl implements UserService {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             if (nonNull(user.getAvatar()) && nonNull(user.getAvatar().getId())) {
                 imageService.getImageById(user.getAvatar().getId());
+            }
+            if (nonNull(user.getPassword()) && !user.getPassword().equals("")) {
+                try {
+                    user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
+                } catch (Exception ex) {
+                    throw new MatchaException("Encrypt password error");
+                }
             }
             if (nonNull(user.getId())) {
                 log.debug("Update user with id: {}", user.getId());

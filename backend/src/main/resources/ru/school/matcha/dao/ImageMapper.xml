@@ -39,4 +39,8 @@
         WHERE user_id = #{id}
     </select>
 
+    <select id="getCountImagesByUserId" resultType="java.lang.Long">
+        SELECT count(id) FROM images WHERE user_id = #{userId}
+    </select>
+
 </mapper>

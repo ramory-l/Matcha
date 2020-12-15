@@ -32,7 +32,6 @@ public class UserController {
     private final static TagService tagService;
 
     private final static Serializer<UserFullDto> userFullDtoSerializer;
-    private final static Serializer<UserDto> userDtoSerializer;
     private static final Serializer<PassResetDto> passResetSerializer;
 
     static {
@@ -41,7 +40,6 @@ public class UserController {
         userService = new UserServiceImpl();
         tagService = new TagServiceImpl();
         userFullDtoSerializer = new Serializer<>();
-        userDtoSerializer = new Serializer<>();
         passResetSerializer = new Serializer<>();
     }
 
@@ -92,8 +90,8 @@ public class UserController {
 
     public static Route updateUser = (request, response) -> {
         AuthorizationController.authorize(request, Role.USER);
-        UserDto userDto = userDtoSerializer.deserialize(request.body(), UserDto.class);
-        User user = userConverter.convertFromDto(userDto);
+        UserFullDto userFullDto = userFullDtoSerializer.deserialize(request.body(), UserFullDto.class);
+        User user = userFullConverter.convertFromDto(userFullDto);
         userService.updateUser(user);
         response.status(Response.PUT.getStatus());
         return "";
@@ -104,6 +102,13 @@ public class UserController {
         userService.updatePassword(hash);
         response.status(Response.GET.getStatus());
         return "";
+    };
+
+    public static Route getMatcha = (request, response) -> {
+        Long id = parseLong(request.params("id"));
+        List<User> users = userService.getMatcha(id);
+        response.status(Response.GET.getStatus());
+        return userConverter.createFromEntities(users);
     };
 
     public static Route resetPassword = (request, response) -> {

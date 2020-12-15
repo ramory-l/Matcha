@@ -1,6 +1,12 @@
 package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.school.matcha.converters.Converter;
+import ru.school.matcha.converters.LikeConverter;
+import ru.school.matcha.domain.Like;
+import ru.school.matcha.domain.User;
+import ru.school.matcha.dto.LikeDto;
+import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.enums.Location;
 import ru.school.matcha.enums.Response;
 import ru.school.matcha.enums.Role;
@@ -8,6 +14,7 @@ import ru.school.matcha.services.LikeServiceImpl;
 import ru.school.matcha.services.interfaces.LikeService;
 import spark.Route;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,35 +25,41 @@ public class LikeController {
 
     private static final LikeService likeService;
 
+    private static final Converter<LikeDto, Like> likeConverter;
+
     static {
         likeService = new LikeServiceImpl();
+        likeConverter = new LikeConverter();
     }
 
     public static Route getLikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         AuthorizationController.authorize(request, Role.USER);
-        List<Long> likes = likeService.getLikesByUserId(id, true, outgoing);
+        List<LikeDto> likesDto = likeConverter.createFromEntities(likeService.getLikesByUserId(id, true, outgoing));
         response.status(Response.GET.getStatus());
-        return likes;
+        return likesDto;
     };
 
     public static Route getDislikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         AuthorizationController.authorize(request, Role.USER);
-        List<Long> likes = likeService.getLikesByUserId(id, false, outgoing);
+        List<LikeDto> dislikesDto = likeConverter.createFromEntities(likeService.getLikesByUserId(id, false, outgoing));
         response.status(Response.GET.getStatus());
-        return likes;
+        return dislikesDto;
     };
 
     public static Route getAllLikesAndDislikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
         Boolean outgoing = Boolean.parseBoolean(request.queryParams("outgoing"));
         AuthorizationController.authorize(request, Role.USER);
-        Map<String, List<Long>> likes = likeService.getLikesByUserId(id, outgoing);
+        Map<String, List<Like>> likes = likeService.getLikesByUserId(id, outgoing);
+        Map<String, List<LikeDto>> allLikesAndDislikesDto = new HashMap<>();
+        allLikesAndDislikesDto.put("likes", likeConverter.createFromEntities(likes.get("like")));
+        allLikesAndDislikesDto.put("dislikes", likeConverter.createFromEntities(likes.get("dislike")));
         response.status(Response.GET.getStatus());
-        return likes;
+        return allLikesAndDislikesDto;
     };
 
     public static Route createLike = (request, response) -> {

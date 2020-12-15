@@ -36,7 +36,7 @@ public class CloudinaryAPI {
             File file = new File("backend/images/" + fileName);
             Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
             Image image = new Image();
-            image.setName((String) uploadResult.get("original_filename"));
+            image.setName(fileName);
             image.setLink((String) uploadResult.get("url"));
             image.setExternalId((String) uploadResult.get("public_id"));
             return image;

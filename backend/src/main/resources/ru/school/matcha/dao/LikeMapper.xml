@@ -1,11 +1,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ru.school.matcha.dao.LikeMapper">
 
-    <select id="getLikes" resultType="java.lang.Long">
-        SELECT
-        <if test="outgoing == null or !outgoing">"from"</if>
-        <if test="outgoing">"to"</if>
+    <resultMap id="Like" type="ru.school.matcha.domain.Like">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <association property="avatar" column="avatar_id" javaType="ru.school.matcha.domain.Image"
+                     select="ru.school.matcha.dao.ImageMapper.getImageById"/>
+    </resultMap>
+
+    <select id="getLikes" resultMap="Like">
+        SELECT username,
+        <if test="outgoing == null or !outgoing">"from" as id</if>
+        <if test="outgoing">"to" as id</if>
         FROM likes
+        <if test="outgoing == null or !outgoing">INNER JOIN "user" u on u.id = likes."from"</if>
+        <if test="outgoing">INNER JOIN "user" u on u.id = likes."to"</if>
         WHERE
         <if test="outgoing == null or !outgoing">
             "to" = #{userId}
