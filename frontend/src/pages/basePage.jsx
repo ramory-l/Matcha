@@ -7,13 +7,16 @@ import ProfilePage from "../pages/profilePage";
 import MessagesPage from "./messagesPage";
 import NotFound from "../components/notFound";
 import SearchPage from "./searchPage";
-import auth from "../services/authService";
+import auth, { getJwt } from "../services/authService";
+import { ws } from "../config.json";
 
 const BasePage = () => {
   const [user, setUser] = useState({});
+  const [webSocket, setWebSocket] = useState(null);
 
   useEffect(() => {
     const user = auth.getCurrentUser();
+    setWebSocket(new WebSocket(`${ws}${getJwt()}`));
     setUser(user);
   }, []);
 

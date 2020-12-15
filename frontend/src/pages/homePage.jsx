@@ -38,8 +38,13 @@ const HomePage = (props) => {
   }, [props.location.search]);
 
   const filtered = users.filter((user) => {
-    if (likesDislikes["like"].includes(user.id)) user.isLiked = true;
-    if (likesDislikes["dislike"].includes(user.id)) user.isDisliked = true;
+    if (likesDislikes["likes"].filter((like) => like.id === user.id).length)
+      user.isLiked = true;
+    if (
+      likesDislikes["dislikes"].filter((dislike) => dislike.id === user.id)
+        .length
+    )
+      user.isDisliked = true;
     return user.id !== auth.getCurrentUser().id;
   });
   const paginatedUsers = paginate(filtered, currentPage, pageSize);

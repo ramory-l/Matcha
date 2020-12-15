@@ -46,11 +46,15 @@ function isObject(object) {
 
 export function findSimilarityInForms(userForm, anotherUser) {
   // console.log(Number(moment(anotherUser.birthday).fromNow(true).slice(0, 3)));
+  const likes = userForm.likesDislikes.likes;
+  const dislikes = userForm.likesDislikes.dislikes;
+
   if (
-    userForm.likesDislikes.like.includes(anotherUser.id) ||
-    userForm.likesDislikes.dislike.includes(anotherUser.id)
+    likes.filter((like) => like.id === anotherUser.id).length ||
+    dislikes.filter((dislikes) => dislikes.id === anotherUser.id).length
   )
     return false;
+
   if (userForm.id === anotherUser.form.id) return false;
 
   const userFormKeys = Object.keys(userForm);

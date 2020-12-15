@@ -12,7 +12,9 @@ export function getUserForm() {
 }
 
 export function updateUserForm(userForm) {
-  return http.put(`${apiEndpoint}/`, userForm, {
+  const tempForm = { ...userForm };
+  delete tempForm.likesDislikes;
+  return http.put(`${apiEndpoint}/`, tempForm, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }

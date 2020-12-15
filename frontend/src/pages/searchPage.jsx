@@ -36,6 +36,11 @@ const SearchPage = () => {
   const handleSearchButtonClick = async () => {
     const { data: users } = await userService.getUsers();
     const { data: userForm } = await getUserForm();
+    const { data: likesDislikes } = await userService.getUserRates(
+      "likesDislikes",
+      true
+    );
+    userForm.likesDislikes = likesDislikes;
     const filteredUsers = users.filter((user) => {
       return findSimilarityInForms(userForm, user);
     });

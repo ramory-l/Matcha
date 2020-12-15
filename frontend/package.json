@@ -25,6 +25,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-toastify": "^6.0.9",
+    "socket.io-client": "^3.0.4",
     "swiper": "^6.3.5"
   },
   "scripts": {
