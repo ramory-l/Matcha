@@ -16,6 +16,8 @@ public interface UserService {
 
     List<User> getUsersByTagId(Long tagId);
 
+    List<User> getMatcha(Long id);
+
     Long createUser(User user);
 
     void batchCreateUsers(List<User> users);

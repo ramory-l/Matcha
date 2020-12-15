@@ -16,8 +16,6 @@ import ru.school.matcha.security.PasswordCipher;
 import ru.school.matcha.services.interfaces.FormService;
 import ru.school.matcha.services.interfaces.UserService;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -68,6 +66,15 @@ public class UserServiceImpl implements UserService {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserByUsername(username).orElseThrow(NotFoundException::new);
+        }
+    }
+
+    @Override
+    public List<User> getMatcha(Long id) {
+        log.debug("Get matcha");
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.getMatcha(id);
         }
     }
 

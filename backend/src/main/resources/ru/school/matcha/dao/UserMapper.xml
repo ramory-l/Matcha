@@ -209,4 +209,9 @@
         WHERE email = #{email}
     </select>
 
+    <select id="getMatcha" resultMap="User">
+        SELECT u.* FROM likes INNER JOIN "user" u on u.id = likes."from"
+        WHERE "like" = true AND "to" = #{id}
+    </select>
+
 </mapper>
