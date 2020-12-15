@@ -14,6 +14,8 @@ public interface ImageService {
 
     List<Image> getImagesByUserId(Long userId);
 
+    Long getCountImagesByUserId(Long userId);
+
     void deleteImageById(Long id);
 
 }
