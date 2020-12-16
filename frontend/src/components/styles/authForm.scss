@@ -10,8 +10,13 @@
   background: rgba(180, 228, 240, 0.849);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   font-family: "Cinzel Decorative", cursive;
-  color: white;
   text-shadow: 0px 0px 10px black;
+  color: white;
+  .form-group {
+    color: black;
+    font-family: "Roboto", sans-serif;
+    font-size: 16pt;
+  }
 }
 
 .LoginForm {
@@ -20,10 +25,4 @@
 
 .RegisterForm {
   @extend %auth-form;
-}
-
-.form-group {
-  color: black;
-  font-family: "Roboto", sans-serif;
-  font-size: 16pt;
 }

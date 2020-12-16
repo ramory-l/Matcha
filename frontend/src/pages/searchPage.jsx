@@ -5,7 +5,6 @@ import * as userService from "../services/userService";
 import { findSimilarityInForms } from "../utils/equal";
 import { getUserForm } from "../services/formService";
 import "./styles/searchPage.scss";
-import "swiper/swiper.scss";
 
 const SearchUsersWithLoading = WithLoading(SearchUsers);
 

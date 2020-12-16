@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import UserAvatar from "./userAvatar";
 import ProfileForm from "./profileForm";
-import UsersTable from "./usersTable";
+import GuestsTable from "./guestsTable";
 import ListGroup from "./common/listGroup";
 import SettingForm from "./settingsForm";
+import LikersTable from "./likersTable";
 import UserContext from "../contexts/userContext";
+import MatchesTable from "./matchesTable";
 import { getUserImages } from "../services/imageService";
 import { updateUser } from "../services/userService";
-import { useEffect } from "react";
 
 const User = (props) => {
   const [images, setImages] = useState([]);
@@ -44,7 +45,7 @@ const User = (props) => {
               items={[
                 { title: "My data", path: "/profile/me" },
                 { title: "My guests", path: "/profile/me/guests" },
-                { title: "My likes", path: "/profile/me/likes" },
+                { title: "My likers", path: "/profile/me/likers" },
                 { title: "My matches", path: "/profile/me/matches" },
                 { title: "Settings", path: "/profile/me/settings" },
               ]}
@@ -54,7 +55,13 @@ const User = (props) => {
         <div className="col">
           <Switch>
             {isMe ? (
-              <Route path={`${match.path}/guests`} component={UsersTable} />
+              <Route path={`${match.path}/guests`} component={GuestsTable} />
+            ) : null}
+            {isMe ? (
+              <Route path={`${match.path}/likers`} component={LikersTable} />
+            ) : null}
+            {isMe ? (
+              <Route path={`${match.path}/matches`} component={MatchesTable} />
             ) : null}
             {isMe ? (
               <Route
@@ -62,6 +69,7 @@ const User = (props) => {
                 render={() => <SettingForm {...props} />}
               />
             ) : null}
+
             <Route
               exact
               path={`${match.path}`}

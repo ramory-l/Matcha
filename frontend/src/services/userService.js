@@ -55,6 +55,13 @@ export function getUserRates(type, outgoing) {
   });
 }
 
+export function getUserMatches() {
+  let userId = auth.getCurrentUser().id;
+  return http.get(`${apiEndpoint}/matcha/${userId}`, {
+    headers: { "x-auth-token": `T_${auth.getJwt()}` },
+  });
+}
+
 export function updateUser(user) {
   const tempUser = { ...user };
   tempUser.username = auth.getCurrentUser().sub;

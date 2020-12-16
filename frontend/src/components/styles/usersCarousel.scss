@@ -1,4 +1,46 @@
-.carousel-inner {
-  border-radius: 5px;
-  background-color: rgba(0, 0, 0, 0.247);
+.carousel {
+  width: 70%;
+  .carousel-inner {
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.247);
+    .carousel-caption {
+      background-color: rgba(0, 0, 0, 0.582);
+      h5,
+      p {
+        color: white;
+      }
+    }
+  }
+  .carousel-control-prev {
+    left: 30px;
+  }
+  .carousel-control-next {
+    right: 30px;
+  }
+  i {
+    font-size: 5em;
+  }
+}
+
+@media (max-width: 500px) {
+  .carousel {
+    .carousel-inner {
+      .carousel-caption {
+        bottom: -35px;
+        h5,
+        p {
+          font-size: 9pt;
+        }
+      }
+    }
+    .carousel-control-prev {
+      left: 15px;
+    }
+    .carousel-control-next {
+      right: 15px;
+    }
+    i {
+      font-size: 3em;
+    }
+  }
 }

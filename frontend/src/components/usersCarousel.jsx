@@ -12,7 +12,7 @@ const UsersCarousel = ({ users }) => {
   return (
     <div
       id="carouselExampleControls"
-      className="carousel slide w-75"
+      className="carousel slide"
       data-ride="carousel"
       data-interval="false"
     >
@@ -23,11 +23,11 @@ const UsersCarousel = ({ users }) => {
             className={index === 0 ? `carousel-item active` : `carousel-item`}
           >
             <img
-              src="/default-avatar.png"
+              src={user.avatar?.link ? user.avatar.link : "/default-avatar.png"}
               className="d-block w-100"
               alt={user.id}
             />
-            <div className="carousel-caption d-none d-md-block text-dark">
+            <div className="carousel-caption text-dark">
               <h5>
                 {user.firstName} {user.lastName}
               </h5>
@@ -43,10 +43,7 @@ const UsersCarousel = ({ users }) => {
         data-slide="next"
         onClick={() => handleLikeDislike("like")}
       >
-        <i
-          className="fa fa-thumbs-up fa-5x text-success"
-          aria-hidden="true"
-        ></i>
+        <i className="fa fa-thumbs-down text-success" aria-hidden="true"></i>
       </a>
       <a
         className="carousel-control-next"
@@ -55,10 +52,7 @@ const UsersCarousel = ({ users }) => {
         data-slide="next"
         onClick={() => handleLikeDislike("dislike")}
       >
-        <i
-          className="fa fa-thumbs-down fa-5x text-danger"
-          aria-hidden="true"
-        ></i>
+        <i className="fa fa-thumbs-down text-danger" aria-hidden="true"></i>
       </a>
     </div>
   );

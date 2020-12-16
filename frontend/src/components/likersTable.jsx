@@ -1,33 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { getGuests } from "../services/guestService";
 import Loading from "./common/loading";
 import Table from "./common/table";
 import _ from "lodash";
-import moment from "moment";
+import { getUserRates } from "../services/userService";
 
-const UsersTable = (props) => {
+const LikersTable = (props) => {
   const [sortColumn, setSortColumn] = useState({
     path: "username",
     order: "asc",
   });
-  const [guests, setGuests] = useState([]);
+  const [likers, setLikers] = useState([]);
 
   useEffect(() => {
-    async function fetchGuests() {
-      const { data: guests } = await getGuests();
-      const modifiedGuests = guests.map((guest) => {
-        const newGuest = { ...guest };
-        newGuest.date = moment(newGuest.date).format("YYYY-MM-DD, h:mm:ss a");
-        return newGuest;
-      });
-      const sorted = _.orderBy(
-        modifiedGuests,
-        [sortColumn.path],
-        [sortColumn.order]
-      );
-      setGuests(sorted);
+    async function fetchLikers() {
+      const { data: likers } = await getUserRates("likes", false);
+      const sorted = _.orderBy(likers, [sortColumn.path], [sortColumn.order]);
+      setLikers(sorted);
     }
-    fetchGuests();
+    fetchLikers();
   }, [sortColumn]);
 
   const columns = [
@@ -44,17 +34,16 @@ const UsersTable = (props) => {
       noSort: true,
     },
     { path: "username", label: "Username" },
-    { path: "date", label: "Date" },
   ];
 
   const handleSort = (sortColumn) => {
     setSortColumn(sortColumn);
   };
 
-  return guests ? (
+  return likers ? (
     <Table
       columns={columns}
-      data={guests}
+      data={likers}
       onSort={handleSort}
       sortColumn={sortColumn}
       style={{
@@ -67,4 +56,4 @@ const UsersTable = (props) => {
   );
 };
 
-export default UsersTable;
+export default LikersTable;

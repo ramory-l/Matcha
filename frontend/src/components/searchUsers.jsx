@@ -12,8 +12,7 @@ const SearchUsers = ({ users, userForm, onSearchButtonClick }) => {
       ) : (
         <h1>Please choose options</h1>
       )}
-
-      <div className="row">
+      <div className="row justify-content-center">
         <SearhForm
           userForm={userForm}
           onSearchButtonClick={onSearchButtonClick}
