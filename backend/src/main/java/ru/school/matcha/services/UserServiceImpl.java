@@ -24,15 +24,9 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private static final FormService formService;
-    private static final ImageService imageService;
-    private static final JwtTokenProvider jwtTokenProvider;
-
-    static {
-        formService = new FormServiceImpl();
-        imageService = new ImageServiceImpl();
-        jwtTokenProvider = new JwtTokenProvider();
-    }
+    private static final FormService formService = new FormServiceImpl();
+    private static final ImageService imageService = new ImageServiceImpl();
+    private static final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
 
     @Override
     public List<User> getAllUsers() {

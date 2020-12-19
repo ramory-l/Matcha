@@ -13,17 +13,11 @@ import spark.Route;
 @Slf4j
 public class AuthenticateController {
 
-    private static final Converter<AuthDto, Auth> authConverter;
+    private static final Converter<AuthDto, Auth> authConverter = new AuthConverter();
 
-    private static final AuthenticationService authenticationService;
+    private static final AuthenticationService authenticationService = new AuthenticationServiceImpl();
 
-    private static final Serializer<AuthDto> authDtoSerializer;
-
-    static {
-        authConverter = new AuthConverter();
-        authenticationService = new AuthenticationServiceImpl();
-        authDtoSerializer = new Serializer<>();
-    }
+    private static final Serializer<AuthDto> authDtoSerializer = new Serializer<>();
 
     public static Route authenticate = (request, response) -> {
         AuthDto authDto = authDtoSerializer.deserialize(request.body(), AuthDto.class);

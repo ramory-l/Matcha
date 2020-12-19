@@ -2,46 +2,43 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.converters.Converter;
+import ru.school.matcha.converters.MessageConverter;
 import ru.school.matcha.converters.UserConverter;
 import ru.school.matcha.converters.UserFullConverter;
+import ru.school.matcha.domain.Message;
 import ru.school.matcha.domain.User;
-import ru.school.matcha.dto.PassResetDto;
-import ru.school.matcha.dto.UserDto;
-import ru.school.matcha.dto.UserFullDto;
+import ru.school.matcha.dto.*;
 import ru.school.matcha.enums.Location;
 import ru.school.matcha.enums.Response;
 import ru.school.matcha.enums.Role;
 import ru.school.matcha.serializators.Serializer;
+import ru.school.matcha.services.MessageServiceImpl;
 import ru.school.matcha.services.TagServiceImpl;
 import ru.school.matcha.services.UserServiceImpl;
+import ru.school.matcha.services.interfaces.MessageService;
 import ru.school.matcha.services.interfaces.TagService;
 import ru.school.matcha.services.interfaces.UserService;
 import spark.Route;
 
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
+import static spark.Spark.halt;
 
 @Slf4j
 public class UserController {
 
-    private final static Converter<UserFullDto, User> userFullConverter;
-    private final static Converter<UserDto, User> userConverter;
+    private final static Converter<UserFullDto, User> userFullConverter = new UserFullConverter();
+    private final static Converter<UserDto, User> userConverter = new UserConverter();
+    private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
 
-    private final static UserService userService;
-    private final static TagService tagService;
+    private final static UserService userService = new UserServiceImpl();
+    private final static TagService tagService = new TagServiceImpl();
+    private final static MessageService messageService = new MessageServiceImpl();
 
-    private final static Serializer<UserFullDto> userFullDtoSerializer;
-    private static final Serializer<PassResetDto> passResetSerializer;
-
-    static {
-        userFullConverter = new UserFullConverter();
-        userConverter = new UserConverter();
-        userService = new UserServiceImpl();
-        tagService = new TagServiceImpl();
-        userFullDtoSerializer = new Serializer<>();
-        passResetSerializer = new Serializer<>();
-    }
+    private final static Serializer<UserFullDto> userFullDtoSerializer = new Serializer<>();
+    private final static Serializer<PassResetDto> passResetSerializer = new Serializer<>();
 
     public static Route createUser = (request, response) -> {
         UserFullDto userFullDto = userFullDtoSerializer.deserialize(request.body(), UserFullDto.class);
@@ -139,6 +136,21 @@ public class UserController {
         AuthorizationController.authorize(request, Role.USER);
         response.status(Response.GET.getStatus());
         return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId()));
+    };
+
+    public static Route getMessages = (request, response) -> {
+        int limit = parseInt(request.params("limit")),
+                offset = parseInt(request.params("offset"));
+        long first = parseLong(request.params("first")),
+                second = parseLong(request.params("second"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 || (first != userId || second != userId)) {
+            halt(403, "Access is denied");
+        }
+        long totalCount = messageService.getTotalCountMessages(first, second);
+        List<MessageDto> result = messageConverter.createFromEntities(messageService.getMessages(limit, offset, first, second));
+        response.status(Response.GET.getStatus());
+        return new PageDto<>(result, totalCount, offset);
     };
 
 }

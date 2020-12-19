@@ -17,14 +17,9 @@ import static java.lang.Long.parseLong;
 @Slf4j
 public class TagController {
 
-    private final static Converter<TagDto, Tag> tagConverter;
+    private final static Converter<TagDto, Tag> tagConverter = new TagConverter();
 
-    private final static TagService tagService;
-
-    static {
-        tagConverter = new TagConverter();
-        tagService = new TagServiceImpl();
-    }
+    private final static TagService tagService = new TagServiceImpl();
 
     public static Route createTag = (request, response) -> {
         String tagName = request.params("tagName");

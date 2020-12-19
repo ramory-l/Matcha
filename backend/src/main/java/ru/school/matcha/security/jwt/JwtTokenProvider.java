@@ -84,7 +84,7 @@ public class JwtTokenProvider {
         return claims.getBody().getSubject();
     }
 
-    public Long getUserIdFromPasswordToken(String passwordToken) {
+    public long getUserIdFromPasswordToken(String passwordToken) {
         Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(passwordToken);
         return parseLong(claims.getBody().get("id").toString());
     }
@@ -92,6 +92,11 @@ public class JwtTokenProvider {
     public String getUsernameFromToken(String token) {
         Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
         return claims.getBody().getSubject();
+    }
+
+    public Long getIdFromToken(String token) {
+        Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+        return parseLong(claims.getBody().get("id").toString());
     }
 
     public Role getRoleFromToken(String token) {

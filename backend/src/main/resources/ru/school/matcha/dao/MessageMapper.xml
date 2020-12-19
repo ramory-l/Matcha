@@ -1,0 +1,35 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.school.matcha.dao.MessageMapper">
+
+    <resultMap id="Message" type="ru.school.matcha.domain.Message">
+        <id property="id" column="id"/>
+        <result property="to" column="to"/>
+        <result property="from" column="from"/>
+        <result property="message" column="message"/>
+        <result property="createTs" column="create_ts"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+    <insert id="saveMessage">
+        INSERT INTO messages("from", "to", message, create_ts)
+        VALUES (${from}, ${to}, ${message},
+        <if test="createTs != null">${createTs}</if>)
+    </insert>
+
+    <select id="getMessages" resultMap="Message">
+        SELECT *, 'message' as type
+        FROM messages
+        WHERE ("from" = ${first} AND "to" = ${second})
+           OR ("from" = ${second} AND "to" = ${first})
+        ORDER BY id
+        LIMIT ${limit} OFFSET ${offset}
+    </select>
+
+    <select id="getTotalCountMessages" resultType="java.lang.Long">
+        SELECT count(id)
+        FROM messages
+        WHERE ("from" = ${first} AND "to" = ${second})
+           OR ("from" = ${second} AND "to" = ${first})
+    </select>
+
+</mapper>

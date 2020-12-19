@@ -19,17 +19,11 @@ import static java.lang.Long.parseLong;
 @Slf4j
 public class ImageController {
 
-    private final static Converter<ImageDto, Image> imageConverter;
+    private final static Converter<ImageDto, Image> imageConverter = new ImageConverter();
 
-    private final static ImageService imageService;
+    private final static ImageService imageService = new ImageServiceImpl();
 
-    private final static Serializer<ImageBase64Dto> imageBase64DtoSerializer;
-
-    static {
-        imageService = new ImageServiceImpl();
-        imageConverter = new ImageConverter();
-        imageBase64DtoSerializer = new Serializer<>();
-    }
+    private final static Serializer<ImageBase64Dto> imageBase64DtoSerializer = new Serializer<>();
 
     public static Route createImage = (request, response) -> {
         AuthorizationController.authorize(request, Role.USER);

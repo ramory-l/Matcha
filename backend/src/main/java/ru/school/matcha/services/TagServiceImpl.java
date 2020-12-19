@@ -18,11 +18,7 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class TagServiceImpl implements TagService {
 
-    private static final UserService userService;
-
-    static {
-        userService = new UserServiceImpl();
-    }
+    private static final UserService userService = new UserServiceImpl();
 
     @Override
     public Long createTag(Tag tag) {

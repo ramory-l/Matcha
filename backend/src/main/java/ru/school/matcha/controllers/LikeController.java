@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.converters.Converter;
 import ru.school.matcha.converters.LikeConverter;
 import ru.school.matcha.domain.Like;
-import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.LikeDto;
-import ru.school.matcha.dto.UserDto;
 import ru.school.matcha.enums.Location;
 import ru.school.matcha.enums.Response;
 import ru.school.matcha.enums.Role;
@@ -19,18 +17,14 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.Long.parseLong;
+import static spark.Spark.halt;
 
 @Slf4j
 public class LikeController {
 
-    private static final LikeService likeService;
+    private static final Converter<LikeDto, Like> likeConverter = new LikeConverter();
 
-    private static final Converter<LikeDto, Like> likeConverter;
-
-    static {
-        likeService = new LikeServiceImpl();
-        likeConverter = new LikeConverter();
-    }
+    private static final LikeService likeService = new LikeServiceImpl();
 
     public static Route getLikes = (request, response) -> {
         Long id = parseLong(request.params("id"));
@@ -63,8 +57,11 @@ public class LikeController {
     };
 
     public static Route createLike = (request, response) -> {
-        Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
-        AuthorizationController.authorize(request, Role.USER);
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 || (to != userId || from != userId)) {
+            halt(403, "Access is denied");
+        }
         likeService.like(from, to, true);
         response.header(Location.HEADER, Location.LIKES.getUrl() + to + "/likes");
         response.status(Response.POST.getStatus());
@@ -72,8 +69,11 @@ public class LikeController {
     };
 
     public static Route createDislike = (request, response) -> {
-        Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
-        AuthorizationController.authorize(request, Role.USER);
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 || (to != userId || from != userId)) {
+            halt(403, "Access is denied");
+        }
         likeService.like(from, to, false);
         response.header(Location.HEADER, Location.DISLIKES.getUrl() + to + "/dislikes");
         response.status(Response.POST.getStatus());
@@ -81,16 +81,22 @@ public class LikeController {
     };
 
     public static Route deleteLike = (request, response) -> {
-        Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
-        AuthorizationController.authorize(request, Role.USER);
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 || (to != userId || from != userId)) {
+            halt(403, "Access is denied");
+        }
         likeService.deleteLike(from, to, true);
         response.status(Response.DELETE.getStatus());
         return "";
     };
 
     public static Route deleteDislike = (request, response) -> {
-        Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
-        AuthorizationController.authorize(request, Role.USER);
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 || (to != userId || from != userId)) {
+            halt(403, "Access is denied");
+        }
         likeService.deleteLike(from, to, false);
         response.status(Response.DELETE.getStatus());
         return "";

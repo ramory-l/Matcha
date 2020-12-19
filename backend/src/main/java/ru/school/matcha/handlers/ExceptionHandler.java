@@ -1,5 +1,6 @@
 package ru.school.matcha.handlers;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.enums.Response;
 import ru.school.matcha.exceptions.MailException;
@@ -15,6 +16,7 @@ import static spark.Spark.exception;
 public class ExceptionHandler {
 
     public static void enable() {
+        exception(UnrecognizedPropertyException.class, badProperty);
         exception(NotFoundException.class, notFound);
         exception(HaltException.class, halt);
         exception(MatchaException.class, matcha);
@@ -23,6 +25,11 @@ public class ExceptionHandler {
         exception(MailException.class, mail);
         exception(Exception.class, exception);
     }
+
+    public static spark.ExceptionHandler<UnrecognizedPropertyException> badProperty = (ex, request, response) -> {
+        response.status(Response.MATCHA_EXCEPTION.getStatus());
+        response.body(Response.MATCHA_EXCEPTION.getBody());
+    };
 
     public static spark.ExceptionHandler<AuthenticationException> authentication = (ex, request, response) -> {
         response.status(Response.AUTHENTICATION_EXCEPTION.getStatus());
