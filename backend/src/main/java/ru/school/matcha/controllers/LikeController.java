@@ -59,7 +59,7 @@ public class LikeController {
     public static Route createLike = (request, response) -> {
         long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         Long userId = AuthorizationController.authorize(request, Role.USER);
-        if (userId != 0 || (to != userId || from != userId)) {
+        if (userId != 0 && (to != userId || from != userId)) {
             halt(403, "Access is denied");
         }
         likeService.like(from, to, true);
@@ -71,7 +71,7 @@ public class LikeController {
     public static Route createDislike = (request, response) -> {
         long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         Long userId = AuthorizationController.authorize(request, Role.USER);
-        if (userId != 0 || (to != userId || from != userId)) {
+        if (userId != 0 && (to != userId || from != userId)) {
             halt(403, "Access is denied");
         }
         likeService.like(from, to, false);
@@ -83,7 +83,7 @@ public class LikeController {
     public static Route deleteLike = (request, response) -> {
         long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         Long userId = AuthorizationController.authorize(request, Role.USER);
-        if (userId != 0 || (to != userId || from != userId)) {
+        if (userId != 0 && (to != userId || from != userId)) {
             halt(403, "Access is denied");
         }
         likeService.deleteLike(from, to, true);
@@ -94,7 +94,7 @@ public class LikeController {
     public static Route deleteDislike = (request, response) -> {
         long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         Long userId = AuthorizationController.authorize(request, Role.USER);
-        if (userId != 0 || (to != userId || from != userId)) {
+        if (userId != 0 && (to != userId || from != userId)) {
             halt(403, "Access is denied");
         }
         likeService.deleteLike(from, to, false);
