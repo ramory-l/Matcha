@@ -11,6 +11,7 @@ import ru.school.matcha.dto.*;
 import ru.school.matcha.enums.Location;
 import ru.school.matcha.enums.Response;
 import ru.school.matcha.enums.Role;
+import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.MessageServiceImpl;
 import ru.school.matcha.services.TagServiceImpl;
@@ -148,6 +149,9 @@ public class UserController {
             halt(403, "Access is denied");
         }
         long totalCount = messageService.getTotalCountMessages(first, second);
+        if (offset >= totalCount) {
+            throw new MatchaException("Offset is greater than total count entities");
+        }
         List<MessageDto> result = messageConverter.createFromEntities(messageService.getMessages(limit, offset, first, second));
         response.status(Response.GET.getStatus());
         return new PageDto<>(result, totalCount, offset);
