@@ -31,7 +31,7 @@ const MessagesPage = (props) => {
         />
       </div>
       <div className="col-6">
-        <ChatBox />
+        <ChatBox recipient={recipient} />
       </div>
       {recipient ? (
         <div className="col">
