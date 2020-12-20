@@ -11,9 +11,8 @@
     </resultMap>
 
     <insert id="saveMessage">
-        INSERT INTO messages("from", "to", message, create_ts)
-        VALUES (${from}, ${to}, ${message},
-        <if test="createTs != null">${createTs}</if>)
+        INSERT INTO messages("from", "to", message)
+        VALUES (${from}, ${to}, ${message})
     </insert>
 
     <select id="getMessages" resultMap="Message">

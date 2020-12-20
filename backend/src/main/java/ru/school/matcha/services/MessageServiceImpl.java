@@ -27,6 +27,7 @@ public class MessageServiceImpl implements MessageService {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
             }
+            log.error(ex.getMessage());
             throw new MatchaException("Error to save message");
         } finally {
             if (nonNull(sqlSession)) {
