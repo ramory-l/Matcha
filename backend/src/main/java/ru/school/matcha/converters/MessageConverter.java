@@ -1,11 +1,15 @@
 package ru.school.matcha.converters;
 
+import ru.school.matcha.domain.Image;
 import ru.school.matcha.domain.Message;
+import ru.school.matcha.dto.ImageDto;
 import ru.school.matcha.dto.MessageDto;
 
 import static java.util.Objects.isNull;
 
 public class MessageConverter extends Converter<MessageDto, Message> {
+
+    private static final Converter<ImageDto, Image> imageConverter = new ImageConverter();
 
     public MessageConverter() {
         super(MessageConverter::convertToEntity, MessageConverter::convertToDto);
@@ -22,7 +26,7 @@ public class MessageConverter extends Converter<MessageDto, Message> {
         result.setCreateTs(source.getCreateTs());
         result.setType(source.getType());
         result.setUsername(source.getUsername());
-        result.setAvatar(source.getAvatar());
+        result.setAvatar(imageConverter.convertFromEntity(source.getAvatar()));
         return result;
     }
 
@@ -37,7 +41,7 @@ public class MessageConverter extends Converter<MessageDto, Message> {
         result.setCreateTs(source.getCreateTs());
         result.setType(source.getType());
         result.setUsername(source.getUsername());
-        result.setAvatar(source.getAvatar());
+        result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
         return result;
     }
 
