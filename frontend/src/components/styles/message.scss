@@ -1,0 +1,35 @@
+%message-text {
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.Message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 5px;
+  margin: 7px;
+  padding: 5px;
+  span {
+    display: block;
+    overflow-wrap: break-word;
+  }
+
+  .Message-Title {
+    font-weight: bold;
+  }
+
+  .Message-Text {
+    @extend %message-text;
+    background-color: lightgray;
+  }
+
+  .Message-Text_me {
+    @extend %message-text;
+    background-color: lightblue;
+  }
+}
+
+.Message-Me {
+  align-items: flex-end;
+}

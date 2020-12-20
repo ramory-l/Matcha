@@ -36,7 +36,6 @@ const BasePage = () => {
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
 
-        console.log(data);
         if (data.type === "message") {
           toast(
             <UserMessageNotification

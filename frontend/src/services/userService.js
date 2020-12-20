@@ -62,6 +62,16 @@ export function getUserMatches() {
   });
 }
 
+export function getMessagesWithUser(userId, limit, offset) {
+  let firstUser = auth.getCurrentUser().id;
+  return http.get(
+    `${apiEndpoint}/messages/limit/${limit}/offset/${offset}/first/${firstUser}/second/${userId}`,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}
+
 export function updateUser(user) {
   const tempUser = { ...user };
   tempUser.username = auth.getCurrentUser().sub;
