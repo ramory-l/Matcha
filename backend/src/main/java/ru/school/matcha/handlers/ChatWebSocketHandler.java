@@ -54,6 +54,7 @@ public class ChatWebSocketHandler {
             }
             String username = jwtTokenProvider.getUsernameFromToken(token);
             User user = userService.getUserByUsername(username);
+            session.setIdleTimeout(10000000);
             sessionUsernameMap.put(session, user);
         } catch (JwtAuthenticationException ex) {
             log.error("Credentials are invalid");
