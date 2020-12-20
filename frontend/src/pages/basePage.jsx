@@ -10,6 +10,7 @@ import SearchPage from "./searchPage";
 import auth, { getJwt } from "../services/authService";
 import { ws } from "../config.json";
 import { toast } from "react-toastify";
+import UserMessageNotification from "../components/userMessageNotification";
 import BaseContext from "../contexts/baseContext";
 
 const BasePage = () => {
@@ -35,7 +36,18 @@ const BasePage = () => {
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
 
-        toast(data);
+        console.log(data);
+        if (data.type === "message") {
+          toast(
+            <UserMessageNotification
+              avatarLink={data.avatar}
+              username={data.username}
+              message={data.message}
+            />
+          );
+        } else {
+          toast(data.message);
+        }
       };
 
       return () => {

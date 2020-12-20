@@ -12,10 +12,10 @@ const ChatBox = ({ recipient }) => {
       from: getCurrentUser().id,
       to: recipient.id,
       message: messageString,
-      createTS: Date.now(),
+      createTs: Date.now(),
       type: "message",
     };
-    baseContext.webSocket.send(message);
+    baseContext.webSocket.send(JSON.stringify(message));
   };
 
   return (
