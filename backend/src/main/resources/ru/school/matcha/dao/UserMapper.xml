@@ -214,7 +214,7 @@
         FROM likes general
                  INNER JOIN likes tmp ON general."from" = tmp."to"
         WHERE general."like" = true
-          AND general."from" = ${id}) AS matches INNER JOIN "user" u ON u.id = matches.id
+          AND general."from" = #{id}) AS matches INNER JOIN "user" u ON u.id = matches.id
     </select>
 
 </mapper>

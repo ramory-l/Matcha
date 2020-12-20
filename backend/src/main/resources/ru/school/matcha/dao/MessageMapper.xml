@@ -11,24 +11,24 @@
     </resultMap>
 
     <insert id="saveMessage">
-        INSERT INTO messages("from", "to", message)
-        VALUES (${from}, ${to}, ${message})
+        INSERT INTO messages("from", "to", message, create_ts)
+        VALUES (#{from}, #{to}, #{message}, #{createTs})
     </insert>
 
     <select id="getMessages" resultMap="Message">
         SELECT *, 'message' as type
         FROM messages
-        WHERE ("from" = ${first} AND "to" = ${second})
-           OR ("from" = ${second} AND "to" = ${first})
+        WHERE ("from" = #{first} AND "to" = #{second})
+           OR ("from" = #{second} AND "to" = #{first})
         ORDER BY id DESC
-        LIMIT ${limit} OFFSET ${offset}
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <select id="getTotalCountMessages" resultType="java.lang.Long">
         SELECT count(id)
         FROM messages
-        WHERE ("from" = ${first} AND "to" = ${second})
-           OR ("from" = ${second} AND "to" = ${first})
+        WHERE ("from" = #{first} AND "to" = #{second})
+           OR ("from" = #{second} AND "to" = #{first})
     </select>
 
 </mapper>

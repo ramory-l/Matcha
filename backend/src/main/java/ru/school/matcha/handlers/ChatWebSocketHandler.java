@@ -86,7 +86,7 @@ public class ChatWebSocketHandler {
     public void onMessage(Session user, String json) {
         try {
             MessageDto messageDto = messageDtoSerializer.deserialize(json, MessageDto.class);
-            if (isNull(messageDto.getMessage()) || isNull(messageDto.getTo())) {
+            if (isNull(messageDto.getMessage()) || isNull(messageDto.getTo()) || isNull(messageDto.getCreateTs())) {
                 throw new MatchaException("Invalid Message");
             }
             Message message = messageConverter.convertFromDto(messageDto);
