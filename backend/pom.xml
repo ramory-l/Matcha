@@ -28,6 +28,7 @@
         <javaxmail.version>1.4</javaxmail.version>
         <commonsio.version>2.6</commonsio.version>
         <cloudinary.version>1.27.0</cloudinary.version>
+        <java.encoding>UTF-8</java.encoding>
     </properties>
 
     <dependencies>
@@ -129,9 +130,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>RELEASE</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <encoding>${java.encoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>

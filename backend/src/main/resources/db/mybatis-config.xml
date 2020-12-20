@@ -10,6 +10,7 @@
         <typeAlias type='ru.school.matcha.domain.Tag' alias='Tag'/>
         <typeAlias type='ru.school.matcha.domain.User' alias='User'/>
         <typeAlias type='ru.school.matcha.domain.User' alias='Like'/>
+        <typeAlias type='ru.school.matcha.domain.Message' alias='Message'/>
     </typeAliases>
     <environments default='development'>
         <environment id='development'>
@@ -29,5 +30,6 @@
         <mapper resource='ru/school/matcha/dao/GuestMapper.xml'/>
         <mapper resource='ru/school/matcha/dao/ImageMapper.xml'/>
         <mapper resource='ru/school/matcha/dao/TagMapper.xml'/>
+        <mapper resource='ru/school/matcha/dao/MessageMapper.xml'/>
     </mappers>
 </configuration>

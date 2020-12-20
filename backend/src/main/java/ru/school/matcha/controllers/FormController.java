@@ -20,17 +20,11 @@ import static java.lang.Long.parseLong;
 @Slf4j
 public class FormController {
 
-    private static final Converter<FormDto, Form> formConverter;
+    private static final Converter<FormDto, Form> formConverter = new FormConverter();
 
-    private static final FormService formService;
+    private static final FormService formService = new FormServiceImpl();
 
-    private static final Serializer<FormDto> serializerFormDto;
-
-    static {
-        formService = new FormServiceImpl();
-        formConverter = new FormConverter();
-        serializerFormDto = new Serializer<>();
-    }
+    private static final Serializer<FormDto> serializerFormDto = new Serializer<>();
 
     public static Route createForm = (request, response) -> {
         AuthorizationController.authorize(request, Role.USER);

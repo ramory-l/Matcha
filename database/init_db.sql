@@ -85,6 +85,15 @@ create table images
     create_ts   timestamp without time zone default now() not null
 );
 
+create table messages
+(
+    id        bigserial primary key                     not null,
+    "from"    bigint references "user" (id)             not null,
+    "to"      bigint references "user" (id)             not null,
+    message   text                        default ''    not null,
+    create_ts timestamp without time zone default now() not null
+);
+
 INSERT INTO public.form (man,
                          woman,
                          friendship,

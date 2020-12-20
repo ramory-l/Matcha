@@ -11,11 +11,7 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class AuthorizationServiceImpl implements AuthorizationService {
 
-    private static final JwtTokenProvider jwtTokenProvider;
-
-    static {
-        jwtTokenProvider = new JwtTokenProvider();
-    }
+    private static final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
 
     @Override
     public Role authorize(String token) throws JwtAuthenticationException {
@@ -28,6 +24,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Long getUserIdFromToken(String token) {
+        return jwtTokenProvider.getIdFromToken(jwtTokenProvider.resolveToken(token));
     }
 
 }
