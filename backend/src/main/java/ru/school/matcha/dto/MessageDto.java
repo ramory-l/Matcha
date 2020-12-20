@@ -2,7 +2,6 @@ package ru.school.matcha.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
-import ru.school.matcha.domain.Image;
 
 import java.util.Date;
 
@@ -16,6 +15,6 @@ public class MessageDto {
     private Date createTs;
     private String type;
     private String username;
-    private Image avatar;
+    private ImageDto avatar;
 
 }

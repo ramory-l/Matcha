@@ -11,13 +11,8 @@ import static java.util.Objects.isNull;
 
 public class UserFullConverter extends Converter<UserFullDto, User> {
 
-    private static final Converter<FormDto, Form> formConverter;
-    private static final Converter<ImageDto, Image> imageConverter;
-
-    static {
-        formConverter = new FormConverter();
-        imageConverter = new ImageConverter();
-    }
+    private static final Converter<FormDto, Form> formConverter = new FormConverter();
+    private static final Converter<ImageDto, Image> imageConverter = new ImageConverter();
 
     public UserFullConverter() {
         super(UserFullConverter::convertToEntity, UserFullConverter::convertToDto);
