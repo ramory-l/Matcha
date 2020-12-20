@@ -21,10 +21,12 @@ import ru.school.matcha.services.interfaces.MessageService;
 import ru.school.matcha.services.interfaces.UserService;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Slf4j
 @WebSocket
@@ -55,8 +57,6 @@ public class ChatWebSocketHandler {
             sessionUsernameMap.put(session, user);
         } catch (JwtAuthenticationException ex) {
             log.error("Credentials are invalid");
-        } catch (MatchaException ex) {
-            log.error(ex.getMessage());
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }
@@ -90,11 +90,14 @@ public class ChatWebSocketHandler {
                 throw new MatchaException("Invalid Message");
             }
             Message message = messageConverter.convertFromDto(messageDto);
-            checkUserOnline(message);
+            Message notificationAboutOfflineUser = checkUserOnline(message);
             if ("message".equals(message.getType())) {
                 messageService.saveMessage(message);
             }
             sendMessage(sessionUsernameMap.get(user), message);
+            if (nonNull(notificationAboutOfflineUser)) {
+                sendMessage(sessionUsernameMap.get(user), notificationAboutOfflineUser);
+            }
         } catch (IOException ex) {
             log.error("Invalid message");
         } catch (MatchaException ex) {
@@ -102,17 +105,21 @@ public class ChatWebSocketHandler {
         }
     }
 
-    private static void checkUserOnline(Message message) {
+    private static Message checkUserOnline(Message message) {
         if (sessionUsernameMap
                 .values()
                 .stream()
                 .parallel()
                 .noneMatch(user -> user.getId().equals(message.getTo()))) {
-            message.setMessage("User is offline");
-            message.setType("notification");
-            message.setTo(message.getFrom());
-            message.setFrom(message.getTo());
+            Message newMessage = new Message();
+            newMessage.setMessage("User is offline");
+            newMessage.setType("notification");
+            newMessage.setTo(message.getFrom());
+            newMessage.setFrom(message.getTo());
+            newMessage.setCreateTs(new Date());
+            return newMessage;
         }
+        return null;
     }
 
 }
