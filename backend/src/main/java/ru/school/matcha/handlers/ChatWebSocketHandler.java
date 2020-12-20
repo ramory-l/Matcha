@@ -117,7 +117,7 @@ public class ChatWebSocketHandler {
                 .noneMatch(user -> user.getId().equals(message.getTo()))) {
             Message newMessage = new Message();
             newMessage.setMessage("User is offline");
-            newMessage.setType("notification");
+            newMessage.setType("system_notification");
             newMessage.setTo(message.getFrom());
             newMessage.setFrom(message.getTo());
             newMessage.setCreateTs(new Date());
