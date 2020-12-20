@@ -62,7 +62,7 @@ public class ChatWebSocketHandler {
         }
     }
 
-    private static void sendMessage(User sender, Message message) {
+    private static void sendMessage(Message message) {
         sessionUsernameMap
                 .entrySet()
                 .stream()
@@ -96,9 +96,9 @@ public class ChatWebSocketHandler {
             if ("message".equals(message.getType())) {
                 messageService.saveMessage(message);
             }
-            sendMessage(sessionUsernameMap.get(user), message);
+            sendMessage(message);
             if (nonNull(notificationAboutOfflineUser)) {
-                sendMessage(sessionUsernameMap.get(user), notificationAboutOfflineUser);
+                sendMessage(notificationAboutOfflineUser);
             }
         } catch (IOException ex) {
             log.error("Invalid message");
