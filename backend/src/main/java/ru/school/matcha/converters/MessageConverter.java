@@ -21,6 +21,8 @@ public class MessageConverter extends Converter<MessageDto, Message> {
         result.setMessage(source.getMessage());
         result.setCreateTs(source.getCreateTs());
         result.setType(source.getType());
+        result.setUsername(source.getUsername());
+        result.setAvatar(source.getAvatar());
         return result;
     }
 
@@ -34,6 +36,8 @@ public class MessageConverter extends Converter<MessageDto, Message> {
         result.setMessage(source.getMessage());
         result.setCreateTs(source.getCreateTs());
         result.setType(source.getType());
+        result.setUsername(source.getUsername());
+        result.setAvatar(source.getAvatar());
         return result;
     }
 

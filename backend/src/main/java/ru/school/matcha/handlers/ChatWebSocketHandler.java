@@ -52,8 +52,7 @@ public class ChatWebSocketHandler {
             if (!jwtTokenProvider.validateToken(token)) {
                 throw new JwtAuthenticationException("Credential are invalid");
             }
-            String username = jwtTokenProvider.getUsernameFromToken(token);
-            User user = userService.getUserByUsername(username);
+            User user = userService.getUserById(jwtTokenProvider.getIdFromToken(token));
             session.setIdleTimeout(10000000);
             sessionUsernameMap.put(session, user);
         } catch (JwtAuthenticationException ex) {
@@ -71,6 +70,8 @@ public class ChatWebSocketHandler {
                 .filter(elem -> elem.getValue().getId().equals(message.getTo()))
                 .forEach(elem -> {
                     try {
+                        message.setUsername(elem.getValue().getUsername());
+                        message.setAvatar(elem.getValue().getAvatar());
                         elem.getKey()
                                 .getRemote()
                                 .sendString(messageDtoSerializer.serialize(messageConverter.convertFromEntity(message)));
