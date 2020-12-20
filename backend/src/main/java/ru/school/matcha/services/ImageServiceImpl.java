@@ -21,18 +21,15 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class ImageServiceImpl implements ImageService {
 
-    private static final UserService userService;
-    private static final int limit = 5;
+    private static final UserService userService = new UserServiceImpl();
 
-    static {
-        userService = new UserServiceImpl();
-    }
+    private static final int LIMIT = 5;
 
     @Override
     public Long createImage(String base64, String fileName, Long userId) {
         log.debug("Create image");
-        if (getCountImagesByUserId(userId) >= limit) {
-            throw new MatchaException("Photo limit reached (limit: " + limit + ")");
+        if (getCountImagesByUserId(userId) >= LIMIT) {
+            throw new MatchaException("Photo limit reached (limit: " + LIMIT + ")");
         }
         SqlSession sqlSession = null;
         try {

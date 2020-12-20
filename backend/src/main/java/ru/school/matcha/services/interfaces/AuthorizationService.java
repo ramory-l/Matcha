@@ -7,4 +7,6 @@ public interface AuthorizationService {
 
     Role authorize(String token) throws JwtAuthenticationException;
 
+    Long getUserIdFromToken(String token);
+
 }

@@ -22,14 +22,9 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class LikeServiceImpl implements LikeService {
 
-    private static final UserService userService;
+    private static final Converter<LikeDto, Like> likeConverter = new LikeConverter();
 
-    private static final Converter<LikeDto, Like> likeConverter;
-
-    static {
-        userService = new UserServiceImpl();
-        likeConverter = new LikeConverter();
-    }
+    private static final UserService userService = new UserServiceImpl();
 
     @Override
     public void like(Long from, Long to, boolean isLike) {

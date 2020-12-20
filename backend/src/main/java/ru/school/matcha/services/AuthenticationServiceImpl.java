@@ -16,13 +16,9 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private static final UserService userService;
-    private static final JwtTokenProvider jwtTokenProvider;
+    private static final UserService userService = new UserServiceImpl();
 
-    static {
-        userService = new UserServiceImpl();
-        jwtTokenProvider = new JwtTokenProvider();
-    }
+    private static final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
 
     @Override
     public String authenticate(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException {

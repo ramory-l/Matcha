@@ -39,6 +39,7 @@ public class MatchaApplication {
                 get("/:id/tags", TagController.getTagsByUserId, new JsonTransformer());
                 get("/password/:hash", UserController.editPassword, new JsonTransformer());
                 get("/matcha/:id", UserController.getMatcha, new JsonTransformer());
+                get("/messages/limit/:limit/offset/:offset/first/:first/second/:second", UserController.getMessages, new JsonTransformer());
                 put("/password/reset", UserController.resetPassword, new JsonTransformer());
                 post("/:userId/tags/:tagName", TagController.createTag, new JsonTransformer());
                 delete("/:userId/tags/:tagName", TagController.deleteTag, new JsonTransformer());
