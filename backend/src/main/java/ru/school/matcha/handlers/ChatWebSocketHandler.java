@@ -84,9 +84,11 @@ public class ChatWebSocketHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session user, String json) {
+        System.out.println(json);
         try {
             MessageDto messageDto = messageDtoSerializer.deserialize(json, MessageDto.class);
             if (isNull(messageDto.getMessage()) || isNull(messageDto.getCreateTs())) {
+                System.out.println("Hello");
                 throw new MatchaException("Invalid Message");
             }
             Message message = messageConverter.convertFromDto(messageDto);
@@ -99,6 +101,7 @@ public class ChatWebSocketHandler {
                 sendMessage(sessionUsernameMap.get(user), notificationAboutOfflineUser);
             }
         } catch (IOException ex) {
+            System.out.println(ex.getMessage());
             log.error("Invalid message");
         } catch (MatchaException ex) {
             log.error(ex.getMessage());
