@@ -70,7 +70,9 @@ public class ChatWebSocketHandler {
                 .filter(elem -> elem.getValue().getId().equals(message.getTo()))
                 .forEach(elem -> {
                     try {
-                        elem.getKey().getRemote().sendString(sender.getUsername() + ": " + message);
+                        elem.getKey()
+                                .getRemote()
+                                .sendString(messageDtoSerializer.serialize(messageConverter.convertFromEntity(message)));
                     } catch (Exception e) {
                         log.error(e.getMessage());
                     }
