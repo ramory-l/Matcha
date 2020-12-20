@@ -25,7 +25,7 @@ public class GuestController {
     public static Route createGuest = (request, response) -> {
         long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         Long userId = AuthorizationController.authorize(request, Role.USER);
-        if (userId != 0 && to != userId) {
+        if (userId != 0 && from != userId) {
             halt(403, "Access is denied");
         }
         guestService.createGuest(to, from);
