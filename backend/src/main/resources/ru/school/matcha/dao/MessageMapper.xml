@@ -21,7 +21,7 @@
         FROM messages
         WHERE ("from" = ${first} AND "to" = ${second})
            OR ("from" = ${second} AND "to" = ${first})
-        ORDER BY id
+        ORDER BY id DESC
         LIMIT ${limit} OFFSET ${offset}
     </select>
 
