@@ -13,5 +13,7 @@ public class Message {
     private String message;
     private Date createTs;
     private String type;
+    private String username;
+    private Image avatar;
 
 }
