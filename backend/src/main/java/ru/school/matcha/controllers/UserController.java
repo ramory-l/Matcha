@@ -145,7 +145,7 @@ public class UserController {
         long first = parseLong(request.params("first")),
                 second = parseLong(request.params("second"));
         Long userId = AuthorizationController.authorize(request, Role.USER);
-        if (userId != 0 && (first != userId || second != userId)) {
+        if (userId != 0 && first != userId && second != userId) {
             halt(403, "Access is denied");
         }
         long totalCount = messageService.getTotalCountMessages(first, second);
