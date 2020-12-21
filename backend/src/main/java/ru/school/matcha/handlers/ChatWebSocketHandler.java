@@ -94,8 +94,9 @@ public class ChatWebSocketHandler {
                 throw new MatchaException("Invalid Message");
             }
             Message message = messageConverter.convertFromDto(messageDto);
-            Message notificationAboutOfflineUser = checkUserOnline(message);
+            Message notificationAboutOfflineUser = null;
             if ("message".equals(message.getType())) {
+                notificationAboutOfflineUser = checkUserOnline(message);
                 messageService.saveMessage(message);
             }
             sendMessage(message);
