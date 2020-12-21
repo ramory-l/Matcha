@@ -1,9 +1,13 @@
-.carousel {
+.carousel.modified {
   width: 70%;
   .carousel-inner {
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.247);
     .carousel-caption {
+      padding: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
       background-color: rgba(0, 0, 0, 0.582);
       h5,
       p {
@@ -23,13 +27,13 @@
 }
 
 @media (max-width: 500px) {
-  .carousel {
+  .carousel.modified {
     .carousel-inner {
       .carousel-caption {
-        bottom: -35px;
+        height: 35px;
         h5,
         p {
-          font-size: 9pt;
+          font-size: 7pt;
         }
       }
     }
@@ -40,7 +44,17 @@
       right: 15px;
     }
     i {
-      font-size: 3em;
+      font-size: 2em;
+    }
+  }
+}
+
+@media (max-width: 350px) {
+  .carousel.modified {
+    .carousel-inner {
+      .carousel-caption {
+        height: 30px;
+      }
     }
   }
 }

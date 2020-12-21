@@ -31,11 +31,11 @@ const MessagesPage = (props) => {
   return (
     <div className="row">
       <div className="col-3">
-        <h2>Your Messages:</h2>
+        <span style={{ fontWeight: "bold" }}>Your Messages:</span>
         {users.length > 0 ? (
           <ListGroup items={users} />
         ) : (
-          <h3>No messages yet.</h3>
+          <p>No messages yet.</p>
         )}
       </div>
       {recipient ? (

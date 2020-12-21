@@ -28,8 +28,18 @@
     @extend %message-text;
     background-color: lightblue;
   }
+
+  .Message-Date {
+    font-size: 9pt;
+  }
 }
 
 .Message-Me {
   align-items: flex-end;
+}
+
+@media (max-width: 500px) {
+  .Message-Date {
+    font-size: 7pt;
+  }
 }

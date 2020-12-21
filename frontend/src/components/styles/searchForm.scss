@@ -26,3 +26,9 @@
     margin-right: 5px;
   }
 }
+
+@media (max-width: 350px) {
+  .SearchForm {
+    display: block;
+  }
+}

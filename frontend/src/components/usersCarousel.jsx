@@ -12,7 +12,7 @@ const UsersCarousel = ({ users }) => {
   return (
     <div
       id="carouselExampleControls"
-      className="carousel slide"
+      className="carousel modified slide"
       data-ride="carousel"
       data-interval="false"
     >
@@ -43,7 +43,7 @@ const UsersCarousel = ({ users }) => {
         data-slide="next"
         onClick={() => handleLikeDislike("like")}
       >
-        <i className="fa fa-thumbs-down text-success" aria-hidden="true"></i>
+        <i className="fa fa-thumbs-up text-success" aria-hidden="true"></i>
       </a>
       <a
         className="carousel-control-next"

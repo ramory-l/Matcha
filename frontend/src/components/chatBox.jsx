@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import BaseContext from "../contexts/baseContext";
 import { getCurrentUser } from "../services/authService";
 import { getMessagesWithUser } from "../services/userService";
@@ -8,7 +8,6 @@ import "./styles/chatBox.scss";
 
 const ChatBox = ({ recipient }) => {
   const [messages, setMessages] = useState([]);
-  const messageEl = useRef(null);
 
   useEffect(() => {
     async function fetchMessages() {
@@ -42,18 +41,13 @@ const ChatBox = ({ recipient }) => {
     };
     newMessages.unshift(message);
     setMessages(newMessages);
-    console.log(messageEl.current);
     baseContext.webSocket.send(JSON.stringify(message));
   };
 
   return (
     <div className="ChatBox">
       {messages ? (
-        <MessageList
-          ref={messageEl}
-          recipient={recipient}
-          messages={messages}
-        />
+        <MessageList recipient={recipient} messages={messages} />
       ) : null}
       <MessageInput onMessageSend={handleMessageSend} />
     </div>
