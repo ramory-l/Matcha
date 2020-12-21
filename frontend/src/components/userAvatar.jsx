@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import UserContext from "../contexts/userContext";
-import LinkButton from "./common/linkButton";
 import ImageFileInput from "./imageFileInput";
+import RateButtons from "./rateButtons";
 import "./styles/userAvatar.scss";
 
 const UserAvatar = (props) => {
@@ -47,9 +47,7 @@ const UserAvatar = (props) => {
           ) : null}
         </div>
       ) : (
-        <LinkButton className="btn btn-info" to={`/messages/${user.username}`}>
-          Send a message
-        </LinkButton>
+        <RateButtons />
       )}
     </div>
   );

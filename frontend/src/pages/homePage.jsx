@@ -14,7 +14,7 @@ const HomePage = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [likesDislikes, setLikesDislikes] = useState({});
+  const [likesDislikes, setLikesDislikes] = useState([]);
   const pageSize = useState(10)[0];
 
   useEffect(() => {

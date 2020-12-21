@@ -9,6 +9,7 @@ import "./styles/userCard.scss";
 
 const UserCard = (props) => {
   const { user } = props;
+  console.log("userCard", user);
   const [rate, setRate] = useState(user.rate);
   const baseContext = useContext(BaseContext);
 
