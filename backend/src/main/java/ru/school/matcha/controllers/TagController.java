@@ -31,25 +31,11 @@ public class TagController {
         return "";
     };
 
-    public static Route getTags = (request, response) -> {
-        AuthorizationController.authorize(request, Role.USER);
-        response.status(Response.GET.getStatus());
-        return tagConverter.createFromEntities(tagService.getTags());
-    };
-
     public static Route getTagsByUserId = (request, response) -> {
         Long userId = parseLong(request.params("id"));
         AuthorizationController.authorize(request, Role.USER);
         response.status(Response.GET.getStatus());
         return tagConverter.createFromEntities(tagService.getTagsByUserId(userId));
-    };
-
-    public static Route deleteTagById = (request, response) -> {
-        Long id = parseLong(request.params("id"));
-        AuthorizationController.authorize(request, Role.USER);
-        tagService.deleteTagById(id);
-        response.status(Response.DELETE.getStatus());
-        return "";
     };
 
     public static Route deleteTag = (request, response) -> {

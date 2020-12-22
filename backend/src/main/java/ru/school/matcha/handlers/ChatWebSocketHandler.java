@@ -62,7 +62,7 @@ public class ChatWebSocketHandler {
         }
     }
 
-    private static void sendMessage(Message message) {
+    private static void sendMessage(User author, Message message) {
         sessionUsernameMap
                 .entrySet()
                 .stream()
@@ -70,8 +70,8 @@ public class ChatWebSocketHandler {
                 .filter(elem -> elem.getValue().getId().equals(message.getTo()))
                 .forEach(elem -> {
                     try {
-                        message.setUsername(elem.getValue().getUsername());
-                        message.setAvatar(elem.getValue().getAvatar());
+                        message.setUsername(author.getUsername());
+                        message.setAvatar(author.getAvatar());
                         elem.getKey()
                                 .getRemote()
                                 .sendString(messageDtoSerializer.serialize(messageConverter.convertFromEntity(message)));
@@ -89,19 +89,16 @@ public class ChatWebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session user, String json) {
         try {
-            MessageDto messageDto = messageDtoSerializer.deserialize(json, MessageDto.class);
-            if (isNull(messageDto.getMessage()) || isNull(messageDto.getTo()) || isNull(messageDto.getCreateTs())) {
-                throw new MatchaException("Invalid Message");
-            }
-            Message message = messageConverter.convertFromDto(messageDto);
             Message notificationAboutOfflineUser = null;
+            Message message = checkJsonWithMessage(json);
+            User author = checkAuthorOnline(message);
             if ("message".equals(message.getType())) {
                 notificationAboutOfflineUser = checkUserOnline(message);
                 messageService.saveMessage(message);
             }
-            sendMessage(message);
+            sendMessage(author, message);
             if (nonNull(notificationAboutOfflineUser)) {
-                sendMessage(notificationAboutOfflineUser);
+                sendMessage(author, notificationAboutOfflineUser);
             }
         } catch (IOException ex) {
             log.error("Invalid message");
@@ -110,7 +107,24 @@ public class ChatWebSocketHandler {
         }
     }
 
-    private static Message checkUserOnline(Message message) {
+    private User checkAuthorOnline(Message message) {
+        return sessionUsernameMap
+                .values()
+                .stream()
+                .parallel()
+                .filter(elem -> elem.getId().equals(message.getFrom()))
+                .findFirst().orElseThrow(() -> new MatchaException("Author offline"));
+    }
+
+    private Message checkJsonWithMessage(String json) throws IOException {
+        MessageDto messageDto = messageDtoSerializer.deserialize(json, MessageDto.class);
+        if (isNull(messageDto.getMessage()) || isNull(messageDto.getTo()) || isNull(messageDto.getCreateTs())) {
+            throw new MatchaException("Invalid Message");
+        }
+        return messageConverter.convertFromDto(messageDto);
+    }
+
+    private Message checkUserOnline(Message message) {
         if (sessionUsernameMap
                 .values()
                 .stream()

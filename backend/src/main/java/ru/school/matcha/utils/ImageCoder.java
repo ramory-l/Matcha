@@ -17,9 +17,4 @@ public class ImageCoder {
         FileUtils.writeByteArrayToFile(new File(IMAGE_PATH + fileName), decodedBytes);
     }
 
-    public static String encodeImage(String fileName) throws IOException {
-        byte[] fileContent = FileUtils.readFileToByteArray(new File(IMAGE_PATH + fileName));
-        return Base64.getEncoder().encodeToString(fileContent);
-    }
-
 }

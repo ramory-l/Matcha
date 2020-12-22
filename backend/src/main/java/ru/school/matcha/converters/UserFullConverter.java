@@ -62,12 +62,12 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setForm(formConverter.convertFromDto(source.getForm()));
         result.setRate(source.getRate());
         result.setIsActive(source.getIsActive());
-        result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
         result.setRole(source.getRole());
         result.setLatitude(source.getLatitude());
         result.setLongitude(source.getLongitude());
         result.setCreateTs(source.getCreateTs());
         result.setUpdateTs(source.getUpdateTs());
+        result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
         result.setDeleteTs(source.getDeleteTs());
         return result;
     }

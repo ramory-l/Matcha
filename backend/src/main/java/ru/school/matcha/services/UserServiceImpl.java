@@ -216,29 +216,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserByUsername(String username) {
-        log.debug("Delete user with username: {}", username);
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            User user = getUserByUsername(username);
-            userMapper.deleteUserByUsername(username);
-            formService.deleteFormById(user.getForm().getId());
-            sqlSession.commit();
-        } catch (Exception ex) {
-            if (nonNull(sqlSession)) {
-                sqlSession.rollback();
-            }
-            throw new MatchaException("Error to delete user by username: " + username);
-        } finally {
-            if (nonNull(sqlSession)) {
-                sqlSession.close();
-            }
-        }
-    }
-
-    @Override
     public String getUserEncryptPasswordById(Long id) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);

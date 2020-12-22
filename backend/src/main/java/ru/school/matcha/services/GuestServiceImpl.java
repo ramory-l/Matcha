@@ -44,25 +44,4 @@ public class GuestServiceImpl implements GuestService {
         }
     }
 
-    @Override
-    public void deleteGuest(Long userId, Long guestId) {
-        log.debug("Delete guest with id: {} for user with id: {}", guestId, userId);
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-            GuestMapper guestMapper = sqlSession.getMapper(GuestMapper.class);
-            guestMapper.deleteGuest(userId, guestId);
-            sqlSession.commit();
-        } catch (Exception ex) {
-            if (nonNull(sqlSession)) {
-                sqlSession.rollback();
-            }
-            throw new MatchaException(String.format("Error to delete guest(userId: %d; guestId: %d)", userId, guestId));
-        } finally {
-            if (nonNull(sqlSession)) {
-                sqlSession.close();
-            }
-        }
-    }
-
 }

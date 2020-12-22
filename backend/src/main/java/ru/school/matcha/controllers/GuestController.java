@@ -41,12 +41,4 @@ public class GuestController {
         return guestConverter.createFromEntities(guestService.getGuestsByUserId(userId));
     };
 
-    public static Route deleteGuest = (request, response) -> {
-        Long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
-        AuthorizationController.authorize(request, Role.ADMIN);
-        guestService.deleteGuest(to, from);
-        response.status(Response.DELETE.getStatus());
-        return "";
-    };
-
 }

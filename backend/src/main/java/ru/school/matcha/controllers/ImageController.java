@@ -34,13 +34,6 @@ public class ImageController {
         return "";
     };
 
-    public static Route getImageById = (request, response) -> {
-        Long id = parseLong(request.params("id"));
-        AuthorizationController.authorize(request, Role.USER);
-        response.status(Response.GET.getStatus());
-        return imageConverter.convertFromEntity(imageService.getImageById(id));
-    };
-
     public static Route getImagesByUserId = (request, response) -> {
         Long userId = parseLong(request.params("id"));
         AuthorizationController.authorize(request, Role.USER);

@@ -14,13 +14,12 @@ import ru.school.matcha.enums.Role;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.MessageServiceImpl;
-import ru.school.matcha.services.TagServiceImpl;
 import ru.school.matcha.services.UserServiceImpl;
 import ru.school.matcha.services.interfaces.MessageService;
-import ru.school.matcha.services.interfaces.TagService;
 import ru.school.matcha.services.interfaces.UserService;
 import spark.Route;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -35,7 +34,6 @@ public class UserController {
     private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
 
     private final static UserService userService = new UserServiceImpl();
-    private final static TagService tagService = new TagServiceImpl();
     private final static MessageService messageService = new MessageServiceImpl();
 
     private final static Serializer<UserFullDto> userFullDtoSerializer = new Serializer<>();
@@ -124,21 +122,6 @@ public class UserController {
         return "";
     };
 
-    public static Route deleteUserByUsername = (request, response) -> {
-        String username = request.params("username");
-        AuthorizationController.authorize(request, Role.ADMIN);
-        userService.deleteUserByUsername(username);
-        response.status(Response.DELETE.getStatus());
-        return "";
-    };
-
-    public static Route getUsersByTagName = (request, response) -> {
-        String tagName = request.params("tagName");
-        AuthorizationController.authorize(request, Role.USER);
-        response.status(Response.GET.getStatus());
-        return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId()));
-    };
-
     public static Route getMessages = (request, response) -> {
         int limit = parseInt(request.params("limit")),
                 offset = parseInt(request.params("offset"));
@@ -149,7 +132,9 @@ public class UserController {
             halt(403, "Access is denied");
         }
         long totalCount = messageService.getTotalCountMessages(first, second);
-        if (offset >= totalCount) {
+        if (totalCount == 0) {
+            return new PageDto<>(new ArrayList<>(), totalCount, offset);
+        } else if (offset >= totalCount) {
             throw new MatchaException("Offset is greater than total count entities");
         }
         List<MessageDto> result = messageConverter.createFromEntities(messageService.getMessages(limit, offset, first, second));

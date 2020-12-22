@@ -45,7 +45,6 @@ public class MatchaApplication {
                 delete("/:userId/tags/:tagName", TagController.deleteTag, new JsonTransformer());
                 put("/", UserController.updateUser, new JsonTransformer());
                 delete("/:id", UserController.deleteUserById, new JsonTransformer());
-                delete("/username/:username", UserController.deleteUserByUsername, new JsonTransformer());
                 path(Path.LIKES.getUrl(), () -> {
                     post("/from/:from/to/:to", LikeController.createLike, new JsonTransformer());
                     delete("/from/:from/to/:to", LikeController.deleteLike, new JsonTransformer());
@@ -54,28 +53,13 @@ public class MatchaApplication {
                     post("/from/:from/to/:to", LikeController.createDislike, new JsonTransformer());
                     delete("/from/:from/to/:to", LikeController.deleteDislike, new JsonTransformer());
                 });
-                path(Path.TAGS.getUrl(), () -> {
-                    get("/", TagController.getTags, new JsonTransformer());
-                    get("/:tagName", UserController.getUsersByTagName, new JsonTransformer());
-                    delete("/:id", TagController.deleteTagById, new JsonTransformer());
-                });
-                path(Path.GUESTS.getUrl(), () -> {
-                    post("/from/:from/to/:to", GuestController.createGuest, new JsonTransformer());
-                    delete("/from/:from/to/:to", GuestController.deleteGuest, new JsonTransformer());
-                });
+                path(Path.GUESTS.getUrl(), () -> post("/from/:from/to/:to", GuestController.createGuest, new JsonTransformer()));
                 path(Path.IMAGES.getUrl(), () -> {
                     post("/", ImageController.createImage, new JsonTransformer());
-                    get("/:id", ImageController.getImageById, new JsonTransformer());
                     delete("/:id", ImageController.deleteImageById, new JsonTransformer());
                 });
             });
-            path(Path.FORMS.getUrl(), () -> {
-                post("/", FormController.createForm, new JsonTransformer());
-                get("/all", FormController.getAllForms, new JsonTransformer());
-                get("/:id", FormController.getFormById, new JsonTransformer());
-                put("/", FormController.updateForm, new JsonTransformer());
-                delete("/:id", FormController.deleteFormById, new JsonTransformer());
-            });
+            path(Path.FORMS.getUrl(), () -> put("/", FormController.updateForm, new JsonTransformer()));
         });
     }
 
