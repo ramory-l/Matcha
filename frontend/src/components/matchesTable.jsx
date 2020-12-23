@@ -15,7 +15,6 @@ const MatchesTable = (props) => {
   useEffect(() => {
     async function fetchMatches() {
       const { data: matches } = await getUserMatches();
-      console.log(matches);
       const modifiedMatches = matches.map((match) => {
         const newMatch = { ...match };
         const age = moment().diff(newMatch.birthday, "years");

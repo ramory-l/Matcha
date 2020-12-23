@@ -2,11 +2,12 @@ import React from "react";
 import Message from "./message";
 import "./styles/messageList.scss";
 
-const MessageList = ({ messages, recipient }) => {
+const MessageList = React.forwardRef((props, ref) => {
+  const { messages, recipient } = props;
   if (messages.length === 0) return <p>No messages yet</p>;
 
   return (
-    <div className="MessageList">
+    <div ref={ref} className="MessageList">
       {messages
         .slice(0)
         .reverse()
@@ -15,6 +16,6 @@ const MessageList = ({ messages, recipient }) => {
         ))}
     </div>
   );
-};
+});
 
 export default MessageList;

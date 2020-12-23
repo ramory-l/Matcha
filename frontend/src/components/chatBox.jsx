@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import BaseContext from "../contexts/baseContext";
 import { getCurrentUser } from "../services/authService";
 import { getMessagesWithUser } from "../services/userService";
@@ -6,12 +6,18 @@ import MessageList from "./messageList";
 import MessageInput from "./messageInput";
 import "./styles/chatBox.scss";
 
-const ChatBox = ({ recipient }) => {
+const ChatBox = (props) => {
+  const { recipient } = props;
   const [messages, setMessages] = useState([]);
+  const chatBoxRef = useRef(null);
 
   useEffect(() => {
     async function fetchMessages() {
-      const { data: messages } = await getMessagesWithUser(recipient.id, 15, 0);
+      const { data: messages } = await getMessagesWithUser(
+        recipient.id,
+        120,
+        0
+      );
       setMessages(messages.data);
     }
     fetchMessages();
@@ -40,6 +46,8 @@ const ChatBox = ({ recipient }) => {
       type: "message",
     };
     newMessages.unshift(message);
+    console.log(chatBoxRef.current);
+    chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     setMessages(newMessages);
     baseContext.webSocket.send(JSON.stringify(message));
   };
@@ -47,7 +55,11 @@ const ChatBox = ({ recipient }) => {
   return (
     <div className="ChatBox">
       {messages ? (
-        <MessageList recipient={recipient} messages={messages} />
+        <MessageList
+          ref={chatBoxRef}
+          recipient={recipient}
+          messages={messages}
+        />
       ) : null}
       <MessageInput onMessageSend={handleMessageSend} />
     </div>

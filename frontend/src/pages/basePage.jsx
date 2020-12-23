@@ -12,12 +12,25 @@ import { ws } from "../config.json";
 import { toast } from "react-toastify";
 import UserNotification from "../components/userNotification";
 import BaseContext from "../contexts/baseContext";
+import { getUserMatches } from "../services/userService";
 
-const BasePage = () => {
+const BasePage = (props) => {
   const [user, setUser] = useState({});
   const [webSocket, setWebSocket] = useState(null);
+  const [matches, setMatches] = useState([]);
+  const [avaliableChats, setAvaliableChats] = useState([]);
 
   useEffect(() => {
+    async function getMatches() {
+      const { data: matches } = await getUserMatches();
+      setMatches(matches);
+      const avaliableChats = matches.map(
+        (match) => `/messages/${match.username}`
+      );
+      avaliableChats.push("/messages");
+      setAvaliableChats(avaliableChats);
+    }
+    getMatches();
     const user = auth.getCurrentUser();
     setWebSocket(new WebSocket(`${ws}T_${getJwt()}`));
     setUser(user);
@@ -55,12 +68,15 @@ const BasePage = () => {
 
   return (
     <>
-      <BaseContext.Provider value={{ webSocket }}>
+      <BaseContext.Provider value={{ webSocket, matches, avaliableChats }}>
         <NavBar user={user} />
         <main className="container">
           <Switch>
             <Route path="/profile/:username" component={ProfilePage} />
-            <Route path="/messages/:username?" component={MessagesPage} />
+            {avaliableChats &&
+            avaliableChats.includes(props.location.pathname) ? (
+              <Route path="/messages/:username?" component={MessagesPage} />
+            ) : null}
             <Route path="/search" component={SearchPage} />
             <Route path="/logout" component={Logout} />
             <Route path="/not-found" component={NotFound} />

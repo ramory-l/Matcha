@@ -16,8 +16,10 @@ const MessageInput = ({ onMessageSend }) => {
           className="btn btn-outline-secondary"
           type="button"
           onClick={() => {
-            onMessageSend(message);
-            setMessage("");
+            if (message) {
+              onMessageSend(message);
+              setMessage("");
+            }
           }}
         >
           Send

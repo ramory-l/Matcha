@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
+import BaseContext from "../contexts/baseContext";
 import UserContext from "../contexts/userContext";
 import ImageFileInput from "./imageFileInput";
 import RateButtons from "./rateButtons";
+import LinkButton from "./common/linkButton";
 import "./styles/userAvatar.scss";
 
 const UserAvatar = (props) => {
   const { user, isMe, editMode, onEditModeChange, location } = props;
   const userContext = useContext(UserContext);
+  const baseContext = useContext(BaseContext);
+
   return (
     <div className="UserAvatar">
       <figure className="figure">
@@ -46,6 +50,12 @@ const UserAvatar = (props) => {
             </button>
           ) : null}
         </div>
+      ) : baseContext.matches.filter(
+          (match) => match.username === user.username
+        ).length ? (
+        <LinkButton to={`/messages/${user.username}`} className="btn btn-info">
+          Send Message
+        </LinkButton>
       ) : (
         <RateButtons />
       )}

@@ -62,10 +62,10 @@ export function getUserMatches() {
   });
 }
 
-export function getMessagesWithUser(userId, limit, offset) {
-  let firstUser = auth.getCurrentUser().id;
+export function getMessagesWithUser(secondUserId, limit, offset) {
+  let firstUserId = auth.getCurrentUser().id;
   return http.get(
-    `${apiEndpoint}/messages/limit/${limit}/offset/${offset}/first/${firstUser}/second/${userId}`,
+    `${apiEndpoint}/messages/limit/${limit}/offset/${offset}/first/${firstUserId}/second/${secondUserId}`,
     {
       headers: { "x-auth-token": `T_${auth.getJwt()}` },
     }
