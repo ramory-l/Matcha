@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.dao.TagMapper;
 import ru.school.matcha.domain.Tag;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.services.interfaces.TagService;
 import ru.school.matcha.services.interfaces.UserService;
 import ru.school.matcha.utils.MyBatisUtil;
@@ -130,6 +131,15 @@ public class TagServiceImpl implements TagService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
+        }
+    }
+
+    @Override
+    public Tag getTagByName(String name) {
+        log.debug("Get tag by name: {}", name);
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
+            return tagMapper.getTagByName(name).orElseThrow(NotFoundException::new);
         }
     }
 
