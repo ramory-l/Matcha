@@ -5,7 +5,6 @@ import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.dao.TagMapper;
 import ru.school.matcha.domain.Tag;
 import ru.school.matcha.exceptions.MatchaException;
-import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.services.interfaces.TagService;
 import ru.school.matcha.services.interfaces.UserService;
 import ru.school.matcha.utils.MyBatisUtil;
@@ -21,7 +20,7 @@ public class TagServiceImpl implements TagService {
     private static final UserService userService = new UserServiceImpl();
 
     @Override
-    public Long createTag(Tag tag) {
+    public void createTag(Tag tag) {
         log.debug("Create tag");
         SqlSession sqlSession = null;
         try {
@@ -29,7 +28,6 @@ public class TagServiceImpl implements TagService {
             TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
             tagMapper.createTag(tag);
             sqlSession.commit();
-            return tag.getId();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
@@ -81,24 +79,6 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag getTagById(Long id) {
-        log.debug("Get tag by id: {}", id);
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
-            return tagMapper.getTagById(id).orElseThrow(NotFoundException::new);
-        }
-    }
-
-    @Override
-    public Tag getTagByName(String name) {
-        log.debug("Get tag by name: {}", name);
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
-            return tagMapper.getTagByName(name).orElseThrow(NotFoundException::new);
-        }
-    }
-
-    @Override
     public List<Tag> getTagsByUserId(Long userId) {
         log.debug("Get tags by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
@@ -121,27 +101,6 @@ public class TagServiceImpl implements TagService {
                 sqlSession.rollback();
             }
             throw new MatchaException("Error to delete tag with id: " + id);
-        } finally {
-            if (nonNull(sqlSession)) {
-                sqlSession.close();
-            }
-        }
-    }
-
-    @Override
-    public void deleteUserTags(Long userId) {
-        log.debug("Delete tags by user with id: {}", userId);
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-            TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
-            tagMapper.deleteUserTags(userId);
-            sqlSession.commit();
-        } catch (Exception ex) {
-            if (nonNull(sqlSession)) {
-                sqlSession.rollback();
-            }
-            throw new MatchaException("Error to delete tags by user with id: " + userId);
         } finally {
             if (nonNull(sqlSession)) {
                 sqlSession.close();

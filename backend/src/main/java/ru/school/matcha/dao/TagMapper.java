@@ -18,14 +18,10 @@ public interface TagMapper {
 
     List<Tag> getTags();
 
-    Optional<Tag> getTagById(Long id);
-
     Optional<Tag> getTagByName(String name);
 
     List<Tag> getTagsByUserId(Long userId);
 
     void deleteTagById(Long id);
-
-    void deleteUserTags(Long userId);
 
 }

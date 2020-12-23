@@ -5,7 +5,6 @@ import ru.school.matcha.converters.Converter;
 import ru.school.matcha.converters.FormConverter;
 import ru.school.matcha.domain.Form;
 import ru.school.matcha.dto.FormDto;
-import ru.school.matcha.enums.Location;
 import ru.school.matcha.enums.Response;
 import ru.school.matcha.enums.Role;
 import ru.school.matcha.serializators.Serializer;
@@ -25,16 +24,6 @@ public class FormController {
     private static final FormService formService = new FormServiceImpl();
 
     private static final Serializer<FormDto> serializerFormDto = new Serializer<>();
-
-    public static Route createForm = (request, response) -> {
-        AuthorizationController.authorize(request, Role.USER);
-        FormDto formDto = serializerFormDto.deserialize(request.body(), FormDto.class);
-        Form form = formConverter.convertFromDto(formDto);
-        Form result = formService.createForm(form);
-        response.header(Location.HEADER, Location.FORMS.getUrl() + result.getId());
-        response.status(Response.GET.getStatus());
-        return "";
-    };
 
     public static Route getAllForms = (request, response) -> {
         AuthorizationController.authorize(request, Role.ADMIN);

@@ -8,7 +8,7 @@ public interface ImageService {
 
     Long createImage(String base64, String fileName, Long userId);
 
-    Image getImageById(Long id);
+    void getImageById(Long id);
 
     Image getAvatarByUserId(Long userId);
 

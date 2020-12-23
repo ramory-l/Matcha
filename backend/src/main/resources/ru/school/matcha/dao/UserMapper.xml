@@ -148,14 +148,6 @@
         WHERE id = #{id}
     </update>
 
-    <update id="deleteUserByUsername">
-        UPDATE "user"
-        SET is_active = false,
-            form_id   = null,
-            delete_ts = now()
-        WHERE username ILIKE #{username}
-    </update>
-
     <update id="updatePasswordByUserId">
         UPDATE "user"
         SET update_ts = now(),

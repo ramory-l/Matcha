@@ -77,11 +77,11 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image getImageById(Long id) {
+    public void getImageById(Long id) {
         log.debug("Get image by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
-            return imageMapper.getImageById(id).orElseThrow(NotFoundException::new);
+            imageMapper.getImageById(id).orElseThrow(NotFoundException::new);
         }
     }
 

@@ -2,10 +2,7 @@ package ru.school.matcha.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
-import ru.school.matcha.converters.Converter;
-import ru.school.matcha.converters.LikeConverter;
 import ru.school.matcha.domain.Like;
-import ru.school.matcha.dto.LikeDto;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.LikeMapper;
 import ru.school.matcha.exceptions.MatchaException;
@@ -21,8 +18,6 @@ import static java.util.Objects.nonNull;
 
 @Slf4j
 public class LikeServiceImpl implements LikeService {
-
-    private static final Converter<LikeDto, Like> likeConverter = new LikeConverter();
 
     private static final UserService userService = new UserServiceImpl();
 

@@ -22,12 +22,6 @@
         WHERE id = #{id}
     </delete>
 
-    <delete id="deleteUserTags">
-        DELETE
-        FROM tags
-        WHERE id IN (SELECT tag_id FROM user_ref_tags WHERE user_id = #{userId})
-    </delete>
-
     <delete id="deleteUserRefTag">
         DELETE FROM user_ref_tags WHERE user_id = #{userId} AND tag_id = #{tagId}
     </delete>
@@ -47,12 +41,6 @@
         SELECT *
         FROM tags
         WHERE tag = #{name}
-    </select>
-
-    <select id="getTagById" resultMap="Tag">
-        SELECT *
-        FROM tags
-        WHERE id = #{id}
     </select>
 
 </mapper>
