@@ -3,7 +3,7 @@ import SearchUsers from "../components/searchUsers";
 import WithLoading from "../components/common/withLoading";
 import * as userService from "../services/userService";
 import { findSimilarityInForms } from "../utils/equal";
-import { getUserForm } from "../services/formService";
+import { getCurrentUser } from "../services/authService";
 import "./styles/searchPage.scss";
 
 const SearchUsersWithLoading = WithLoading(SearchUsers);
@@ -16,7 +16,8 @@ const SearchPage = () => {
   useEffect(() => {
     async function fetchUsers() {
       const { data: users } = await userService.getUsers();
-      const { data: userForm } = await getUserForm();
+      const { data: user } = await userService.getUser(getCurrentUser().sub);
+      const userForm = user.form;
       const { data: likesDislikes } = await userService.getUserRates(
         "likesDislikes",
         true
@@ -34,7 +35,8 @@ const SearchPage = () => {
 
   const handleSearchButtonClick = async () => {
     const { data: users } = await userService.getUsers();
-    const { data: userForm } = await getUserForm();
+    const { data: user } = await userService.getUser(getCurrentUser().sub);
+    const userForm = user.form;
     const { data: likesDislikes } = await userService.getUserRates(
       "likesDislikes",
       true

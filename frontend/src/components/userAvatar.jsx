@@ -1,15 +1,24 @@
-import React, { useContext } from "react";
-import BaseContext from "../contexts/baseContext";
+import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/userContext";
 import ImageFileInput from "./imageFileInput";
 import RateButtons from "./rateButtons";
 import LinkButton from "./common/linkButton";
 import "./styles/userAvatar.scss";
+import { getUserMatches } from "../services/userService";
 
 const UserAvatar = (props) => {
   const { user, isMe, editMode, onEditModeChange, location } = props;
+  const [rate, setRate] = useState(user.rate);
+  const [matches, setMatches] = useState([]);
   const userContext = useContext(UserContext);
-  const baseContext = useContext(BaseContext);
+
+  useEffect(() => {
+    async function getMatches() {
+      const { data: matches } = await getUserMatches();
+      setMatches(matches);
+    }
+    getMatches();
+  }, []);
 
   return (
     <div className="UserAvatar">
@@ -24,7 +33,7 @@ const UserAvatar = (props) => {
           alt="avatar"
         />
         <figcaption className="figure-caption text-center text-dark">
-          Fame rating: <strong>{user.rate}</strong>
+          Fame rating: <strong>{rate}</strong>
         </figcaption>
       </figure>
       {isMe ? (
@@ -50,14 +59,12 @@ const UserAvatar = (props) => {
             </button>
           ) : null}
         </div>
-      ) : baseContext.matches.filter(
-          (match) => match.username === user.username
-        ).length ? (
+      ) : matches.filter((match) => match.username === user.username).length ? (
         <LinkButton to={`/messages/${user.username}`} className="btn btn-info">
           Send Message
         </LinkButton>
       ) : (
-        <RateButtons />
+        <RateButtons user={user} rateUpdateFunction={setRate} />
       )}
     </div>
   );

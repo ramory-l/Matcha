@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import BaseContext from "../contexts/baseContext";
 import { getCurrentUser } from "../services/authService";
 import { getMessagesWithUser } from "../services/userService";
@@ -9,7 +9,6 @@ import "./styles/chatBox.scss";
 const ChatBox = (props) => {
   const { recipient } = props;
   const [messages, setMessages] = useState([]);
-  const chatBoxRef = useRef(null);
 
   useEffect(() => {
     async function fetchMessages() {
@@ -26,14 +25,21 @@ const ChatBox = (props) => {
   const baseContext = useContext(BaseContext);
 
   useEffect(() => {
-    if (baseContext.webSocket) {
-      baseContext.webSocket.onmessage = (message) => {
-        const data = JSON.parse(message.data);
+    const handleMessage = (message) => {
+      const data = JSON.parse(message.data);
+      if (data.type === "message") {
         const newMessages = [...messages];
         newMessages.unshift(data);
         setMessages(newMessages);
-      };
+      }
+    };
+    if (baseContext.webSocket) {
+      baseContext.webSocket.addEventListener("message", handleMessage);
     }
+    return () => {
+      baseContext.webSocket.removeEventListener("message", handleMessage);
+      console.log("closed");
+    };
   }, [baseContext.webSocket, messages]);
 
   const handleMessageSend = (messageString) => {
@@ -46,8 +52,6 @@ const ChatBox = (props) => {
       type: "message",
     };
     newMessages.unshift(message);
-    console.log(chatBoxRef.current);
-    chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     setMessages(newMessages);
     baseContext.webSocket.send(JSON.stringify(message));
   };
@@ -55,11 +59,7 @@ const ChatBox = (props) => {
   return (
     <div className="ChatBox">
       {messages ? (
-        <MessageList
-          ref={chatBoxRef}
-          recipient={recipient}
-          messages={messages}
-        />
+        <MessageList recipient={recipient} messages={messages} />
       ) : null}
       <MessageInput onMessageSend={handleMessageSend} />
     </div>

@@ -3,7 +3,7 @@ import WithLoading from "../components/common/withLoading";
 import User from "../components/user";
 import auth from "../services/authService";
 import { createGuest } from "../services/guestService";
-import { getUser } from "../services/userService";
+import { getUser, getUserRates } from "../services/userService";
 
 const UserWithLoading = WithLoading(User);
 
@@ -28,6 +28,14 @@ const ProfilePage = (props) => {
         await createGuest(user.id);
         console.log("Guest created!");
       }
+      const { data: likesDislikes } = await getUserRates("likesDislikes", true);
+      if (likesDislikes["likes"].filter((like) => like.id === user.id).length)
+        user.isLiked = true;
+      if (
+        likesDislikes["dislikes"].filter((dislike) => dislike.id === user.id)
+          .length
+      )
+        user.isDisliked = true;
       setUser(user);
       setIsLoading(false);
     }

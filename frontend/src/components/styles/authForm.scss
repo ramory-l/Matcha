@@ -25,4 +25,15 @@
 
 .RegisterForm {
   @extend %auth-form;
+  .RegisterForm-Title {
+    font-size: 26pt;
+  }
+}
+
+@media (max-width: 500px) {
+  .RegisterForm {
+    .RegisterForm-Title {
+      font-size: 20pt;
+    }
+  }
 }

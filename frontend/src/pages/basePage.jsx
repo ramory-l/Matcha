@@ -12,25 +12,12 @@ import { ws } from "../config.json";
 import { toast } from "react-toastify";
 import UserNotification from "../components/userNotification";
 import BaseContext from "../contexts/baseContext";
-import { getUserMatches } from "../services/userService";
 
 const BasePage = (props) => {
   const [user, setUser] = useState({});
   const [webSocket, setWebSocket] = useState(null);
-  const [matches, setMatches] = useState([]);
-  const [avaliableChats, setAvaliableChats] = useState([]);
 
   useEffect(() => {
-    async function getMatches() {
-      const { data: matches } = await getUserMatches();
-      setMatches(matches);
-      const avaliableChats = matches.map(
-        (match) => `/messages/${match.username}`
-      );
-      avaliableChats.push("/messages");
-      setAvaliableChats(avaliableChats);
-    }
-    getMatches();
     const user = auth.getCurrentUser();
     setWebSocket(new WebSocket(`${ws}T_${getJwt()}`));
     setUser(user);
@@ -48,15 +35,16 @@ const BasePage = (props) => {
 
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
-
-        toast(
-          <UserNotification
-            dataType={data.type}
-            avatarLink={data.avatar}
-            username={data.username}
-            message={data.message}
-          />
-        );
+        if (data.type !== "message") {
+          toast(
+            <UserNotification
+              dataType={data.type}
+              avatarLink={data.avatar?.link}
+              username={data.username}
+              message={data.message}
+            />
+          );
+        }
       };
 
       return () => {
@@ -64,19 +52,16 @@ const BasePage = (props) => {
         console.log("closed");
       };
     }
-  }, [webSocket]);
+  }, [webSocket, props.match.pathname]);
 
   return (
     <>
-      <BaseContext.Provider value={{ webSocket, matches, avaliableChats }}>
+      <BaseContext.Provider value={{ webSocket }}>
         <NavBar user={user} />
         <main className="container">
           <Switch>
             <Route path="/profile/:username" component={ProfilePage} />
-            {avaliableChats &&
-            avaliableChats.includes(props.location.pathname) ? (
-              <Route path="/messages/:username?" component={MessagesPage} />
-            ) : null}
+            <Route path="/messages/:username?" component={MessagesPage} />
             <Route path="/search" component={SearchPage} />
             <Route path="/logout" component={Logout} />
             <Route path="/not-found" component={NotFound} />

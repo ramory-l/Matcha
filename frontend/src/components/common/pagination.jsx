@@ -4,9 +4,16 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 import "./styles/pagination.scss";
 
-const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
-  const [startRange, setStartRange] = useState(1);
-  const [endRange, setEndRange] = useState(6);
+const Pagination = ({
+  itemsCount,
+  pageSize,
+  currentPage,
+  onPageChange,
+  startRangeProp = 1,
+  endRangeProp = 4,
+}) => {
+  const [startRange, setStartRange] = useState(startRangeProp);
+  const [endRange, setEndRange] = useState(endRangeProp);
 
   const pagesCount = Math.ceil(itemsCount / pageSize);
 

@@ -1,6 +1,7 @@
 %message-text {
   border-radius: 5px;
   padding: 5px;
+  max-width: 200px;
 }
 
 .Message {
@@ -10,10 +11,7 @@
   border-radius: 5px;
   margin: 7px;
   padding: 5px;
-  span {
-    display: block;
-    overflow-wrap: break-word;
-  }
+  overflow-wrap: break-word;
 
   .Message-Title {
     font-weight: bold;
@@ -41,5 +39,8 @@
 @media (max-width: 500px) {
   .Message-Date {
     font-size: 7pt;
+  }
+  %message-text {
+    max-width: 100px;
   }
 }

@@ -3,8 +3,8 @@ import FileInput from "./common/fileInput";
 import { toBase64 } from "../utils/fileToBase64";
 import { uploadImage } from "../services/imageService";
 import UserContext from "../contexts/userContext";
-import "./styles/imageFileInput.scss";
 import { toast } from "react-toastify";
+import "./styles/imageFileInput.scss";
 
 const ImageFileInput = ({ name, label, userId }) => {
   const [newLabel, setNewLabel] = useState(label);
@@ -14,9 +14,10 @@ const ImageFileInput = ({ name, label, userId }) => {
   const handleChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      file.name.length > 13
-        ? setNewLabel(file.name.slice(0, 7) + "...")
-        : setNewLabel(file.name);
+      // file.name.length > 13
+      //   ? setNewLabel(file.name.slice(0, 7) + "...")
+      //   : setNewLabel(file.name);
+      setNewLabel(file.name);
       const filename = file.name.split(".")[0];
       const imageBase64 = await toBase64(file);
       const image = {
@@ -34,7 +35,11 @@ const ImageFileInput = ({ name, label, userId }) => {
         await uploadImage(image);
         userContext.handleNewImages();
         toast.success("Successfully added new image!");
-      } catch (ex) {}
+      } catch (ex) {
+        if (ex.response && ex.response.status === 400) {
+          toast.error("You can upload max 5 photos!");
+        }
+      }
     }
   };
 

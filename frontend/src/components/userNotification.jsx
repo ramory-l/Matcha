@@ -12,7 +12,7 @@ const UserNotification = ({ dataType, avatarLink, username, message }) => {
       <div className="UserNotification-MessageBox">
         {dataType === "message" ? (
           <>
-            <span>Message From: {username} </span> <br />
+            <span className="MessageBox-Username">{username}:</span> <br />
           </>
         ) : null}
         <span>{message}</span>
