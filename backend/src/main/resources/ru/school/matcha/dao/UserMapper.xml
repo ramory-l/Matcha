@@ -79,6 +79,12 @@
         ON CONFLICT DO NOTHING
     </insert>
 
+    <insert id="addingComplaint">
+        INSERT INTO complaints("from", "to", message)
+        VALUES ("from", "to", message)
+        ON CONFLICT DO NOTHING
+    </insert>
+
     <update id="updateUserByUsername">
         UPDATE "user" SET
         <if test="firstName != null">
@@ -264,6 +270,10 @@
         SELECT *
         FROM black_list
         WHERE "from" = #{userId}
+    </select>
+
+    <select id="getUserComplaint" resultType="java.lang.Long">
+        SELECT count(id) FROM complaints WHERE "to" = #{to} AND "from" = #{from}
     </select>
 
 </mapper>

@@ -421,4 +421,32 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void userIsFake(long from, long to, String message) {
+        if (isNull(message) || "".equals(message)) {
+            throw new MatchaException("Message is empty");
+        }
+        checkUsers(from, to);
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (userMapper.getUserComplaint(from, to) > 0) {
+                throw new MatchaException("User already in black list");
+            }
+            userMapper.addingComplaint(from, to, message);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to adding complaint. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+            addToBlackList(from, to);
+        }
+    }
+
 }

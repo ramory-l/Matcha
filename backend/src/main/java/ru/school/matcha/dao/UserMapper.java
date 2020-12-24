@@ -50,4 +50,8 @@ public interface UserMapper {
 
     void updateLastLoginDateUsers(List<Long> ids);
 
+    void addingComplaint(@Param("from") Long from, @Param("to") Long to, @Param("message") String message);
+
+    long getUserComplaint(@Param("from") Long from, @Param("to") Long to);
+
 }

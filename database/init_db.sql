@@ -105,6 +105,16 @@ create table black_list
     unique ("to", "from")
 );
 
+create table complaints
+(
+    id        bigserial primary key                     not null,
+    "from"    bigint references "user" (id)             not null,
+    "to"      bigint references "user" (id)             not null,
+    message   text                        default ''    not null,
+    create_ts timestamp without time zone default now() not null,
+    unique ("to", "from")
+);
+
 INSERT INTO public.form (man,
                          woman,
                          friendship,

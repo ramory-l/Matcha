@@ -193,4 +193,17 @@ public class UserController {
         return userConverter.createFromEntities(user);
     };
 
+    public static Route userIsFake = (request, response) -> {
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        String message = request.body();
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && from != userId) {
+            halt(403, "Access is denied");
+        }
+        userService.userIsFake(from, to, message);
+        response.header(Location.HEADER, Location.USERS.getUrl() + to);
+        response.status(Response.POST.getStatus());
+        return "";
+    };
+
 }
