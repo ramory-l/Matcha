@@ -56,7 +56,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public List<Like> getLikesByUserId(Long userId, Boolean isLike, Boolean outgoing) {
-        log.debug("Get likes/dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
             return likeMapper.getLikes(userId, isLike, outgoing);
@@ -65,7 +64,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Map<String, List<Like>> getLikesByUserId(Long userId, Boolean outgoing) {
-        log.debug("Get likes and dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
             Map<String, List<Like>> likes = new HashMap<>();
@@ -77,7 +75,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void deleteLike(Long from, Long to, boolean isLike) {
-        log.debug("Delete like/dislike from {} to {}", from, to);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -111,11 +108,11 @@ public class LikeServiceImpl implements LikeService {
 
     private void checkUsers(Long from, Long to) {
         if (isNull(userService.getUserById(from))) {
-            log.error("User 'from' with id: {} doesn't exist", from);
+            log.debug("User 'from' with id: {} doesn't exist", from);
             throw new MatchaException("User 'from' with id: " + from + " doesn't exist");
         }
         if (isNull(userService.getUserById(to))) {
-            log.error("User 'to' with id: {} doesn't exist", to);
+            log.debug("User 'to' with id: {} doesn't exist", to);
             throw new MatchaException("User 'to' with id: " + to + " doesn't exist");
         }
     }

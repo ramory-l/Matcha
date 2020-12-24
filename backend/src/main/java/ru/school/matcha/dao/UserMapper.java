@@ -38,4 +38,6 @@ public interface UserMapper {
 
     void updatePasswordByUserId(@Param("userId") Long userId, @Param("newPassword") String newPassword);
 
+    void verifiedUser(Long userId);
+
 }

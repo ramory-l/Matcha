@@ -26,10 +26,14 @@ public interface UserService {
 
     void updatePassword(String hash);
 
-    void formingEmail(String email, String newPass);
+    void formingResetPasswordEmail(String email, String newPass);
 
     void deleteUserById(Long id);
 
     String getUserEncryptPasswordById(Long id);
+
+    void formingVerificationEmail(String email);
+
+    void verified(String hash);
 
 }

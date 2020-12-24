@@ -24,13 +24,12 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private static final FormService formService = new FormServiceImpl();
-    private static final ImageService imageService = new ImageServiceImpl();
-    private static final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+    private final FormService formService = new FormServiceImpl();
+    private final ImageService imageService = new ImageServiceImpl();
+    private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
 
     @Override
     public List<User> getAllUsers() {
-        log.debug("Get all users");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getAllUsers();
@@ -39,7 +38,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        log.debug("Get user by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserById(id).orElseThrow(NotFoundException::new);
@@ -56,7 +54,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        log.debug("Get user by username: {}", username);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserByUsername(username).orElseThrow(NotFoundException::new);
@@ -65,7 +62,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getMatcha(Long id) {
-        log.debug("Get matcha");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getMatcha(id);
@@ -74,7 +70,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long createUser(User user) {
-        log.debug("Create new user");
         String username = user.getUsername();
         try {
             try {
@@ -102,10 +97,12 @@ public class UserServiceImpl implements UserService {
                 newUser.setFirstName(user.getFirstName());
                 newUser.setLastName(user.getLastName());
                 newUser.setRate(0L);
+                newUser.setIsVerified(false);
                 defaultForm.setId(formService.createForm(defaultForm).getId());
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
                 sqlSession.commit();
+                formingVerificationEmail(user.getEmail());
                 return newUser.getId();
             } catch (Exception ex) {
                 if (nonNull(sqlSession)) {
@@ -126,7 +123,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void batchCreateUsers(List<User> users) {
-        log.debug("Batch create users");
         SqlSession sqlSession = null;
         FormService formService = new FormServiceImpl();
         try {
@@ -140,6 +136,7 @@ public class UserServiceImpl implements UserService {
                     throw new MatchaException(ex.getMessage());
                 }
                 user.setRate(0L);
+                user.setIsVerified(true);
                 userMapper.createFullUser(user);
             });
             sqlSession.commit();
@@ -173,10 +170,8 @@ public class UserServiceImpl implements UserService {
                 }
             }
             if (nonNull(user.getId())) {
-                log.debug("Update user with id: {}", user.getId());
                 userMapper.updateUserById(user);
             } else if (nonNull(user.getUsername())) {
-                log.debug("Update user with username: {}", user.getUsername());
                 userMapper.updateUserByUsername(user);
             }
             sqlSession.commit();
@@ -194,7 +189,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long userId) {
-        log.debug("Delete user with id: {}", userId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -262,17 +256,58 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void formingEmail(String email, String newPass) {
+    public void formingResetPasswordEmail(String email, String newPass) {
         if (isNull(email) || isNull(newPass)) {
             throw new NotFoundException("Fields are not filled");
         }
         User user = getUserByEmail(email);
-        String passwordToken = jwtTokenProvider.createPasswordToken(newPass, user.getId());
-        MailUtil.send(user.getEmail(), "Password change",
-                "Hello, " + user.getUsername() + "<br><br> Please Click " +
-                        "<a href='http://localhost:8080/api/users/password/" + passwordToken + "'>" +
-                        "<strong>here</strong></a> to reset your password. The link works " +
-                        "within 24 hours. <br><br><br> Thanks!");
+        if (nonNull(user)) {
+            String passwordToken = jwtTokenProvider.createPasswordToken(newPass, user.getId());
+            MailUtil.send(user.getEmail(), "Password change",
+                    "Hello, " + user.getUsername() + "<br><br> Please Click " +
+                            "<a href='http://localhost:8080/api/users/password/" + passwordToken + "'>" +
+                            "<strong>here</strong></a> to reset your password. The link works " +
+                            "within 24 hours. <br><br><br> Thanks!");
+        }
+    }
+
+    @Override
+    public void formingVerificationEmail(String email) {
+        if (nonNull(email)) {
+            User user = getUserByEmail(email);
+            if (nonNull(user)) {
+                String verifiedToken = jwtTokenProvider.createVerifiedToken(user.getId());
+                MailUtil.send(user.getEmail(), "User verification",
+                        "Hello, " + user.getUsername() + "<br><br> Please Click " +
+                                "<a href='http://localhost:8080/api/users/verified/" + verifiedToken + "'>" +
+                                "<strong>here</strong></a> to verified your account. The link works " +
+                                "within 7 days. <br><br><br> Thanks!");
+            }
+        }
+    }
+
+    @Override
+    public void verified(String hash) {
+        if (!jwtTokenProvider.validateToken(hash)) {
+            throw new MatchaException("Link expired");
+        }
+        Long userId = jwtTokenProvider.getUserIdFromVerifiedToken(hash);
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.verifiedUser(userId);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to verified user. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
     }
 
 }

@@ -5,7 +5,7 @@ import ru.school.matcha.controllers.*;
 import ru.school.matcha.converters.*;
 import ru.school.matcha.enums.Cors;
 import ru.school.matcha.enums.Path;
-import ru.school.matcha.handlers.ChatWebSocketHandler;
+import ru.school.matcha.handlers.WebSocketHandler;
 import ru.school.matcha.handlers.ExceptionHandler;
 import ru.school.matcha.utils.CloudinaryAPI;
 import ru.school.matcha.utils.MailUtil;
@@ -17,7 +17,7 @@ public class MatchaApplication {
 
     public static void main(String[] args) {
         port(8080);
-        webSocket(Path.SOCKET.getUrl(), ChatWebSocketHandler.class);
+        webSocket(Path.SOCKET.getUrl(), WebSocketHandler.class);
         enableCORS();
         ExceptionHandler.enable();
         MailUtil.initMail();
@@ -38,6 +38,7 @@ public class MatchaApplication {
                 get("/:id/images", ImageController.getImagesByUserId, new JsonTransformer());
                 get("/:id/tags", TagController.getTagsByUserId, new JsonTransformer());
                 get("/password/:hash", UserController.editPassword, new JsonTransformer());
+                get("/verified/:hash", UserController.verified, new JsonTransformer());
                 get("/matcha/:id", UserController.getMatcha, new JsonTransformer());
                 get("/messages/limit/:limit/offset/:offset/first/:first/second/:second", UserController.getMessages, new JsonTransformer());
                 put("/password/reset", UserController.resetPassword, new JsonTransformer());

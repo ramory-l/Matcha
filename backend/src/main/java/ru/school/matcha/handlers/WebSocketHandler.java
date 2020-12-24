@@ -30,7 +30,7 @@ import static java.util.Objects.nonNull;
 
 @Slf4j
 @WebSocket
-public class ChatWebSocketHandler {
+public class WebSocketHandler {
 
     private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
 
@@ -56,7 +56,7 @@ public class ChatWebSocketHandler {
             session.setIdleTimeout(10000000);
             sessionUsernameMap.put(session, user);
         } catch (JwtAuthenticationException ex) {
-            log.error("Credentials are invalid");
+            log.debug("Credentials are invalid");
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }

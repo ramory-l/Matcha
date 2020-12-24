@@ -22,7 +22,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void createTag(Tag tag) {
-        log.debug("Create tag");
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -72,7 +71,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTags() {
-        log.debug("Get tags");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
             return tagMapper.getTags();
@@ -81,7 +79,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTagsByUserId(Long userId) {
-        log.debug("Get tags by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
             return tagMapper.getTagsByUserId(userId);
@@ -90,7 +87,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void deleteTagById(Long id) {
-        log.debug("Delete tag by id: {}", id);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -136,7 +132,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag getTagByName(String name) {
-        log.debug("Get tag by name: {}", name);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
             return tagMapper.getTagByName(name).orElseThrow(NotFoundException::new);

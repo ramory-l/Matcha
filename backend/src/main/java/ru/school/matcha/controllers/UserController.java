@@ -112,7 +112,7 @@ public class UserController {
 
     public static Route resetPassword = (request, response) -> {
         PassResetDto passResetDto = passResetSerializer.deserialize(request.body(), PassResetDto.class);
-        userService.formingEmail(passResetDto.getEmail(), passResetDto.getNewPass());
+        userService.formingResetPasswordEmail(passResetDto.getEmail(), passResetDto.getNewPass());
         response.status(Response.PUT.getStatus());
         return "";
     };
@@ -150,6 +150,13 @@ public class UserController {
         AuthorizationController.authorize(request, Role.USER);
         response.status(Response.GET.getStatus());
         return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId()));
+    };
+
+    public static Route verified = (request, response) -> {
+        String hash = request.params("hash");
+        userService.verified(hash);
+        response.status(Response.GET.getStatus());
+        return "";
     };
 
 }

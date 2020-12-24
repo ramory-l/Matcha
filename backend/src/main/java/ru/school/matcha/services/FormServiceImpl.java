@@ -19,7 +19,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public List<Form> getAllForms() {
-        log.debug("Get all forms");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
             return formMapper.getAllForms();
@@ -28,7 +27,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public Form getFormById(Long id) {
-        log.debug("Get form by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             FormMapper formMapper = sqlSession.getMapper(FormMapper.class);
             return formMapper.getFormById(id).orElseThrow(NotFoundException::new);
@@ -37,7 +35,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public Form createForm(Form form) {
-        log.debug("Create new form");
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -62,7 +59,6 @@ public class FormServiceImpl implements FormService {
         if (isNull(form.getId())) {
             throw new MatchaException("The update could not be completed because the identifier was not specified");
         }
-        log.debug("Update form by id: {}", form.getId());
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -83,7 +79,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public void deleteFormById(Long id) {
-        log.debug("Delete form by id: {}", id);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -104,7 +99,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public void deleteAllInactiveForms() {
-        log.debug("Delete all inactive forms");
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();

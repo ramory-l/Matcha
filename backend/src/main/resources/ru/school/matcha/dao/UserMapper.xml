@@ -15,6 +15,7 @@
         <result property="role" column="role"/>
         <result property="latitude" column="latitude"/>
         <result property="longitude" column="longitude"/>
+        <result property="isVerified" column="is_verified"/>
         <result property="createTs" column="create_ts"/>
         <result property="updateTs" column="update_ts"/>
         <result property="deleteTs" column="delete_ts"/>
@@ -34,7 +35,16 @@
     </resultMap>
 
     <insert id="createUser" keyProperty="user.id" useGeneratedKeys="true" keyColumn="id">
-        INSERT INTO "user"(username, email, password, first_name, last_name, is_active, form_id, rate, create_ts)
+        INSERT INTO "user"(username,
+                           email,
+                           password,
+                           first_name,
+                           last_name,
+                           is_active,
+                           form_id,
+                           rate,
+                           is_verified,
+                           create_ts)
         VALUES (#{user.username},
                 #{user.email},
                 #{user.password},
@@ -43,6 +53,7 @@
                 true,
                 #{formId},
                 #{user.rate},
+                #{user.isVerified},
                 now())
     </insert>
 
@@ -155,6 +166,12 @@
         WHERE id = #{userId}
     </update>
 
+    <update id="verifiedUser">
+        UPDATE "user"
+        SET is_verified = true
+        WHERE id = #{userId}
+    </update>
+
     <select id="getAllUsers" resultMap="User">
         SELECT *
         FROM "user"
@@ -202,11 +219,13 @@
     </select>
 
     <select id="getMatcha" resultMap="User">
-        SELECT u.* FROM (SELECT DISTINCT general."to" id
-        FROM likes general
-                 INNER JOIN likes tmp ON general."from" = tmp."to"
-        WHERE general."like" = true
-          AND general."from" = #{id}) AS matches INNER JOIN "user" u ON u.id = matches.id
+        SELECT u.*
+        FROM (SELECT DISTINCT general."to" id
+              FROM likes general
+                       INNER JOIN likes tmp ON general."from" = tmp."to"
+              WHERE general."like" = true
+                AND general."from" = #{id}) AS matches
+                 INNER JOIN "user" u ON u.id = matches.id
     </select>
 
 </mapper>

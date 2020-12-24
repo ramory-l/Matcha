@@ -37,7 +37,6 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public List<Guest> getGuestsByUserId(Long userId) {
-        log.debug("Get guests by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             GuestMapper guestMapper = sqlSession.getMapper(GuestMapper.class);
             return guestMapper.getGuestsByUserId(userId);

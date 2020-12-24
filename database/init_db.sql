@@ -35,6 +35,7 @@ create table "user"
     role        varchar(64)                 default 'USER' not null,
     latitude    double precision            default 0,
     longitude   double precision            default 0,
+    is_verified boolean                     default false   not null,
     create_ts   timestamp without time zone default now()  not null,
     update_ts   timestamp without time zone,
     delete_ts   timestamp without time zone,
