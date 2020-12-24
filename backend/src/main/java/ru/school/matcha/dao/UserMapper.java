@@ -28,8 +28,6 @@ public interface UserMapper {
 
     void createFullUser(User users);
 
-    void updateUserByUsername(User user);
-
     void updateUserById(User user);
 
     void deleteUserById(Long id);

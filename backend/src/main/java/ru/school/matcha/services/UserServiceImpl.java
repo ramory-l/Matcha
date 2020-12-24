@@ -167,6 +167,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
+        if (isNull(user.getId())) {
+            throw new MatchaException("Unidentified user");
+        }
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -181,11 +184,17 @@ public class UserServiceImpl implements UserService {
                     throw new MatchaException("Encrypt password error");
                 }
             }
-            if (nonNull(user.getId())) {
-                userMapper.updateUserById(user);
-            } else if (nonNull(user.getUsername())) {
-                userMapper.updateUserByUsername(user);
+            if (nonNull(user.getEmail())) {
+                if (nonNull(getUserByEmail(user.getEmail()))) {
+                    throw new MatchaException("User with such email already exist");
+                }
             }
+            if (nonNull(user.getUsername())) {
+                if (nonNull(getUserById(user.getId()))) {
+                    throw new MatchaException("User with such username already exist");
+                }
+            }
+            userMapper.updateUserById(user);
             sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
