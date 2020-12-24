@@ -42,7 +42,6 @@ public class ExceptionHandler {
     };
 
     public static spark.ExceptionHandler<MailException> mail = (ex, request, response) -> {
-        log.error(ex.getMessage());
         response.status(Response.MAIL_EXCEPTION.getStatus());
         response.body(ex.getMessage());
     };
@@ -53,14 +52,11 @@ public class ExceptionHandler {
     };
 
     public static spark.ExceptionHandler<MatchaException> matcha = (ex, request, response) -> {
-
-        log.error(ex.getMessage());
         response.status(Response.MATCHA_EXCEPTION.getStatus());
         response.body(ex.getMessage());
     };
 
     public static spark.ExceptionHandler<NumberFormatException> numberFormat = (ex, request, response) -> {
-
         response.status(Response.NUMBER_FORMAT_EXCEPTION.getStatus());
         response.body(Response.NUMBER_FORMAT_EXCEPTION.getBody());
     };

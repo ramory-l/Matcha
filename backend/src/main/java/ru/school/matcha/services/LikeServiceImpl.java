@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.domain.Like;
 import ru.school.matcha.domain.User;
+import ru.school.matcha.services.interfaces.ImageService;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.LikeMapper;
 import ru.school.matcha.exceptions.MatchaException;
@@ -21,6 +22,7 @@ import static java.util.Objects.nonNull;
 public class LikeServiceImpl implements LikeService {
 
     private static final UserService userService = new UserServiceImpl();
+    private static final ImageService imageService = new ImageServiceImpl();
 
     @Override
     public void like(Long from, Long to, boolean isLike) {
@@ -28,6 +30,9 @@ public class LikeServiceImpl implements LikeService {
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
+            if (!checkAbilityLike(from)) {
+                throw new MatchaException("User has no photo");
+            }
             userService.checkOnBlackList(from, to);
             userService.checkOnBlackList(to, from);
             if (nonNull(likeMapper.getLike(from, to, isLike))) {
@@ -55,6 +60,10 @@ public class LikeServiceImpl implements LikeService {
                 sqlSession.close();
             }
         }
+    }
+
+    private boolean checkAbilityLike(long userId) {
+        return imageService.getCountImagesByUserId(userId) != 0;
     }
 
     @Override
