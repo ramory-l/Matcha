@@ -3,10 +3,10 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.dao.GuestMapper;
-import ru.school.matcha.dao.UserMapper;
 import ru.school.matcha.domain.Guest;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.services.interfaces.GuestService;
+import ru.school.matcha.services.interfaces.UserService;
 import ru.school.matcha.utils.MyBatisUtil;
 
 import java.util.List;
@@ -16,8 +16,12 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class GuestServiceImpl implements GuestService {
 
+    private static final UserService userService = new UserServiceImpl();
+
     @Override
     public void createGuest(Long userId, Long guestId) {
+        userService.checkOnBlackList(userId, guestId);
+        userService.checkOnBlackList(guestId, userId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();

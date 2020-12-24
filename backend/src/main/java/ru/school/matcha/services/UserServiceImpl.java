@@ -393,4 +393,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void checkOnBlackList(long from, long to) {
+        List<User> blackListUsers = getUserBlackList(to);
+        if (blackListUsers.stream().parallel().anyMatch(blackUser -> blackUser.getId().equals(from))) {
+            throw new MatchaException("User in black list");
+        }
+    }
+
 }

@@ -44,4 +44,6 @@ public interface UserService {
 
     List<User> getUserBlackList(long userId);
 
+    void checkOnBlackList(long from, long to);
+
 }
