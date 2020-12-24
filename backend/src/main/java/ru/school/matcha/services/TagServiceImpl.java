@@ -115,7 +115,7 @@ public class TagServiceImpl implements TagService {
                     .orElseThrow(() -> new MatchaException("Tag with name " + tagName + " doesn't exist"));
             tagMapper.deleteUserRefTag(tag.getId(), userId);
             sqlSession.commit();
-            if (userService.getUsersByTagId(tag.getId()).isEmpty()) {
+            if (userService.getUsersByTagId(tag.getId(), 0L).isEmpty()) {
                 deleteTagById(tag.getId());
             }
         } catch (Exception ex) {

@@ -62,8 +62,8 @@ public class UserController {
     };
 
     public static Route getAllUsers = (request, response) -> {
-        AuthorizationController.authorize(request, Role.USER);
-        List<User> users = userService.getAllUsers();
+        long userId = AuthorizationController.authorize(request, Role.USER);
+        List<User> users = userService.getAllUsers(userId);
         List<UserDto> result = userConverter.createFromEntities(users);
         response.status(Response.GET.getStatus());
         return result;
@@ -147,9 +147,9 @@ public class UserController {
 
     public static Route getUsersByTagName = (request, response) -> {
         String tagName = request.params("tagName");
-        AuthorizationController.authorize(request, Role.USER);
+        long userId = AuthorizationController.authorize(request, Role.USER);
         response.status(Response.GET.getStatus());
-        return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId()));
+        return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId(), userId));
     };
 
     public static Route verified = (request, response) -> {

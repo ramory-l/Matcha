@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<User> getAllUsers();
+    List<User> getAllUsers(long userId);
 
     User getUserById(Long id);
 
@@ -14,7 +14,7 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
-    List<User> getUsersByTagId(Long tagId);
+    List<User> getUsersByTagId(Long tagId, Long userId);
 
     List<User> getMatcha(Long id);
 

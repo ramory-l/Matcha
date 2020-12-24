@@ -10,7 +10,7 @@ import java.util.Optional;
 @Mapper
 public interface UserMapper {
 
-    List<User> getAllUsers();
+    List<User> getAllUsers(Long userId);
 
     Optional<User> getUserById(Long id);
 
@@ -20,7 +20,7 @@ public interface UserMapper {
 
     Optional<User> getUserByUsername(String username);
 
-    List<User> getUsersByTagId(Long tagId);
+    List<User> getUsersByTagId(@Param("tagId") Long tagId, @Param("userId") Long userId);
 
     List<User> getMatcha(Long id);
 

@@ -3,6 +3,7 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.dao.GuestMapper;
+import ru.school.matcha.dao.UserMapper;
 import ru.school.matcha.domain.Guest;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.services.interfaces.GuestService;
@@ -40,6 +41,26 @@ public class GuestServiceImpl implements GuestService {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             GuestMapper guestMapper = sqlSession.getMapper(GuestMapper.class);
             return guestMapper.getGuestsByUserId(userId);
+        }
+    }
+
+    @Override
+    public void deleteGuest(Long userId, Long guestId) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            GuestMapper guestMapper = sqlSession.getMapper(GuestMapper.class);
+            guestMapper.deleteGuest(userId, guestId);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to delete guest. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
         }
     }
 

@@ -190,6 +190,8 @@
         FROM "user"
         WHERE is_active = true
           AND is_verified = true
+          AND id != #{userId}
+          AND id NOT IN (SELECT "to" FROM black_list WHERE "from" = #{userId})
         ORDER BY id
     </select>
 
@@ -217,7 +219,7 @@
         SELECT u.*
         FROM "user" u
                  INNER JOIN user_ref_tags t on u.id = t.user_id
-        WHERE t.tag_id = #{tagId}
+        WHERE t.tag_id = #{tagId} AND u.id NOT IN (SELECT "to" FROM black_list WHERE "from" = #{userId})
     </select>
 
     <select id="getUserWithMinimumInfo" resultMap="UserWithMinimumInfo">
@@ -250,7 +252,9 @@
     </select>
 
     <select id="getUserBlackList" resultMap="UserWithMinimumInfo">
-        SELECT * FROM black_list WHERE "from" = #{userId}
+        SELECT *
+        FROM black_list
+        WHERE "from" = #{userId}
     </select>
 
 </mapper>

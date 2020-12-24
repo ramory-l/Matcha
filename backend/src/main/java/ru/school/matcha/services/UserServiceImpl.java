@@ -3,10 +3,9 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
-import ru.school.matcha.dao.LikeMapper;
 import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
-import ru.school.matcha.services.interfaces.ImageService;
+import ru.school.matcha.services.interfaces.*;
 import ru.school.matcha.utils.MailUtil;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
@@ -14,8 +13,6 @@ import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.PasswordCipher;
-import ru.school.matcha.services.interfaces.FormService;
-import ru.school.matcha.services.interfaces.UserService;
 
 import java.util.List;
 
@@ -28,12 +25,14 @@ public class UserServiceImpl implements UserService {
     private final FormService formService = new FormServiceImpl();
     private final ImageService imageService = new ImageServiceImpl();
     private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+    private final LikeService likeService = new LikeServiceImpl();
+    private final GuestService guestService = new GuestServiceImpl();
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(long userId) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getAllUsers();
+            return userMapper.getAllUsers(userId);
         }
     }
 
@@ -231,10 +230,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersByTagId(Long tagId) {
+    public List<User> getUsersByTagId(Long tagId, Long userId) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getUsersByTagId(tagId);
+            return userMapper.getUsersByTagId(tagId, userId);
         }
     }
 
@@ -326,6 +325,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addToBlackList(long from, long to) {
         SqlSession sqlSession = null;
+        likeService.deleteLike(from, to, true);
+        likeService.deleteLike(from, to, false);
+        likeService.deleteLike(to, from, true);
+        likeService.deleteLike(to, from, false);
+        guestService.deleteGuest(from, to);
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);

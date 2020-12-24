@@ -13,4 +13,6 @@ public interface GuestMapper {
 
     List<Guest> getGuestsByUserId(Long userId);
 
+    void deleteGuest(@Param("userId") Long userId, @Param("guestId") Long guestId);
+
 }
