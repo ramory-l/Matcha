@@ -48,4 +48,6 @@ public interface UserMapper {
 
     List<User> getUserBlackList(Long userId);
 
+    void updateLastLoginDateUsers(List<Long> ids);
+
 }

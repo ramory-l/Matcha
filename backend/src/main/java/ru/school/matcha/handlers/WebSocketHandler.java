@@ -8,6 +8,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import ru.school.matcha.converters.Converter;
 import ru.school.matcha.converters.MessageConverter;
+import ru.school.matcha.daemons.CheckUserOnlineDaemon;
 import ru.school.matcha.domain.Message;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.MessageDto;
@@ -141,12 +142,13 @@ public class WebSocketHandler {
         return null;
     }
 
-    private boolean checkUserOnline(Message message) {
-        return sessionUsernameMap
-                .values()
-                .stream()
-                .parallel()
-                .anyMatch(user -> user.getId().equals(message.getTo()));
+    public static void playCheckOnlineDaemon() {
+        Thread daemon = new Thread(new CheckUserOnlineDaemon());
+        daemon.setDaemon(true);
+        daemon.start();
     }
 
+    public static Map<Session, User> getSessionUsernameMap() {
+        return sessionUsernameMap;
+    }
 }

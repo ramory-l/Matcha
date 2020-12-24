@@ -18,6 +18,7 @@ public class MatchaApplication {
     public static void main(String[] args) {
         port(8080);
         webSocket(Path.SOCKET.getUrl(), WebSocketHandler.class);
+        WebSocketHandler.playCheckOnlineDaemon();
         enableCORS();
         ExceptionHandler.enable();
         MailUtil.initMail();

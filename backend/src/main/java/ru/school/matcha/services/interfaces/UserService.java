@@ -46,4 +46,6 @@ public interface UserService {
 
     void checkOnBlackList(long from, long to);
 
+    void updateLastLoginDateUsers(List<Long> ids);
+
 }

@@ -401,4 +401,24 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void updateLastLoginDateUsers(List<Long> ids) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.updateLastLoginDateUsers(ids);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to update last login date users. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
 }
