@@ -49,4 +49,7 @@ public interface UserService {
     void updateLastLoginDateUsers(List<Long> ids);
 
     void userIsFake(long from, long to, String message);
+
+    void offlineUser(Long userId);
+
 }

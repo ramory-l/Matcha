@@ -22,5 +22,7 @@ public class UserDto {
     private ImageDto avatar;
     private Double latitude;
     private Double longitude;
+    private Boolean isOnline;
+    private Date lastLoginDate;
 
 }

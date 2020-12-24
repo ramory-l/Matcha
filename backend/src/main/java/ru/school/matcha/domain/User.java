@@ -27,6 +27,8 @@ public class User {
     private Double latitude;
     private Double longitude;
     private Boolean isVerified;
+    private Boolean isOnline;
+    private Date lastLoginDate;
     private Date createTs;
     private Date updateTs;
     private Date deleteTs;

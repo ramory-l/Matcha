@@ -458,4 +458,24 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void offlineUser(Long userId) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.offlineUser(userId);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to offline. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
 }

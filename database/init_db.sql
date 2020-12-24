@@ -36,6 +36,7 @@ create table "user"
     latitude        double precision            default 0,
     longitude       double precision            default 0,
     is_verified     boolean                     default false  not null,
+    is_online       boolean                     default false  not null,
     create_ts       timestamp without time zone default now()  not null,
     update_ts       timestamp without time zone,
     delete_ts       timestamp without time zone,

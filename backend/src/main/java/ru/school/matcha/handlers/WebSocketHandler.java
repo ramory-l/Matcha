@@ -84,6 +84,8 @@ public class WebSocketHandler {
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
+        User userFromSession = sessionUsernameMap.get(user);
+        userService.offlineUser(userFromSession.getId());
         sessionUsernameMap.remove(user);
     }
 

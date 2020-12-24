@@ -16,6 +16,8 @@
         <result property="latitude" column="latitude"/>
         <result property="longitude" column="longitude"/>
         <result property="isVerified" column="is_verified"/>
+        <result property="lastLoginDate" column="last_login_date"/>
+        <result property="isOnline" column="is_online"/>
         <result property="createTs" column="create_ts"/>
         <result property="updateTs" column="update_ts"/>
         <result property="deleteTs" column="delete_ts"/>
@@ -30,6 +32,8 @@
         <result property="username" column="username"/>
         <result property="gender" column="gender"/>
         <result property="birthday" column="birthday"/>
+        <result property="lastLoginDate" column="last_login_date"/>
+        <result property="isOnline" column="is_online"/>
         <association property="avatar" column="avatar_id" javaType="ru.school.matcha.domain.Image"
                      select="ru.school.matcha.dao.ImageMapper.getImageById"/>
     </resultMap>
@@ -149,11 +153,16 @@
     </update>
 
     <update id="updateLastLoginDateUsers">
-        UPDATE "user" SET last_login_date = now()
+        UPDATE "user" SET last_login_date = now() AND is_online = true
         WHERE id IN
         <foreach collection="ids" open="(" close=")" separator=", " item="id">
             #{id}
         </foreach>
+    </update>
+
+    <update id="offlineUser">
+        UPDATE "user" SET is_online = false
+        WHERE id = #{userId}
     </update>
 
     <delete id="deleteFromBlackList">
