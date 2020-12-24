@@ -159,4 +159,38 @@ public class UserController {
         return "";
     };
 
+    public static Route addToBlackList = (request, response) -> {
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && from != userId) {
+            halt(403, "Access is denied");
+        }
+        userService.addToBlackList(from, to);
+        response.header(Location.HEADER, Location.USERS.getUrl() + to);
+        response.status(Response.POST.getStatus());
+        return "";
+    };
+
+    public static Route deleteFromBlackList = (request, response) -> {
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && from != userId) {
+            halt(403, "Access is denied");
+        }
+        userService.deleteFromBlackList(from, to);
+        response.status(Response.DELETE.getStatus());
+        return "";
+    };
+
+    public static Route getUserBlackList = (request, response) -> {
+        long id = parseLong(request.params("userId"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && id != userId) {
+            halt(403, "Access is denied");
+        }
+        List<User> user = userService.getUserBlackList(id);
+        response.status(Response.GET.getStatus());
+        return userConverter.createFromEntities(user);
+    };
+
 }

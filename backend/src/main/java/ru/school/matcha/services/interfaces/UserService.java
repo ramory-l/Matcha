@@ -36,4 +36,12 @@ public interface UserService {
 
     void verified(String hash);
 
+    void addToBlackList(long from, long to);
+
+    void deleteFromBlackList(long from, long to);
+
+    void checkUsers(Long from, Long to);
+
+    List<User> getUserBlackList(long userId);
+
 }

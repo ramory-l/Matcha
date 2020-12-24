@@ -34,7 +34,7 @@ public class LikeServiceImpl implements LikeService {
                     throw new MatchaException("Dislike already exist");
                 }
             }
-            checkUsers(from, to);
+            userService.checkUsers(from, to);
             likeMapper.like(from, to, isLike);
             if (isLike) {
                 likeMapper.addRate(to);
@@ -86,7 +86,7 @@ public class LikeServiceImpl implements LikeService {
                     throw new MatchaException("Dislike doesn't exist");
                 }
             }
-            checkUsers(from, to);
+            userService.checkUsers(from, to);
             likeMapper.deleteLike(from, to, isLike);
             if (isLike) {
                 likeMapper.deleteRate(to);
@@ -103,17 +103,6 @@ public class LikeServiceImpl implements LikeService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
-        }
-    }
-
-    private void checkUsers(Long from, Long to) {
-        if (isNull(userService.getUserById(from))) {
-            log.debug("User 'from' with id: {} doesn't exist", from);
-            throw new MatchaException("User 'from' with id: " + from + " doesn't exist");
-        }
-        if (isNull(userService.getUserById(to))) {
-            log.debug("User 'to' with id: {} doesn't exist", to);
-            throw new MatchaException("User 'to' with id: " + to + " doesn't exist");
         }
     }
 

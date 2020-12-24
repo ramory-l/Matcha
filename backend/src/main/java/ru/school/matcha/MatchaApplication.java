@@ -41,8 +41,11 @@ public class MatchaApplication {
                 get("/verified/:hash", UserController.verified, new JsonTransformer());
                 get("/matcha/:id", UserController.getMatcha, new JsonTransformer());
                 get("/messages/limit/:limit/offset/:offset/first/:first/second/:second", UserController.getMessages, new JsonTransformer());
+                get("/blacklist/:userId", UserController.getUserBlackList, new JsonTransformer());
                 put("/password/reset", UserController.resetPassword, new JsonTransformer());
                 post("/:userId/tags/:tagName", TagController.createTag, new JsonTransformer());
+                post("/blacklist/from/:from/to/:to", UserController.addToBlackList, new JsonTransformer());
+                delete("/blacklist/from/:from/to/:to", UserController.deleteFromBlackList, new JsonTransformer());
                 delete("/:userId/tags/:tagName", TagController.deleteTag, new JsonTransformer());
                 put("/", UserController.updateUser, new JsonTransformer());
                 delete("/:id", UserController.deleteUserById, new JsonTransformer());

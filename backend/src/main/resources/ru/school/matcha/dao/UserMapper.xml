@@ -73,6 +73,12 @@
         ON CONFLICT DO NOTHING
     </insert>
 
+    <insert id="addToBlackList">
+        INSERT INTO black_list("from", "to")
+        VALUES (#{from}, #{to})
+        ON CONFLICT DO NOTHING
+    </insert>
+
     <update id="updateUserByUsername">
         UPDATE "user" SET
         <if test="firstName != null">
@@ -172,10 +178,18 @@
         WHERE id = #{userId}
     </update>
 
+    <delete id="deleteFromBlackList">
+        DELETE
+        FROM black_list
+        WHERE "from" = #{from}
+          AND "to" = #{to}
+    </delete>
+
     <select id="getAllUsers" resultMap="User">
         SELECT *
         FROM "user"
         WHERE is_active = true
+          AND is_verified = true
         ORDER BY id
     </select>
 
@@ -226,6 +240,17 @@
               WHERE general."like" = true
                 AND general."from" = #{id}) AS matches
                  INNER JOIN "user" u ON u.id = matches.id
+    </select>
+
+    <select id="getUserFromBlackList" resultMap="UserWithMinimumInfo">
+        SELECT *
+        FROM black_list
+        WHERE "to" = #{to}
+          AND "from" = #{from}
+    </select>
+
+    <select id="getUserBlackList" resultMap="UserWithMinimumInfo">
+        SELECT * FROM black_list WHERE "from" = #{userId}
     </select>
 
 </mapper>

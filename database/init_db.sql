@@ -95,6 +95,15 @@ create table messages
     create_ts timestamp without time zone default now() not null
 );
 
+create table black_list
+(
+    id        bigserial primary key                     not null,
+    "from"    bigint references "user" (id)             not null,
+    "to"      bigint references "user" (id)             not null,
+    create_ts timestamp without time zone default now() not null,
+    unique ("to", "from")
+);
+
 INSERT INTO public.form (man,
                          woman,
                          friendship,

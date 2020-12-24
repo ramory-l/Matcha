@@ -40,4 +40,12 @@ public interface UserMapper {
 
     void verifiedUser(Long userId);
 
+    Optional<User> getUserFromBlackList(@Param("from") Long from, @Param("to") Long to);
+
+    void addToBlackList(@Param("from") Long from, @Param("to") Long to);
+
+    void deleteFromBlackList(@Param("from") Long from, @Param("to") Long to);
+
+    List<User> getUserBlackList(Long userId);
+
 }

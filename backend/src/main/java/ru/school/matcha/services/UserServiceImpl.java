@@ -3,6 +3,7 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
+import ru.school.matcha.dao.LikeMapper;
 import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.services.interfaces.ImageService;
@@ -319,6 +320,72 @@ public class UserServiceImpl implements UserService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
+        }
+    }
+
+    @Override
+    public void addToBlackList(long from, long to) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (userMapper.getUserFromBlackList(from, to).isPresent()) {
+                throw new MatchaException("User already in black list");
+            }
+            checkUsers(from, to);
+            userMapper.addToBlackList(from, to);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to adding to black list. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public void deleteFromBlackList(long from, long to) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (!userMapper.getUserFromBlackList(from, to).isPresent()) {
+                throw new MatchaException("User already in black list");
+            }
+            checkUsers(from, to);
+            userMapper.deleteFromBlackList(from, to);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to adding to black list. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public void checkUsers(Long from, Long to) {
+        if (isNull(getUserById(from))) {
+            throw new MatchaException("User 'from' with id: " + from + " doesn't exist");
+        }
+        if (isNull(getUserById(to))) {
+            throw new MatchaException("User 'to' with id: " + to + " doesn't exist");
+        }
+    }
+
+    @Override
+    public List<User> getUserBlackList(long userId) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.getUserBlackList(userId);
         }
     }
 
