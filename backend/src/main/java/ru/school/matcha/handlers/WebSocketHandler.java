@@ -53,7 +53,7 @@ public class WebSocketHandler {
                 throw new JwtAuthenticationException("Credential are invalid");
             }
             User user = userService.getUserById(jwtTokenProvider.getIdFromToken(token));
-            session.setIdleTimeout(10000000);
+            session.setIdleTimeout(3600000);
             sessionUsernameMap.put(session, user);
         } catch (JwtAuthenticationException ex) {
             log.debug("Credentials are invalid");
