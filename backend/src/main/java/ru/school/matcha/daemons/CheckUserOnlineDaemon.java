@@ -27,7 +27,7 @@ public class CheckUserOnlineDaemon implements Runnable {
                 if (!ids.isEmpty()) {
                     userService.updateLastLoginDateUsers(ids);
                 }
-                TimeUnit.MILLISECONDS.sleep(900000);
+                TimeUnit.MILLISECONDS.sleep(300000);
             } catch (MatchaException ignored) {
             }
         }
