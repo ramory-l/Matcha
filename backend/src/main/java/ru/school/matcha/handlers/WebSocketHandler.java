@@ -93,7 +93,7 @@ public class WebSocketHandler {
             Message message = checkJsonWithMessage(json);
             User author = checkAuthorOnline(message);
             if ("message".equals(message.getType())) {
-                notificationAboutOfflineUser = checkUserOnline(message);
+                notificationAboutOfflineUser = checkUserOnlineNotification(message);
                 messageService.saveMessage(message);
             }
             sendMessage(author, message);
@@ -124,7 +124,7 @@ public class WebSocketHandler {
         return messageConverter.convertFromDto(messageDto);
     }
 
-    private Message checkUserOnline(Message message) {
+    private Message checkUserOnlineNotification(Message message) {
         if (sessionUsernameMap
                 .values()
                 .stream()
@@ -139,6 +139,14 @@ public class WebSocketHandler {
             return newMessage;
         }
         return null;
+    }
+
+    private boolean checkUserOnline(Message message) {
+        return sessionUsernameMap
+                .values()
+                .stream()
+                .parallel()
+                .anyMatch(user -> user.getId().equals(message.getTo()));
     }
 
 }
