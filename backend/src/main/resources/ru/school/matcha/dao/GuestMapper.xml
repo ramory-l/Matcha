@@ -14,6 +14,10 @@
         ON CONFLICT (guest_id, user_id) DO UPDATE SET date_ts = now()
     </insert>
 
+    <delete id="deleteGuest">
+        DELETE FROM guests WHERE user_id = #{userId} AND guest_id = #{guestId}
+    </delete>
+
     <select id="getGuestsByUserId" resultMap="Guest">
         SELECT date_ts, avatar_id, username
         FROM guests INNER JOIN "user" u on guests.guest_id = u.id

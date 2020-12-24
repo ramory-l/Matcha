@@ -27,7 +27,6 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Long createImage(String base64, String fileName, Long userId) {
-        log.debug("Create image");
         if (getCountImagesByUserId(userId) >= LIMIT) {
             throw new MatchaException("Photo limit reached (limit: " + LIMIT + ")");
         }
@@ -59,7 +58,6 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Long getCountImagesByUserId(Long userId) {
-        log.debug("Get count images by user id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             return imageMapper.getCountImagesByUserId(userId);
@@ -69,16 +67,10 @@ public class ImageServiceImpl implements ImageService {
     private void deleteImageFromServer(String fileName) {
         final String FILE_PATH = "backend/images/";
         File file = new File(FILE_PATH + fileName);
-        if (file.delete()) {
-            log.debug("Deleting file from server is success");
-        } else {
-            log.debug("Deleting file from server is failed");
-        }
     }
 
     @Override
     public void getImageById(Long id) {
-        log.debug("Get image by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             imageMapper.getImageById(id).orElseThrow(NotFoundException::new);
@@ -87,7 +79,6 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image getAvatarByUserId(Long userId) {
-        log.debug("Get avatar by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             userService.getUserById(userId);
@@ -97,7 +88,6 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public List<Image> getImagesByUserId(Long userId) {
-        log.debug("Get images by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
             userService.getUserById(userId);
@@ -107,7 +97,6 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void deleteImageById(Long id) {
-        log.debug("Delete image by id: {}", id);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();

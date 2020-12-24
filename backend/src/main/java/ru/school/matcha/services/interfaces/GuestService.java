@@ -10,4 +10,6 @@ public interface GuestService {
 
     List<Guest> getGuestsByUserId(Long userId);
 
+    void deleteGuest(Long userId, Long guestId);
+
 }

@@ -5,7 +5,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
-import ru.school.matcha.services.interfaces.ImageService;
+import ru.school.matcha.services.interfaces.*;
 import ru.school.matcha.utils.MailUtil;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
@@ -13,8 +13,6 @@ import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.PasswordCipher;
-import ru.school.matcha.services.interfaces.FormService;
-import ru.school.matcha.services.interfaces.UserService;
 
 import java.util.List;
 
@@ -24,22 +22,22 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private static final FormService formService = new FormServiceImpl();
-    private static final ImageService imageService = new ImageServiceImpl();
-    private static final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+    private final FormService formService = new FormServiceImpl();
+    private final ImageService imageService = new ImageServiceImpl();
+    private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+    private final LikeService likeService = new LikeServiceImpl();
+    private final GuestService guestService = new GuestServiceImpl();
 
     @Override
-    public List<User> getAllUsers() {
-        log.debug("Get all users");
+    public List<User> getAllUsers(long userId) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getAllUsers();
+            return userMapper.getAllUsers(userId);
         }
     }
 
     @Override
     public User getUserById(Long id) {
-        log.debug("Get user by id: {}", id);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserById(id).orElseThrow(NotFoundException::new);
@@ -56,7 +54,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        log.debug("Get user by username: {}", username);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getUserByUsername(username).orElseThrow(NotFoundException::new);
@@ -65,7 +62,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getMatcha(Long id) {
-        log.debug("Get matcha");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getMatcha(id);
@@ -74,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long createUser(User user) {
-        log.debug("Create new user");
+        checkAllDataForNewUser(user);
         String username = user.getUsername();
         try {
             try {
@@ -102,10 +98,12 @@ public class UserServiceImpl implements UserService {
                 newUser.setFirstName(user.getFirstName());
                 newUser.setLastName(user.getLastName());
                 newUser.setRate(0L);
+                newUser.setIsVerified(false);
                 defaultForm.setId(formService.createForm(defaultForm).getId());
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
                 sqlSession.commit();
+                formingVerificationEmail(user.getEmail());
                 return newUser.getId();
             } catch (Exception ex) {
                 if (nonNull(sqlSession)) {
@@ -124,9 +122,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private void checkAllDataForNewUser(User user) {
+        if (isNull(user) || isNull(user.getUsername()) || "".equals(user.getUsername())
+                || isNull(user.getEmail()) || "".equals(user.getEmail())
+                || isNull(user.getFirstName()) || "".equals(user.getFirstName())
+                || isNull(user.getLastName()) || "".equals(user.getLastName())
+                || isNull(user.getPassword()) || "".equals(user.getPassword())
+        ) {
+            throw new MatchaException("Not all fields are filled");
+        }
+    }
+
     @Override
     public void batchCreateUsers(List<User> users) {
-        log.debug("Batch create users");
         SqlSession sqlSession = null;
         FormService formService = new FormServiceImpl();
         try {
@@ -140,6 +148,7 @@ public class UserServiceImpl implements UserService {
                     throw new MatchaException(ex.getMessage());
                 }
                 user.setRate(0L);
+                user.setIsVerified(true);
                 userMapper.createFullUser(user);
             });
             sqlSession.commit();
@@ -158,6 +167,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
+        if (isNull(user.getId())) {
+            throw new MatchaException("Unidentified user");
+        }
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -172,13 +184,17 @@ public class UserServiceImpl implements UserService {
                     throw new MatchaException("Encrypt password error");
                 }
             }
-            if (nonNull(user.getId())) {
-                log.debug("Update user with id: {}", user.getId());
-                userMapper.updateUserById(user);
-            } else if (nonNull(user.getUsername())) {
-                log.debug("Update user with username: {}", user.getUsername());
-                userMapper.updateUserByUsername(user);
+            if (nonNull(user.getEmail())) {
+                if (nonNull(getUserByEmail(user.getEmail()))) {
+                    throw new MatchaException("User with such email already exist");
+                }
             }
+            if (nonNull(user.getUsername())) {
+                if (nonNull(getUserById(user.getId()))) {
+                    throw new MatchaException("User with such username already exist");
+                }
+            }
+            userMapper.updateUserById(user);
             sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
@@ -194,7 +210,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long userId) {
-        log.debug("Delete user with id: {}", userId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -224,10 +239,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersByTagId(Long tagId) {
+    public List<User> getUsersByTagId(Long tagId, Long userId) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getUsersByTagId(tagId);
+            return userMapper.getUsersByTagId(tagId, userId);
         }
     }
 
@@ -262,17 +277,205 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void formingEmail(String email, String newPass) {
+    public void formingResetPasswordEmail(String email, String newPass) {
         if (isNull(email) || isNull(newPass)) {
             throw new NotFoundException("Fields are not filled");
         }
         User user = getUserByEmail(email);
-        String passwordToken = jwtTokenProvider.createPasswordToken(newPass, user.getId());
-        MailUtil.send(user.getEmail(), "Password change",
-                "Hello, " + user.getUsername() + "<br><br> Please Click " +
-                        "<a href='http://localhost:8080/api/users/password/" + passwordToken + "'>" +
-                        "<strong>here</strong></a> to reset your password. The link works " +
-                        "within 24 hours. <br><br><br> Thanks!");
+        if (nonNull(user)) {
+            String passwordToken = jwtTokenProvider.createPasswordToken(newPass, user.getId());
+            MailUtil.send(user.getEmail(), "Password change",
+                    "Hello, " + user.getUsername() + "<br><br> Please Click " +
+                            "<a href='http://localhost:8080/api/users/password/" + passwordToken + "'>" +
+                            "<strong>here</strong></a> to reset your password. The link works " +
+                            "within 24 hours. <br><br><br> Thanks!");
+        }
+    }
+
+    @Override
+    public void formingVerificationEmail(String email) {
+        if (nonNull(email)) {
+            User user = getUserByEmail(email);
+            if (nonNull(user)) {
+                String verifiedToken = jwtTokenProvider.createVerifiedToken(user.getId());
+                MailUtil.send(user.getEmail(), "User verification",
+                        "Hello, " + user.getUsername() + "<br><br> Please Click " +
+                                "<a href='http://localhost:8080/api/users/verified/" + verifiedToken + "'>" +
+                                "<strong>here</strong></a> to verified your account. The link works " +
+                                "within 7 days. <br><br><br> Thanks!");
+            }
+        }
+    }
+
+    @Override
+    public void verified(String hash) {
+        if (!jwtTokenProvider.validateToken(hash)) {
+            throw new MatchaException("Link expired");
+        }
+        Long userId = jwtTokenProvider.getUserIdFromVerifiedToken(hash);
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.verifiedUser(userId);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to verified user. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public void addToBlackList(long from, long to) {
+        SqlSession sqlSession = null;
+        likeService.deleteLike(from, to, true);
+        likeService.deleteLike(from, to, false);
+        likeService.deleteLike(to, from, true);
+        likeService.deleteLike(to, from, false);
+        guestService.deleteGuest(from, to);
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (userMapper.getUserFromBlackList(from, to).isPresent()) {
+                throw new MatchaException("User already in black list");
+            }
+            checkUsers(from, to);
+            userMapper.addToBlackList(from, to);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to adding to black list. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public void deleteFromBlackList(long from, long to) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (!userMapper.getUserFromBlackList(from, to).isPresent()) {
+                throw new MatchaException("User already in black list");
+            }
+            checkUsers(from, to);
+            userMapper.deleteFromBlackList(from, to);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to adding to black list. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public void checkUsers(Long from, Long to) {
+        if (isNull(getUserById(from))) {
+            throw new MatchaException("User 'from' with id: " + from + " doesn't exist");
+        }
+        if (isNull(getUserById(to))) {
+            throw new MatchaException("User 'to' with id: " + to + " doesn't exist");
+        }
+    }
+
+    @Override
+    public List<User> getUserBlackList(long userId) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.getUserBlackList(userId);
+        }
+    }
+
+    @Override
+    public void checkOnBlackList(long from, long to) {
+        List<User> blackListUsers = getUserBlackList(to);
+        if (blackListUsers.stream().parallel().anyMatch(blackUser -> blackUser.getId().equals(from))) {
+            throw new MatchaException("User in black list");
+        }
+    }
+
+    @Override
+    public void updateLastLoginDateUsers(List<Long> ids) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.updateLastLoginDateUsers(ids);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to update last login date users. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public void userIsFake(long from, long to, String message) {
+        if (isNull(message) || "".equals(message)) {
+            throw new MatchaException("Message is empty");
+        }
+        checkUsers(from, to);
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            if (userMapper.getUserComplaint(from, to) > 0) {
+                throw new MatchaException("User already in black list");
+            }
+            userMapper.addingComplaint(from, to, message);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to adding complaint. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+            addToBlackList(from, to);
+        }
+    }
+
+    @Override
+    public void offlineUser(Long userId) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.offlineUser(userId);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to offline. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
     }
 
 }

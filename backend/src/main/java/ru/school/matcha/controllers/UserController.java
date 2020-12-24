@@ -62,8 +62,8 @@ public class UserController {
     };
 
     public static Route getAllUsers = (request, response) -> {
-        AuthorizationController.authorize(request, Role.USER);
-        List<User> users = userService.getAllUsers();
+        long userId = AuthorizationController.authorize(request, Role.USER);
+        List<User> users = userService.getAllUsers(userId);
         List<UserDto> result = userConverter.createFromEntities(users);
         response.status(Response.GET.getStatus());
         return result;
@@ -112,7 +112,7 @@ public class UserController {
 
     public static Route resetPassword = (request, response) -> {
         PassResetDto passResetDto = passResetSerializer.deserialize(request.body(), PassResetDto.class);
-        userService.formingEmail(passResetDto.getEmail(), passResetDto.getNewPass());
+        userService.formingResetPasswordEmail(passResetDto.getEmail(), passResetDto.getNewPass());
         response.status(Response.PUT.getStatus());
         return "";
     };
@@ -147,9 +147,63 @@ public class UserController {
 
     public static Route getUsersByTagName = (request, response) -> {
         String tagName = request.params("tagName");
-        AuthorizationController.authorize(request, Role.USER);
+        long userId = AuthorizationController.authorize(request, Role.USER);
         response.status(Response.GET.getStatus());
-        return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId()));
+        return userConverter.createFromEntities(userService.getUsersByTagId(tagService.getTagByName(tagName).getId(), userId));
+    };
+
+    public static Route verified = (request, response) -> {
+        String hash = request.params("hash");
+        userService.verified(hash);
+        response.status(Response.GET.getStatus());
+        return "";
+    };
+
+    public static Route addToBlackList = (request, response) -> {
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && from != userId) {
+            halt(403, "Access is denied");
+        }
+        userService.addToBlackList(from, to);
+        response.header(Location.HEADER, Location.USERS.getUrl() + to);
+        response.status(Response.POST.getStatus());
+        return "";
+    };
+
+    public static Route deleteFromBlackList = (request, response) -> {
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && from != userId) {
+            halt(403, "Access is denied");
+        }
+        userService.deleteFromBlackList(from, to);
+        response.status(Response.DELETE.getStatus());
+        return "";
+    };
+
+    public static Route getUserBlackList = (request, response) -> {
+        long id = parseLong(request.params("userId"));
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && id != userId) {
+            halt(403, "Access is denied");
+        }
+        List<User> user = userService.getUserBlackList(id);
+        response.status(Response.GET.getStatus());
+        return userConverter.createFromEntities(user);
+    };
+
+    public static Route userIsFake = (request, response) -> {
+        long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
+        String message = request.body();
+        Long userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && from != userId) {
+            halt(403, "Access is denied");
+        }
+        userService.userIsFake(from, to, message);
+        response.header(Location.HEADER, Location.USERS.getUrl() + to);
+        response.status(Response.POST.getStatus());
+        return "";
     };
 
 }

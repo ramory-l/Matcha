@@ -22,10 +22,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String authenticate(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException {
-        log.info("Authenticate user with username: {}", username);
         User user = userService.getUserByUsername(username);
         if (isNull(user)) {
             throw new AuthenticationException(String.format("User with username: %s not found", username));
+        }
+        if (!user.getIsVerified()) {
+            throw new AuthenticationException(String.format("User with username: %s not verified", username));
         }
         String encryptedPassword = userService.getUserEncryptPasswordById(user.getId());
         if (!PasswordCipher.validatePassword(password, encryptedPassword)) {

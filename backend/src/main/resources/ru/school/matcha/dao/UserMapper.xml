@@ -15,6 +15,9 @@
         <result property="role" column="role"/>
         <result property="latitude" column="latitude"/>
         <result property="longitude" column="longitude"/>
+        <result property="isVerified" column="is_verified"/>
+        <result property="lastLoginDate" column="last_login_date"/>
+        <result property="isOnline" column="is_online"/>
         <result property="createTs" column="create_ts"/>
         <result property="updateTs" column="update_ts"/>
         <result property="deleteTs" column="delete_ts"/>
@@ -29,12 +32,23 @@
         <result property="username" column="username"/>
         <result property="gender" column="gender"/>
         <result property="birthday" column="birthday"/>
+        <result property="lastLoginDate" column="last_login_date"/>
+        <result property="isOnline" column="is_online"/>
         <association property="avatar" column="avatar_id" javaType="ru.school.matcha.domain.Image"
                      select="ru.school.matcha.dao.ImageMapper.getImageById"/>
     </resultMap>
 
     <insert id="createUser" keyProperty="user.id" useGeneratedKeys="true" keyColumn="id">
-        INSERT INTO "user"(username, email, password, first_name, last_name, is_active, form_id, rate, create_ts)
+        INSERT INTO "user"(username,
+                           email,
+                           password,
+                           first_name,
+                           last_name,
+                           is_active,
+                           form_id,
+                           rate,
+                           is_verified,
+                           create_ts)
         VALUES (#{user.username},
                 #{user.email},
                 #{user.password},
@@ -43,6 +57,7 @@
                 true,
                 #{formId},
                 #{user.rate},
+                #{user.isVerified},
                 now())
     </insert>
 
@@ -62,47 +77,23 @@
         ON CONFLICT DO NOTHING
     </insert>
 
-    <update id="updateUserByUsername">
-        UPDATE "user" SET
-        <if test="firstName != null">
-            first_name = #{firstName},
-        </if>
-        <if test="lastName != null">
-            last_name = #{lastName},
-        </if>
-        <if test="email != null">
-            email = #{email},
-        </if>
-        <if test="gender != null">
-            gender = #{gender},
-        </if>
-        <if test="birthday != null">
-            birthday = #{birthday},
-        </if>
-        <if test="description != null">
-            description = #{description},
-        </if>
-        <if test="form != null and form.id != null">
-            form_id = #{form.id},
-        </if>
-        <if test="avatar != null and avatar.id != null">
-            avatar_id = #{avatar.id},
-        </if>
-        <if test="latitude != null">
-            latitude = #{latitude},
-        </if>
-        <if test="longitude != null">
-            longitude = #{longitude},
-        </if>
-        <if test="password != null">
-            password = #{password},
-        </if>
-        update_ts = now()
-        WHERE username = #{username}
-    </update>
+    <insert id="addToBlackList">
+        INSERT INTO black_list("from", "to")
+        VALUES (#{from}, #{to})
+        ON CONFLICT DO NOTHING
+    </insert>
+
+    <insert id="addingComplaint">
+        INSERT INTO complaints("from", "to", message)
+        VALUES ("from", "to", message)
+        ON CONFLICT DO NOTHING
+    </insert>
 
     <update id="updateUserById">
         UPDATE "user" SET
+        <if test="username != null">
+            username = #{username},
+        </if>
         <if test="firstName != null">
             first_name = #{firstName},
         </if>
@@ -155,10 +146,39 @@
         WHERE id = #{userId}
     </update>
 
+    <update id="verifiedUser">
+        UPDATE "user"
+        SET is_verified = true
+        WHERE id = #{userId}
+    </update>
+
+    <update id="updateLastLoginDateUsers">
+        UPDATE "user" SET last_login_date = now() AND is_online = true
+        WHERE id IN
+        <foreach collection="ids" open="(" close=")" separator=", " item="id">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="offlineUser">
+        UPDATE "user" SET is_online = false
+        WHERE id = #{userId}
+    </update>
+
+    <delete id="deleteFromBlackList">
+        DELETE
+        FROM black_list
+        WHERE "from" = #{from}
+          AND "to" = #{to}
+    </delete>
+
     <select id="getAllUsers" resultMap="User">
         SELECT *
         FROM "user"
         WHERE is_active = true
+          AND is_verified = true
+          AND id != #{userId}
+          AND id NOT IN (SELECT "to" FROM black_list WHERE "from" = #{userId})
         ORDER BY id
     </select>
 
@@ -187,6 +207,7 @@
         FROM "user" u
                  INNER JOIN user_ref_tags t on u.id = t.user_id
         WHERE t.tag_id = #{tagId}
+          AND u.id NOT IN (SELECT "to" FROM black_list WHERE "from" = #{userId})
     </select>
 
     <select id="getUserWithMinimumInfo" resultMap="UserWithMinimumInfo">
@@ -202,11 +223,33 @@
     </select>
 
     <select id="getMatcha" resultMap="User">
-        SELECT u.* FROM (SELECT DISTINCT general."to" id
-        FROM likes general
-                 INNER JOIN likes tmp ON general."from" = tmp."to"
-        WHERE general."like" = true
-          AND general."from" = #{id}) AS matches INNER JOIN "user" u ON u.id = matches.id
+        SELECT u.*
+        FROM (SELECT DISTINCT general."to" id
+              FROM likes general
+                       INNER JOIN likes tmp ON general."from" = tmp."to"
+              WHERE general."like" = true
+                AND general."from" = #{id}) AS matches
+                 INNER JOIN "user" u ON u.id = matches.id
+    </select>
+
+    <select id="getUserFromBlackList" resultMap="UserWithMinimumInfo">
+        SELECT *
+        FROM black_list
+        WHERE "to" = #{to}
+          AND "from" = #{from}
+    </select>
+
+    <select id="getUserBlackList" resultMap="UserWithMinimumInfo">
+        SELECT *
+        FROM black_list
+        WHERE "from" = #{userId}
+    </select>
+
+    <select id="getUserComplaint" resultType="java.lang.Long">
+        SELECT count(id)
+        FROM complaints
+        WHERE "to" = #{to}
+          AND "from" = #{from}
     </select>
 
 </mapper>

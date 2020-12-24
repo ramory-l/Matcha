@@ -20,6 +20,7 @@ public class JwtTokenProvider {
     private final String secret;
     private final long validityInMilliseconds;
     private final long validityInMillisecondsForPasswordToken;
+    private final long validityInMillisecondsForVerifiedToken;
 
     public JwtTokenProvider() {
         Properties properties;
@@ -32,6 +33,7 @@ public class JwtTokenProvider {
         this.secret = Arrays.toString(Base64.getEncoder().encode(properties.getProperty("jwt.token.secret").getBytes()));
         this.validityInMilliseconds = parseLong(properties.getProperty("jwt.token.expired"));
         this.validityInMillisecondsForPasswordToken = parseLong(properties.getProperty("jwt.password.token.expired"));
+        this.validityInMillisecondsForVerifiedToken = parseLong(properties.getProperty("jwt.verified.token.expired"));
     }
 
     public String createToken(Long id, String username, Role role) {
@@ -54,6 +56,19 @@ public class JwtTokenProvider {
         claims.put("id", id);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMillisecondsForPasswordToken);
+        return Jwts
+                .builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
+    public String createVerifiedToken(Long id) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(id));
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + validityInMillisecondsForVerifiedToken);
         return Jwts
                 .builder()
                 .setClaims(claims)
@@ -87,6 +102,11 @@ public class JwtTokenProvider {
     public long getUserIdFromPasswordToken(String passwordToken) {
         Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(passwordToken);
         return parseLong(claims.getBody().get("id").toString());
+    }
+
+    public long getUserIdFromVerifiedToken(String verifiedToken) {
+        Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(verifiedToken);
+        return parseLong(claims.getBody().getSubject());
     }
 
     public Long getIdFromToken(String token) {

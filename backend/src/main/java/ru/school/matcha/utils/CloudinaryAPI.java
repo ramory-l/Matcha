@@ -41,7 +41,7 @@ public class CloudinaryAPI {
             image.setExternalId((String) uploadResult.get("public_id"));
             return image;
         } catch (Exception ex) {
-            log.error("Failed to create file with name: {} in Cloudinary", fileName, ex);
+            log.debug("Failed to create file with name: {} in Cloudinary", fileName, ex);
         }
         log.error("An unexpected error occurred while trying to create file with name: {} in Cloudinary", fileName);
         return null;
@@ -51,7 +51,7 @@ public class CloudinaryAPI {
         try {
             cloudinary.uploader().destroy(image.getExternalId(), ObjectUtils.emptyMap());
         } catch (Exception ex) {
-            log.error("Failed to delete file with name: {} in Cloudinary", image.getName(), ex);
+            log.debug("Failed to delete file with name: {} in Cloudinary", image.getName(), ex);
         }
     }
 

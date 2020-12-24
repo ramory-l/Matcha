@@ -6,6 +6,7 @@ import ru.school.matcha.dao.GuestMapper;
 import ru.school.matcha.domain.Guest;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.services.interfaces.GuestService;
+import ru.school.matcha.services.interfaces.UserService;
 import ru.school.matcha.utils.MyBatisUtil;
 
 import java.util.List;
@@ -15,8 +16,12 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class GuestServiceImpl implements GuestService {
 
+    private static final UserService userService = new UserServiceImpl();
+
     @Override
     public void createGuest(Long userId, Long guestId) {
+        userService.checkOnBlackList(userId, guestId);
+        userService.checkOnBlackList(guestId, userId);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -37,10 +42,29 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public List<Guest> getGuestsByUserId(Long userId) {
-        log.debug("Get guests by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             GuestMapper guestMapper = sqlSession.getMapper(GuestMapper.class);
             return guestMapper.getGuestsByUserId(userId);
+        }
+    }
+
+    @Override
+    public void deleteGuest(Long userId, Long guestId) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            GuestMapper guestMapper = sqlSession.getMapper(GuestMapper.class);
+            guestMapper.deleteGuest(userId, guestId);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to delete guest. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
         }
     }
 
