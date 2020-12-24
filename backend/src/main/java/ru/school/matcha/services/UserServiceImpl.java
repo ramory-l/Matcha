@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long createUser(User user) {
+        checkAllDataForNewUser(user);
         String username = user.getUsername();
         try {
             try {
@@ -118,6 +119,17 @@ public class UserServiceImpl implements UserService {
             }
         } catch (MatchaException ex) {
             throw new MatchaException("User already exist");
+        }
+    }
+
+    private void checkAllDataForNewUser(User user) {
+        if (isNull(user) || isNull(user.getUsername()) || "".equals(user.getUsername())
+                || isNull(user.getEmail()) || "".equals(user.getEmail())
+                || isNull(user.getFirstName()) || "".equals(user.getFirstName())
+                || isNull(user.getLastName()) || "".equals(user.getLastName())
+                || isNull(user.getPassword()) || "".equals(user.getPassword())
+        ) {
+            throw new MatchaException("Not all fields are filled");
         }
     }
 
