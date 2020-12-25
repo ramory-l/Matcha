@@ -22,8 +22,6 @@ public interface UserMapper {
 
     List<User> getUsersByTagId(@Param("tagId") Long tagId, @Param("userId") Long userId);
 
-    List<User> getMatcha(Long id);
-
     void createUser(@Param("user") User user, @Param("formId") Long formId);
 
     void createFullUser(User users);

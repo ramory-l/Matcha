@@ -3,6 +3,8 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
+import ru.school.matcha.domain.Like;
+import ru.school.matcha.domain.Matcha;
 import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.services.interfaces.*;
@@ -14,7 +16,9 @@ import ru.school.matcha.domain.User;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.PasswordCipher;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -62,10 +66,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getMatcha(Long id) {
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            return userMapper.getMatcha(id);
-        }
+        List<User> users = new ArrayList<>();
+        List<Matcha> matcha = likeService.getMatches(id);
+        matcha.forEach(match -> {
+            List<Matcha> ms = matcha
+                    .stream()
+                    .filter(m -> m.getFrom().equals(match.getTo()))
+                    .collect(Collectors.toList());
+            ms.forEach(test -> {
+                User user = getUserById(test.getTo());
+                if (!users.contains(user) && !user.getId().equals(id)) {
+                    users.add(user);
+                }
+            });
+        });
+        return users;
     }
 
     @Override
