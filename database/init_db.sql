@@ -139,7 +139,8 @@ INSERT INTO public."user" (username,
                            description,
                            is_active,
                            form_id,
-                           role)
+                           role,
+                           is_verified)
 VALUES ('admin',
         'admin',
         'admin',
@@ -150,4 +151,5 @@ VALUES ('admin',
         'I AM SUPERMAN!',
         true,
         (select id from form limit 1),
-        'ADMIN');
+        'ADMIN',
+        true);
