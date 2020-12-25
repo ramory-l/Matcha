@@ -334,11 +334,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addToBlackList(long from, long to) {
         SqlSession sqlSession = null;
-        likeService.deleteLike(from, to, true);
-        likeService.deleteLike(from, to, false);
-        likeService.deleteLike(to, from, true);
-        likeService.deleteLike(to, from, false);
-        guestService.deleteGuest(from, to);
+        try {
+            likeService.deleteLike(from, to, true);
+            likeService.deleteLike(from, to, false);
+            likeService.deleteLike(to, from, true);
+            likeService.deleteLike(to, from, false);
+            guestService.deleteGuest(from, to);
+        } catch (MatchaException ex) {
+            log.debug(ex.getMessage());
+        }
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);

@@ -193,7 +193,7 @@ public class UserController {
         return userConverter.createFromEntities(user);
     };
 
-    public static Route userIsFake = (request, response) -> {
+    public static Route report = (request, response) -> {
         long from = parseLong(request.params("from")), to = parseLong(request.params("to"));
         String message = request.body();
         Long userId = AuthorizationController.authorize(request, Role.USER);

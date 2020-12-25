@@ -86,7 +86,7 @@
 
     <insert id="addingComplaint">
         INSERT INTO complaints("from", "to", message)
-        VALUES ("from", "to", message)
+        VALUES (#{from}, #{to}, #{message})
         ON CONFLICT DO NOTHING
     </insert>
 

@@ -46,7 +46,7 @@ public class MatchaApplication {
                 put("/password/reset", UserController.resetPassword, new JsonTransformer());
                 post("/:userId/tags/:tagName", TagController.createTag, new JsonTransformer());
                 post("/blacklist/from/:from/to/:to", UserController.addToBlackList, new JsonTransformer());
-                post("/fake/from/:from/to/:to", UserController.userIsFake, new JsonTransformer());
+                post("/report/from/:from/to/:to", UserController.report, new JsonTransformer());
                 delete("/blacklist/from/:from/to/:to", UserController.deleteFromBlackList, new JsonTransformer());
                 delete("/:userId/tags/:tagName", TagController.deleteTag, new JsonTransformer());
                 put("/", UserController.updateUser, new JsonTransformer());
