@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.dao.TagMapper;
 import ru.school.matcha.domain.Tag;
 import ru.school.matcha.exceptions.MatchaException;
+import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.services.interfaces.TagService;
 import ru.school.matcha.services.interfaces.UserService;
 import ru.school.matcha.utils.MyBatisUtil;
@@ -21,7 +22,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void createTag(Tag tag) {
-        log.debug("Create tag");
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -71,7 +71,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTags() {
-        log.debug("Get tags");
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
             return tagMapper.getTags();
@@ -80,7 +79,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTagsByUserId(Long userId) {
-        log.debug("Get tags by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
             return tagMapper.getTagsByUserId(userId);
@@ -89,7 +87,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void deleteTagById(Long id) {
-        log.debug("Delete tag by id: {}", id);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -118,7 +115,7 @@ public class TagServiceImpl implements TagService {
                     .orElseThrow(() -> new MatchaException("Tag with name " + tagName + " doesn't exist"));
             tagMapper.deleteUserRefTag(tag.getId(), userId);
             sqlSession.commit();
-            if (userService.getUsersByTagId(tag.getId()).isEmpty()) {
+            if (userService.getUsersByTagId(tag.getId(), 0L).isEmpty()) {
                 deleteTagById(tag.getId());
             }
         } catch (Exception ex) {
@@ -130,6 +127,14 @@ public class TagServiceImpl implements TagService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
+        }
+    }
+
+    @Override
+    public Tag getTagByName(String name) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
+            return tagMapper.getTagByName(name).orElseThrow(NotFoundException::new);
         }
     }
 

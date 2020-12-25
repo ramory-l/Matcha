@@ -8,6 +8,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import ru.school.matcha.converters.Converter;
 import ru.school.matcha.converters.MessageConverter;
+import ru.school.matcha.daemons.CheckUserOnlineDaemon;
 import ru.school.matcha.domain.Message;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.dto.MessageDto;
@@ -30,7 +31,7 @@ import static java.util.Objects.nonNull;
 
 @Slf4j
 @WebSocket
-public class ChatWebSocketHandler {
+public class WebSocketHandler {
 
     private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
 
@@ -53,10 +54,10 @@ public class ChatWebSocketHandler {
                 throw new JwtAuthenticationException("Credential are invalid");
             }
             User user = userService.getUserById(jwtTokenProvider.getIdFromToken(token));
-            session.setIdleTimeout(10000000);
+            session.setIdleTimeout(3600000);
             sessionUsernameMap.put(session, user);
         } catch (JwtAuthenticationException ex) {
-            log.error("Credentials are invalid");
+            log.debug("Credentials are invalid");
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }
@@ -83,6 +84,8 @@ public class ChatWebSocketHandler {
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
+        User userFromSession = sessionUsernameMap.get(user);
+        userService.offlineUser(userFromSession.getId());
         sessionUsernameMap.remove(user);
     }
 
@@ -93,7 +96,7 @@ public class ChatWebSocketHandler {
             Message message = checkJsonWithMessage(json);
             User author = checkAuthorOnline(message);
             if ("message".equals(message.getType())) {
-                notificationAboutOfflineUser = checkUserOnline(message);
+                notificationAboutOfflineUser = checkUserOnlineNotification(message);
                 messageService.saveMessage(message);
             }
             sendMessage(author, message);
@@ -124,7 +127,7 @@ public class ChatWebSocketHandler {
         return messageConverter.convertFromDto(messageDto);
     }
 
-    private Message checkUserOnline(Message message) {
+    private Message checkUserOnlineNotification(Message message) {
         if (sessionUsernameMap
                 .values()
                 .stream()
@@ -141,4 +144,13 @@ public class ChatWebSocketHandler {
         return null;
     }
 
+    public static void playCheckOnlineDaemon() {
+        Thread daemon = new Thread(new CheckUserOnlineDaemon());
+        daemon.setDaemon(true);
+        daemon.start();
+    }
+
+    public static Map<Session, User> getSessionUsernameMap() {
+        return sessionUsernameMap;
+    }
 }

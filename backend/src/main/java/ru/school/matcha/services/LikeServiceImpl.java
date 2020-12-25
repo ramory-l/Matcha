@@ -3,6 +3,8 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.domain.Like;
+import ru.school.matcha.domain.User;
+import ru.school.matcha.services.interfaces.ImageService;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.LikeMapper;
 import ru.school.matcha.exceptions.MatchaException;
@@ -20,6 +22,7 @@ import static java.util.Objects.nonNull;
 public class LikeServiceImpl implements LikeService {
 
     private static final UserService userService = new UserServiceImpl();
+    private static final ImageService imageService = new ImageServiceImpl();
 
     @Override
     public void like(Long from, Long to, boolean isLike) {
@@ -27,6 +30,11 @@ public class LikeServiceImpl implements LikeService {
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
+            if (!checkAbilityLike(from)) {
+                throw new MatchaException("User has no photo");
+            }
+            userService.checkOnBlackList(from, to);
+            userService.checkOnBlackList(to, from);
             if (nonNull(likeMapper.getLike(from, to, isLike))) {
                 if (isLike) {
                     throw new MatchaException("Like already exist");
@@ -34,7 +42,7 @@ public class LikeServiceImpl implements LikeService {
                     throw new MatchaException("Dislike already exist");
                 }
             }
-            checkUsers(from, to);
+            userService.checkUsers(from, to);
             likeMapper.like(from, to, isLike);
             if (isLike) {
                 likeMapper.addRate(to);
@@ -54,9 +62,12 @@ public class LikeServiceImpl implements LikeService {
         }
     }
 
+    private boolean checkAbilityLike(long userId) {
+        return imageService.getCountImagesByUserId(userId) != 0;
+    }
+
     @Override
     public List<Like> getLikesByUserId(Long userId, Boolean isLike, Boolean outgoing) {
-        log.debug("Get likes/dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
             return likeMapper.getLikes(userId, isLike, outgoing);
@@ -65,7 +76,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Map<String, List<Like>> getLikesByUserId(Long userId, Boolean outgoing) {
-        log.debug("Get likes and dislikes by user with id: {}", userId);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
             Map<String, List<Like>> likes = new HashMap<>();
@@ -77,7 +87,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void deleteLike(Long from, Long to, boolean isLike) {
-        log.debug("Delete like/dislike from {} to {}", from, to);
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -89,7 +98,7 @@ public class LikeServiceImpl implements LikeService {
                     throw new MatchaException("Dislike doesn't exist");
                 }
             }
-            checkUsers(from, to);
+            userService.checkUsers(from, to);
             likeMapper.deleteLike(from, to, isLike);
             if (isLike) {
                 likeMapper.deleteRate(to);
@@ -106,17 +115,6 @@ public class LikeServiceImpl implements LikeService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
-        }
-    }
-
-    private void checkUsers(Long from, Long to) {
-        if (isNull(userService.getUserById(from))) {
-            log.error("User 'from' with id: {} doesn't exist", from);
-            throw new MatchaException("User 'from' with id: " + from + " doesn't exist");
-        }
-        if (isNull(userService.getUserById(to))) {
-            log.error("User 'to' with id: {} doesn't exist", to);
-            throw new MatchaException("User 'to' with id: " + to + " doesn't exist");
         }
     }
 

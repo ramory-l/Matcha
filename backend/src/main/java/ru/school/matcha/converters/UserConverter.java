@@ -41,6 +41,8 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setAvatar(imageConverter.convertFromEntity(source.getAvatar()));
         result.setLatitude(source.getLatitude());
         result.setLongitude(source.getLongitude());
+        result.setLastLoginDate(source.getLastLoginDate());
+        result.setIsOnline(source.getIsOnline());
         return result;
     }
 
@@ -62,6 +64,8 @@ public class UserConverter extends Converter<UserDto, User> {
         result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
         result.setLatitude(source.getLatitude());
         result.setLongitude(source.getLongitude());
+        result.setLastLoginDate(source.getLastLoginDate());
+        result.setIsOnline(source.getIsOnline());
         return result;
     }
 

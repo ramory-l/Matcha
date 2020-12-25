@@ -21,7 +21,7 @@ public class AuthorizationController {
         try {
             userRole = authorizationService.authorize(fullToken);
         } catch (JwtAuthenticationException ex) {
-            log.error("Credentials are invalid");
+            log.debug("Credentials are invalid");
         }
         if (isNull(userRole)) {
             halt(401, "Credentials are invalid");

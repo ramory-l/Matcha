@@ -42,6 +42,8 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setCreateTs(source.getCreateTs());
         result.setUpdateTs(source.getUpdateTs());
         result.setDeleteTs(source.getDeleteTs());
+        result.setLastLoginDate(source.getLastLoginDate());
+        result.setIsOnline(source.getIsOnline());
         return result;
     }
 
@@ -69,6 +71,8 @@ public class UserFullConverter extends Converter<UserFullDto, User> {
         result.setUpdateTs(source.getUpdateTs());
         result.setAvatar(imageConverter.convertFromDto(source.getAvatar()));
         result.setDeleteTs(source.getDeleteTs());
+        result.setLastLoginDate(source.getLastLoginDate());
+        result.setIsOnline(source.getIsOnline());
         return result;
     }
 
