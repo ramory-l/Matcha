@@ -63,7 +63,7 @@
 
     <insert id="createFullUser">
         INSERT INTO "user"(username, first_name, last_name, password, email, gender, birthday, description, rate,
-                           form_id)
+                           form_id, is_verified)
         VALUES (#{username},
                 #{firstName},
                 #{lastName},
@@ -73,7 +73,8 @@
                 #{birthday},
                 #{description},
                 #{rate},
-                #{form.id})
+                #{form.id},
+                true)
         ON CONFLICT DO NOTHING
     </insert>
 
@@ -161,7 +162,8 @@
     </update>
 
     <update id="offlineUser">
-        UPDATE "user" SET is_online = false
+        UPDATE "user"
+        SET is_online = false
         WHERE id = #{userId}
     </update>
 
