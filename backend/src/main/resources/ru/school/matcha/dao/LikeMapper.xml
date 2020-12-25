@@ -8,6 +8,11 @@
                      select="ru.school.matcha.dao.ImageMapper.getImageById"/>
     </resultMap>
 
+    <resultMap id="Matcha" type="ru.school.matcha.domain.Matcha">
+        <result property="to" column="to"/>
+        <result property="from" column="from"/>
+    </resultMap>
+
     <select id="getLikes" resultMap="Like">
         SELECT username,
         <if test="outgoing == null or !outgoing">"from" as id</if>
@@ -41,6 +46,18 @@
         <if test="!isLike">
             AND "like" = false
         </if>
+    </select>
+
+    <select id="getMatcha" resultMap="Matcha">
+        SELECT *
+        FROM likes
+        WHERE "to" = 1
+          AND "like" = true
+        UNION
+        SELECT *
+        FROM likes
+        WHERE "from" = 1
+          AND "like" = true
     </select>
 
     <delete id="deleteLike">

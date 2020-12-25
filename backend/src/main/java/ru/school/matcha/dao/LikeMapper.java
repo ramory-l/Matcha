@@ -3,6 +3,7 @@ package ru.school.matcha.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import ru.school.matcha.domain.Like;
+import ru.school.matcha.domain.Matcha;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface LikeMapper {
     void deleteRate(Long userId);
 
     Long getLike(@Param("from") Long from, @Param("to") Long to, @Param("isLike") Boolean isLike);
+
+    List<Matcha> getMatcha(Long id);
 
 }

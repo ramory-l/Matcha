@@ -3,7 +3,7 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import ru.school.matcha.domain.Like;
-import ru.school.matcha.domain.User;
+import ru.school.matcha.domain.Matcha;
 import ru.school.matcha.services.interfaces.ImageService;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.LikeMapper;
@@ -115,6 +115,13 @@ public class LikeServiceImpl implements LikeService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
+        }
+    }
+
+    public List<Matcha> getMatches(long id) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            LikeMapper likeMapper = sqlSession.getMapper(LikeMapper.class);
+            return likeMapper.getMatcha(id);
         }
     }
 

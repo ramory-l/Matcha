@@ -86,7 +86,7 @@
 
     <insert id="addingComplaint">
         INSERT INTO complaints("from", "to", message)
-        VALUES ("from", "to", message)
+        VALUES (#{from}, #{to}, #{message})
         ON CONFLICT DO NOTHING
     </insert>
 
@@ -225,13 +225,13 @@
     </select>
 
     <select id="getMatcha" resultMap="User">
-        SELECT u.*
-        FROM (SELECT DISTINCT general."to" id
-              FROM likes general
-                       INNER JOIN likes tmp ON general."from" = tmp."to"
-              WHERE general."like" = true
-                AND general."from" = #{id}) AS matches
-                 INNER JOIN "user" u ON u.id = matches.id
+        SELECT *
+        FROM likes
+        WHERE "to" = #{id}
+        UNION
+        SELECT *
+        FROM likes
+        WHERE "from" = #{id}
     </select>
 
     <select id="getUserFromBlackList" resultMap="UserWithMinimumInfo">
