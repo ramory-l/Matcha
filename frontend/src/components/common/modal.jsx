@@ -1,7 +1,13 @@
 import React from "react";
 import CloseButton from "./closeButton";
 
-const Modal = ({ children, modalTarget, modalTitle, buttonsArray = [] }) => {
+const Modal = ({
+  children,
+  modalTarget,
+  modalTitle,
+  removeFooter = false,
+  buttonsArray = [],
+}) => {
   return (
     <div
       className="modal fade mw-100"
@@ -17,10 +23,12 @@ const Modal = ({ children, modalTarget, modalTitle, buttonsArray = [] }) => {
             <CloseButton color="light" />
           </div>
           <div className="modal-body">{children}</div>
-          <div className="modal-footer">
-            {buttonsArray.map((button) => button)}
-            <CloseButton type={1} />
-          </div>
+          {removeFooter ? null : (
+            <div className="modal-footer">
+              {buttonsArray.map((button) => button)}
+              <CloseButton type={1} />
+            </div>
+          )}
         </div>
       </div>
     </div>

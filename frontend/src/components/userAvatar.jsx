@@ -5,6 +5,7 @@ import RateButtons from "./rateButtons";
 import LinkButton from "./common/linkButton";
 import "./styles/userAvatar.scss";
 import { getUserMatches } from "../services/userService";
+import ReportModal from "./reportModal";
 
 const UserAvatar = (props) => {
   const { user, isMe, editMode, onEditModeChange, location } = props;
@@ -64,7 +65,21 @@ const UserAvatar = (props) => {
           Send Message
         </LinkButton>
       ) : (
-        <RateButtons user={user} rateUpdateFunction={setRate} />
+        <>
+          <RateButtons user={user} rateUpdateFunction={setRate} />
+          <button
+            data-toggle="modal"
+            data-target="#reportModal"
+            className="btn btn-danger"
+          >
+            Report/Block User
+          </button>
+          <ReportModal
+            modalTarget="reportModal"
+            modalTitle="Report User"
+            userIdToReport={user.id}
+          />
+        </>
       )}
     </div>
   );

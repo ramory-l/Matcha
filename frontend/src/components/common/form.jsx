@@ -128,7 +128,7 @@ class Form extends Component {
   }
 
   renderTextArea(name, label, readonly) {
-    const { data } = this.state;
+    const { data, errors } = this.state;
     return (
       <TextArea
         value={data[name]}
@@ -136,6 +136,7 @@ class Form extends Component {
         label={label}
         readonly={readonly}
         onChange={this.handleChange}
+        error={errors[name]}
       />
     );
   }

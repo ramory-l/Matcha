@@ -1,6 +1,6 @@
 import React from "react";
 
-const TextArea = ({ label, name, value, readonly, onChange }) => {
+const TextArea = ({ label, name, value, readonly, onChange, error }) => {
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>
@@ -13,6 +13,7 @@ const TextArea = ({ label, name, value, readonly, onChange }) => {
         disabled={readonly}
         onChange={onChange}
       ></textarea>
+      {error && <div className="text-danger">{error}</div>}
     </div>
   );
 };

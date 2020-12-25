@@ -10,7 +10,7 @@ const SearchUsers = ({ users, userForm, onSearchButtonClick }) => {
           <UsersCarousel users={users} />
         </div>
       ) : (
-        <h1>Please choose options</h1>
+        <h1>No users found</h1>
       )}
       <div className="row justify-content-center">
         <SearhForm

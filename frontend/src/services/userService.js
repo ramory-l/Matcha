@@ -86,3 +86,25 @@ export function getUserTags(userId) {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
+
+export function reportUser(userToId, reportText) {
+  const userFromId = auth.getCurrentUser().id;
+  return http.post(
+    `${apiEndpoint}/fake/from/${userFromId}/to/${userToId}`,
+    reportText,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}
+
+export function blockUser(userToId) {
+  const userFromId = auth.getCurrentUser().id;
+  return http.post(
+    `${apiEndpoint}/blacklist/from/${userFromId}/to/${userToId}`,
+    null,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}

@@ -24,7 +24,9 @@ const SearchPage = () => {
       );
       userForm.likesDislikes = likesDislikes;
       const filteredUsers = users.filter((user) => {
-        return findSimilarityInForms(userForm, user);
+        return user.avatar !== null
+          ? findSimilarityInForms(userForm, user)
+          : false;
       });
       setUserForm(userForm);
       setUsers(filteredUsers);
@@ -34,18 +36,23 @@ const SearchPage = () => {
   }, []);
 
   const handleSearchButtonClick = async () => {
+    setIsLoading(true);
     const { data: users } = await userService.getUsers();
     const { data: user } = await userService.getUser(getCurrentUser().sub);
     const userForm = user.form;
+    setUserForm(userForm);
     const { data: likesDislikes } = await userService.getUserRates(
       "likesDislikes",
       true
     );
     userForm.likesDislikes = likesDislikes;
     const filteredUsers = users.filter((user) => {
-      return findSimilarityInForms(userForm, user);
+      return user.avatar !== null
+        ? findSimilarityInForms(userForm, user)
+        : false;
     });
     setUsers(filteredUsers);
+    setIsLoading(false);
   };
 
   return (
