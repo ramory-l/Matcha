@@ -2,25 +2,18 @@ import React, { useEffect, useState } from "react";
 import AccessRestricted from "../components/accessRestricted";
 import ChatBox from "../components/chatBox";
 import ListGroup from "../components/common/listGroup";
-import Pagination from "../components/common/pagination";
 import RecipientDescription from "../components/recipientDescription";
 import { getUser, getUserMatches } from "../services/userService";
-import { paginate } from "../utils/paginate";
+import "./styles/messagesPage.scss";
 
 const MessagesPage = (props) => {
   const [recipient, setRecipient] = useState(null);
   const [users, setUsers] = useState([]);
   const [width, setWidth] = useState(window.innerWidth);
   const [cheater, setCheater] = useState(false);
-  const pageSize = useState(5)[0];
-  const [currentPage, setCurrentPage] = useState(1);
 
   const handleWindowSizeChange = () => {
     setWidth(window.innerWidth);
-  };
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
   };
 
   useEffect(() => {
@@ -70,22 +63,14 @@ const MessagesPage = (props) => {
 
   if (cheater) return <AccessRestricted />;
 
-  const paginatedUsers = paginate(users, currentPage, pageSize);
-
   return (
     <div className="row">
       <div className="col-3">
         <span style={{ fontWeight: "bold" }}>Your Messages:</span>
         {users.length > 0 ? (
-          <>
-            <ListGroup items={paginatedUsers} />
-            <Pagination
-              itemsCount={users.length}
-              pageSize={pageSize}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          </>
+          <div className="ChatList">
+            <ListGroup items={users} />
+          </div>
         ) : (
           <p>No messages yet.</p>
         )}
