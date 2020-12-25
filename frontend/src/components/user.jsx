@@ -10,6 +10,7 @@ import UserContext from "../contexts/userContext";
 import MatchesTable from "./matchesTable";
 import { getUserImages } from "../services/imageService";
 import { updateUser } from "../services/userService";
+import "./styles/user.scss";
 
 const User = (props) => {
   const [images, setImages] = useState([]);
@@ -53,30 +54,35 @@ const User = (props) => {
           ) : null}
         </div>
         <div className="col">
-          <Switch>
-            {isMe ? (
-              <Route path={`${match.path}/guests`} component={GuestsTable} />
-            ) : null}
-            {isMe ? (
-              <Route path={`${match.path}/likers`} component={LikersTable} />
-            ) : null}
-            {isMe ? (
-              <Route path={`${match.path}/matches`} component={MatchesTable} />
-            ) : null}
-            {isMe ? (
-              <Route
-                path={`${match.path}/settings`}
-                render={() => <SettingForm {...props} />}
-              />
-            ) : null}
+          <div className="UserInfoBlock">
+            <Switch>
+              {isMe ? (
+                <Route path={`${match.path}/guests`} component={GuestsTable} />
+              ) : null}
+              {isMe ? (
+                <Route path={`${match.path}/likers`} component={LikersTable} />
+              ) : null}
+              {isMe ? (
+                <Route
+                  path={`${match.path}/matches`}
+                  component={MatchesTable}
+                />
+              ) : null}
+              {isMe ? (
+                <Route
+                  path={`${match.path}/settings`}
+                  render={() => <SettingForm {...props} />}
+                />
+              ) : null}
 
-            <Route
-              exact
-              path={`${match.path}`}
-              render={() => <ProfileForm {...props} />}
-            />
-            <Redirect to="/not-found" />
-          </Switch>
+              <Route
+                exact
+                path={`${match.path}`}
+                render={() => <ProfileForm {...props} />}
+              />
+              <Redirect to="/not-found" />
+            </Switch>
+          </div>
         </div>
       </div>
     </UserContext.Provider>

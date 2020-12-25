@@ -3,15 +3,18 @@ import UserContext from "../contexts/userContext";
 import ImageFileInput from "./imageFileInput";
 import RateButtons from "./rateButtons";
 import LinkButton from "./common/linkButton";
-import "./styles/userAvatar.scss";
 import { getUserMatches } from "../services/userService";
 import ReportModal from "./reportModal";
+import moment from "moment";
+import "./styles/userAvatar.scss";
 
 const UserAvatar = (props) => {
   const { user, isMe, editMode, onEditModeChange, location } = props;
   const [rate, setRate] = useState(user.rate);
   const [matches, setMatches] = useState([]);
   const userContext = useContext(UserContext);
+
+  console.log(user);
 
   useEffect(() => {
     async function getMatches() {
@@ -24,6 +27,11 @@ const UserAvatar = (props) => {
   return (
     <div className="UserAvatar">
       <figure className="figure">
+        <div
+          className={`UserAvatar-StatusIndicator ${
+            user.isOnline ? "online" : "offline"
+          }`}
+        ></div>
         <img
           src={
             userContext.userAvatar?.link
@@ -34,6 +42,17 @@ const UserAvatar = (props) => {
           alt="avatar"
         />
         <figcaption className="figure-caption text-center text-dark">
+          {user.isOnline ? null : (
+            <span>
+              Last Seen:{" "}
+              <strong>
+                {user.lastLoginDate
+                  ? moment(user.lastLoginDate).format("YYYY-MM-DD")
+                  : "Здох"}
+              </strong>{" "}
+              <br />
+            </span>
+          )}
           Fame rating: <strong>{rate}</strong>
         </figcaption>
       </figure>
