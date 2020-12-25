@@ -74,7 +74,7 @@
                 #{description},
                 #{rate},
                 #{form.id},
-                true)
+                #{isVerified})
         ON CONFLICT DO NOTHING
     </insert>
 
