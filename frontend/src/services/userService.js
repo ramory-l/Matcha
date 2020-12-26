@@ -3,13 +3,22 @@ import { apiUrl } from "../config.json";
 import auth from "./authService";
 import moment from "moment";
 
-const apiEndpoint = apiUrl + "/user";
+const apiEndpoint = apiUrl + "/users";
 
 export function register(user) {
   return http.post(apiEndpoint, {
     username: user.username,
+    firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
-    password: user.password,
+    password: user.to_password,
+  });
+}
+
+export function resetPassword(user) {
+  return http.put(`${apiEndpoint}/password/reset`, {
+    email: user.email,
+    newPass: user.to_new_password,
   });
 }
 
@@ -27,14 +36,14 @@ export function getUser(username) {
 
 export function rateUser(to, action) {
   let from = auth.getCurrentUser().id;
-  return http.post(`${apiEndpoint}/${action}/from/${from}/to/${to}`, null, {
+  return http.post(`${apiEndpoint}/${action}s/from/${from}/to/${to}`, null, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
 
 export function unrateUser(to, action) {
   let from = auth.getCurrentUser().id;
-  return http.delete(`${apiEndpoint}/${action}/from/${from}/to/${to}`, {
+  return http.delete(`${apiEndpoint}/${action}s/from/${from}/to/${to}`, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
@@ -46,11 +55,57 @@ export function getUserRates(type, outgoing) {
   });
 }
 
+export function getUserMatches() {
+  let userId = auth.getCurrentUser().id;
+  return http.get(`${apiEndpoint}/matcha/${userId}`, {
+    headers: { "x-auth-token": `T_${auth.getJwt()}` },
+  });
+}
+
+export function getMessagesWithUser(secondUserId, limit, offset) {
+  let firstUserId = auth.getCurrentUser().id;
+  return http.get(
+    `${apiEndpoint}/messages/limit/${limit}/offset/${offset}/first/${firstUserId}/second/${secondUserId}`,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}
+
 export function updateUser(user) {
   const tempUser = { ...user };
-  tempUser.username = auth.getCurrentUser().sub;
+  delete tempUser.username;
+  delete tempUser.email;
   tempUser.birthday = moment(user.birthday).valueOf();
   return http.put(`${apiEndpoint}/`, tempUser, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
+}
+
+export function getUserTags(userId) {
+  return http.get(`${apiEndpoint}/${userId}/tags`, {
+    headers: { "x-auth-token": `T_${auth.getJwt()}` },
+  });
+}
+
+export function reportUser(userToId, reportText) {
+  const userFromId = auth.getCurrentUser().id;
+  return http.post(
+    `${apiEndpoint}/fake/from/${userFromId}/to/${userToId}`,
+    reportText,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}
+
+export function blockUser(userToId) {
+  const userFromId = auth.getCurrentUser().id;
+  return http.post(
+    `${apiEndpoint}/blacklist/from/${userFromId}/to/${userToId}`,
+    null,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
 }

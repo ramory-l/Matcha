@@ -5,7 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
-import "./index.css";
+import "font-awesome/css/font-awesome.css";
+import "./index.scss";
 
 ReactDOM.render(
   <React.StrictMode>

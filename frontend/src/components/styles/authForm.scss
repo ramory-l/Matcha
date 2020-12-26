@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Roboto:wght@100&display=swap");
+
 %auth-form {
   display: flex;
   flex-direction: column;
@@ -5,27 +7,33 @@
   width: 50vw;
   padding: 20px;
   border-radius: 5px;
-  background: white;
+  background: rgba(180, 228, 240, 0.849);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-}
-
-%login-form-buttons {
-  display: flex;
-  justify-content: space-around;
+  font-family: "Cinzel Decorative", cursive;
+  text-shadow: 0px 0px 10px black;
+  color: white;
+  .form-group {
+    color: black;
+    font-family: "Roboto", sans-serif;
+    font-size: 16pt;
+  }
 }
 
 .LoginForm {
   @extend %auth-form;
 }
 
-.LoginForm-Buttons {
-  @extend %login-form-buttons;
-}
-
 .RegisterForm {
   @extend %auth-form;
+  .RegisterForm-Title {
+    font-size: 26pt;
+  }
 }
 
-.RegisterForm-Buttons {
-  @extend %login-form-buttons;
+@media (max-width: 500px) {
+  .RegisterForm {
+    .RegisterForm-Title {
+      font-size: 20pt;
+    }
+  }
 }

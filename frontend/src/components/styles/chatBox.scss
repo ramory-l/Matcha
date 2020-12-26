@@ -1,12 +1,10 @@
 .ChatBox {
-  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  height: 500px;
   border: 1px solid black;
+  box-shadow: 0 0 30px 1px lightblue;
   border-radius: 5px;
-  padding: 5px;
-}
-
-.ChatBox-Messages {
-  height: 70vh;
-  width: 100%;
-  overflow-y: scroll;
 }

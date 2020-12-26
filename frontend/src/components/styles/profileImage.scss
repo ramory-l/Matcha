@@ -1,0 +1,19 @@
+.ProfileImage {
+  .close {
+    color: white;
+    position: absolute;
+    background-color: red;
+    border-radius: 5px;
+    padding: 1px;
+  }
+
+  img {
+    border: 2px solid white;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+
+  img:hover {
+    box-shadow: 0 0 10px 2px white;
+  }
+}

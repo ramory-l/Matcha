@@ -1,0 +1,20 @@
+#gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  img {
+    height: 10vw;
+    object-fit: cover;
+    cursor: pointer;
+    width: 11vw;
+  }
+}
+
+@media (max-width: 500px) {
+  #gallery {
+    img {
+      height: 15vh;
+      width: 20vw;
+    }
+  }
+}

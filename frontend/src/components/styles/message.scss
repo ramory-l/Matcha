@@ -1,0 +1,46 @@
+%message-text {
+  border-radius: 5px;
+  padding: 5px;
+  max-width: 200px;
+}
+
+.Message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 5px;
+  margin: 7px;
+  padding: 5px;
+  overflow-wrap: break-word;
+
+  .Message-Title {
+    font-weight: bold;
+  }
+
+  .Message-Text {
+    @extend %message-text;
+    background-color: lightgray;
+  }
+
+  .Message-Text_me {
+    @extend %message-text;
+    background-color: lightblue;
+  }
+
+  .Message-Date {
+    font-size: 9pt;
+  }
+}
+
+.Message-Me {
+  align-items: flex-end;
+}
+
+@media (max-width: 500px) {
+  .Message-Date {
+    font-size: 7pt;
+  }
+  %message-text {
+    max-width: 100px;
+  }
+}

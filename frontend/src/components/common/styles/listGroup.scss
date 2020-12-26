@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap");
+
+.list-group {
+  font-family: "Cinzel Decorative", cursive;
+  a {
+    padding: 12px;
+    background-color: transparent;
+    overflow-wrap: break-word;
+  }
+  a.active {
+    background-color: #c0f6ff8a;
+    border-color: lightblue;
+  }
+}
+
+@media (max-width: 450px) {
+  .list-group {
+    font-size: 8pt;
+    a {
+      padding: 4px;
+    }
+  }
+}
+
+@media (max-width: 350px) {
+  .list-group {
+    font-size: 6pt;
+    a {
+      padding: 4px;
+    }
+  }
+}

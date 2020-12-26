@@ -1,0 +1,14 @@
+.UserNotification {
+  display: flex;
+  img {
+    object-fit: cover;
+    width: 70px;
+    height: 70px;
+    border-radius: 5px;
+  }
+  .UserNotification-MessageBox {
+    .MessageBox-Username {
+      color: black;
+    }
+  }
+}

@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import ListGroup from "../components/common/listGroup";
-import Loading from "../components/common/loading";
-import ProfileForm from "../components/profileForm";
-import auth from "../services/authService";
-import { getUser } from "../services/userService";
+import React, { useState, useEffect, useContext } from "react";
+import WithLoading from "../components/common/withLoading";
+import User from "../components/user";
+import BaseContext from "../contexts/baseContext";
+import auth, { getCurrentUser } from "../services/authService";
+import { createGuest } from "../services/guestService";
+import { getUser, getUserRates } from "../services/userService";
+
+const UserWithLoading = WithLoading(User);
 
 const ProfilePage = (props) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
-  let username = props.match.params.username;
-  let isMe = username === "me" ? true : false;
+  let isMe = props.match.params.username === "me" ? true : false;
   const [editMode, setEditMode] = useState(false);
+  const baseContext = useContext(BaseContext);
 
   const handleEditModeChange = () => {
     setEditMode((prev) => !prev);
@@ -18,71 +21,45 @@ const ProfilePage = (props) => {
 
   useEffect(() => {
     async function fetchUser() {
-      let username = props.match.params.username;
-      if (username === "me") username = auth.getCurrentUser().sub;
+      const username =
+        props.match.params.username === "me"
+          ? auth.getCurrentUser().sub
+          : props.match.params.username;
       const { data: user } = await getUser(username);
+      if (user.username !== auth.getCurrentUser().sub) {
+        await createGuest(user.id);
+        const guestNotification = {
+          from: getCurrentUser().id,
+          to: user.id,
+          message: `${getCurrentUser().sub} visited your profile!`,
+          createTs: Date.now(),
+          type: "notification",
+        };
+        baseContext.webSocket.send(JSON.stringify(guestNotification));
+      }
+      const { data: likesDislikes } = await getUserRates("likesDislikes", true);
+      if (likesDislikes["likes"].filter((like) => like.id === user.id).length)
+        user.isLiked = true;
+      if (
+        likesDislikes["dislikes"].filter((dislike) => dislike.id === user.id)
+          .length
+      )
+        user.isDisliked = true;
       setUser(user);
+      setIsLoading(false);
     }
     fetchUser();
-  }, [props]);
+  }, [props.match.params.username, baseContext.webSocket]);
 
   return (
-    <>
-      {user ? (
-        <div className="row">
-          <div className="col-3">
-            <figure className="figure">
-              <img
-                src="/default-avatar.png"
-                className="figure-img img-fluid rounded"
-                alt="avatar"
-              />
-              <figcaption className="figure-caption text-center">
-                Fame rating: <strong>{user.rate}</strong>
-              </figcaption>
-            </figure>
-            {isMe ? (
-              <button
-                onClick={handleEditModeChange}
-                type="button"
-                className="btn btn-primary"
-              >
-                Edit profile
-              </button>
-            ) : (
-              <Link
-                to={{
-                  pathname: `/messages/${user.username}`,
-                  state: {
-                    recipient: user,
-                  },
-                }}
-              >
-                <button type="button" className="btn btn-primary">
-                  Send a message
-                </button>
-              </Link>
-            )}
-          </div>
-          <div className="col-6">
-            <ProfileForm
-              {...props}
-              user={user}
-              isMe={isMe}
-              editMode={editMode}
-              onEditModeChange={handleEditModeChange}
-            />
-          </div>
-          <div className="col-2">
-            <ListGroup
-              items={["Who viewed my profile", "Who liked me", "My matches"]}
-            />
-          </div>
-        </div>
-      ) : (
-        <Loading />
-      )}
-    </>
+    <UserWithLoading
+      {...props}
+      isLoading={isLoading}
+      user={user}
+      isMe={isMe}
+      editMode={editMode}
+      onEditModeChange={handleEditModeChange}
+    />
   );
 };
 

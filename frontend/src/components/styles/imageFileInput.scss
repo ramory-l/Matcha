@@ -1,0 +1,38 @@
+.DivFileInput {
+  display: flex;
+  flex-direction: column;
+  width: inherit;
+}
+
+.ImageFileInput {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.ImageFileInput + label {
+  font-size: 1.25em;
+  color: white;
+  background-color: #ffc107;
+  display: inline-block;
+  padding: 5px;
+  border-radius: 5px;
+  overflow-wrap: break-word;
+}
+
+.ImageFileInput:focus + label,
+.ImageFileInput + label:hover {
+  background-color: rgb(101, 141, 214);
+}
+
+.ImageFileInput + label {
+  cursor: pointer;
+}
+
+.ImageFileInput:focus + label {
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}

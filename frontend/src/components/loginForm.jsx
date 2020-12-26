@@ -1,6 +1,7 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import Form from "./common/form";
+import LinkButton from "./common/linkButton";
 import Joi from "joi";
 import auth from "../services/authService";
 import "./styles/authForm.scss";
@@ -26,7 +27,10 @@ class LoginForm extends Form {
       const { state } = this.props.location;
       window.location = state ? state.from.pathname : "/";
     } catch (ex) {
-      if (ex.response && ex.response.status === 400) {
+      if (
+        (ex.response && ex.response.status === 404) ||
+        ex.response.status === 401
+      ) {
         const errors = { ...this.state.errors };
         errors.username = ex.response.data;
         this.setState({ errors });
@@ -41,16 +45,21 @@ class LoginForm extends Form {
         <h1>Login Form</h1>
         {this.renderInput("username", "Username")}
         {this.renderInput("password", "Password", false, "password")}
-        {this.renderCheckbox("rememberme", "Remember me")}
-        <div className="LoginForm-Buttons">
-          {this.renderButton("Login")}
-          <Link to="/auth/register">
-            <button className="btn btn-warning">Forgot password</button>
-          </Link>
-          <Link to="/auth/register">
-            <button className="btn btn-warning">Not a member yet?</button>
-          </Link>
-        </div>
+        {this.renderButton("Login", "btn btn-dark")}
+        <LinkButton
+          onClick={(e) => e.preventDefault()}
+          to="/auth/reset"
+          className="btn btn-light"
+        >
+          Forgot password
+        </LinkButton>
+        <LinkButton
+          onClick={(e) => e.preventDefault()}
+          to="/auth/register"
+          className="btn btn-warning ml-0"
+        >
+          Not a member yet?
+        </LinkButton>
       </form>
     );
   }

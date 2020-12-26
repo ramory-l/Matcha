@@ -3,7 +3,7 @@ import React from "react";
 const Input = ({ readonly, value, name, label, error, ...rest }) => {
   return (
     <div className="form-group">
-      <label htmlFor={name}>{label}</label>
+      {label ? <label htmlFor={name}>{label}</label> : null}
       {readonly ? (
         <input
           {...rest}
