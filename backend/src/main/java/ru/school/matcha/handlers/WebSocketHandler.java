@@ -56,6 +56,7 @@ public class WebSocketHandler {
             User user = userService.getUserById(jwtTokenProvider.getIdFromToken(token));
             session.setIdleTimeout(3600000);
             sessionUsernameMap.put(session, user);
+            userService.userIsOnline(user.getId());
         } catch (JwtAuthenticationException ex) {
             log.debug("Credentials are invalid");
         } catch (Exception ex) {
@@ -85,7 +86,9 @@ public class WebSocketHandler {
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
         User userFromSession = sessionUsernameMap.get(user);
-        userService.offlineUser(userFromSession.getId());
+        if (nonNull(userFromSession)) {
+            userService.userIsOffline(userFromSession.getId());
+        }
         sessionUsernameMap.remove(user);
     }
 

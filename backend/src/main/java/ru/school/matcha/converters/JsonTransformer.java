@@ -11,7 +11,7 @@ public class JsonTransformer implements ResponseTransformer {
     private final StringWriter stringWriter = new StringWriter();
 
     @Override
-    public String render(Object model) throws Exception {
+    public synchronized String render(Object model) throws Exception {
         objectMapper.writeValue(cleanWriter(stringWriter), model);
         return stringWriter.toString();
     }

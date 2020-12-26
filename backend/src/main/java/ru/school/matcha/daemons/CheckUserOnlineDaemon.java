@@ -23,9 +23,9 @@ public class CheckUserOnlineDaemon implements Runnable {
         while (true) {
             try {
                 Map<Session, User> sessionUsernameMap = WebSocketHandler.getSessionUsernameMap();
-                List<Long> ids = sessionUsernameMap.values().stream().parallel().map(User::getId).collect(Collectors.toList());
-                if (!ids.isEmpty()) {
-                    userService.updateLastLoginDateUsers(ids);
+                List<Long> listIds = sessionUsernameMap.values().stream().parallel().map(User::getId).collect(Collectors.toList());
+                if (!listIds.isEmpty()) {
+                    userService.updateActivityStatusForUsers(listIds);
                 }
                 TimeUnit.MILLISECONDS.sleep(300000);
             } catch (MatchaException ignored) {
