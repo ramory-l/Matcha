@@ -26,7 +26,7 @@ const ProfilePage = (props) => {
           ? auth.getCurrentUser().sub
           : props.match.params.username;
       const { data: user } = await getUser(username);
-      if (user.username !== auth.getCurrentUser().sub) {
+      if (user && user.username !== auth.getCurrentUser().sub) {
         await createGuest(user.id);
         const guestNotification = {
           from: getCurrentUser().id,
@@ -35,16 +35,19 @@ const ProfilePage = (props) => {
           createTs: Date.now(),
           type: "notification",
         };
-        baseContext.webSocket.send(JSON.stringify(guestNotification));
+        if (baseContext.webSocket)
+          baseContext.webSocket.send(JSON.stringify(guestNotification));
       }
       const { data: likesDislikes } = await getUserRates("likesDislikes", true);
-      if (likesDislikes["likes"].filter((like) => like.id === user.id).length)
-        user.isLiked = true;
-      if (
-        likesDislikes["dislikes"].filter((dislike) => dislike.id === user.id)
-          .length
-      )
-        user.isDisliked = true;
+      if (likesDislikes) {
+        if (likesDislikes["likes"].filter((like) => like.id === user.id).length)
+          user.isLiked = true;
+        if (
+          likesDislikes["dislikes"].filter((dislike) => dislike.id === user.id)
+            .length
+        )
+          user.isDisliked = true;
+      }
       setUser(user);
       setIsLoading(false);
     }
