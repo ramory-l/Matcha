@@ -14,8 +14,6 @@ const UserAvatar = (props) => {
   const [matches, setMatches] = useState([]);
   const userContext = useContext(UserContext);
 
-  console.log(user);
-
   useEffect(() => {
     async function getMatches() {
       const { data: matches } = await getUserMatches();

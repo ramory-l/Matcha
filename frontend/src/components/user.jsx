@@ -10,6 +10,7 @@ import UserContext from "../contexts/userContext";
 import MatchesTable from "./matchesTable";
 import { getUserImages } from "../services/imageService";
 import { updateUser } from "../services/userService";
+import { toast } from "react-toastify";
 import "./styles/user.scss";
 
 const User = (props) => {
@@ -22,9 +23,14 @@ const User = (props) => {
   }, [user.avatar]);
 
   const handleUserAvatarUpdate = async (newAvatar) => {
-    setUserAvatar(newAvatar);
-    user.avatar = newAvatar;
-    await updateUser(user);
+    try {
+      user.avatar = newAvatar;
+      await updateUser(user);
+      setUserAvatar(newAvatar);
+      toast.success("Avatar has been changed!");
+    } catch (ex) {
+      toast.error("Error to update avatar!");
+    }
   };
 
   const handleNewImages = async () => {

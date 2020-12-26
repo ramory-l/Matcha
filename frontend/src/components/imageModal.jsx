@@ -1,6 +1,5 @@
 import React from "react";
 import { useContext } from "react";
-import { toast } from "react-toastify";
 import UserContext from "../contexts/userContext";
 import Modal from "./common/modal";
 import "./styles/imageModal.scss";
@@ -23,7 +22,6 @@ const ImageModal = ({ images, modalTitle, modalTarget, carouselTarget }) => {
               link: item.firstChild.src,
             };
             userContext.handleUserAvatarUpdate(newAvatar);
-            toast.success("Avatar has been changed!");
           }}
         >
           Make as avatar

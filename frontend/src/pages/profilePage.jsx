@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import WithLoading from "../components/common/withLoading";
 import User from "../components/user";
-import auth from "../services/authService";
+import BaseContext from "../contexts/baseContext";
+import auth, { getCurrentUser } from "../services/authService";
 import { createGuest } from "../services/guestService";
 import { getUser, getUserRates } from "../services/userService";
 
@@ -12,6 +13,7 @@ const ProfilePage = (props) => {
   const [user, setUser] = useState(null);
   let isMe = props.match.params.username === "me" ? true : false;
   const [editMode, setEditMode] = useState(false);
+  const baseContext = useContext(BaseContext);
 
   const handleEditModeChange = () => {
     setEditMode((prev) => !prev);
@@ -26,7 +28,14 @@ const ProfilePage = (props) => {
       const { data: user } = await getUser(username);
       if (user.username !== auth.getCurrentUser().sub) {
         await createGuest(user.id);
-        console.log("Guest created!");
+        const guestNotification = {
+          from: getCurrentUser().id,
+          to: user.id,
+          message: `${getCurrentUser().sub} visited your profile!`,
+          createTs: Date.now(),
+          type: "notification",
+        };
+        baseContext.webSocket.send(JSON.stringify(guestNotification));
       }
       const { data: likesDislikes } = await getUserRates("likesDislikes", true);
       if (likesDislikes["likes"].filter((like) => like.id === user.id).length)
@@ -40,7 +49,7 @@ const ProfilePage = (props) => {
       setIsLoading(false);
     }
     fetchUser();
-  }, [props]);
+  }, [props.match.params.username, baseContext.webSocket]);
 
   return (
     <UserWithLoading
