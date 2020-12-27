@@ -1,23 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { rateUser } from "../services/userService";
 import "./styles/usersCarousel.scss";
 
 const UsersCarousel = ({ users }) => {
+  const [fetchedUsers, setFetchedUsers] = useState([]);
+
+  useEffect(() => {
+    setFetchedUsers(users);
+  }, [users]);
+
   const handleLikeDislike = async (action) => {
+    const newUsers = [...fetchedUsers];
     const activeUser = document.querySelector(".carousel-item.active");
     const activeUserId = activeUser.firstChild.alt;
+    newUsers.shift();
+    setTimeout(() => setFetchedUsers(newUsers), 1000);
     await rateUser(activeUserId, action);
   };
 
+  console.log(fetchedUsers);
   return (
     <div
       id="carouselExampleControls"
       className="carousel modified slide"
       data-ride="carousel"
       data-interval="false"
+      data-keyboard="false"
     >
       <div className="carousel-inner">
-        {users.map((user, index) => (
+        {fetchedUsers.map((user, index) => (
           <div
             key={user.id}
             className={index === 0 ? `carousel-item active` : `carousel-item`}

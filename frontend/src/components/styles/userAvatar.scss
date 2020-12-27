@@ -31,14 +31,21 @@
   background-color: gray;
 }
 
-.UserAvatar-Buttons {
+.UserAvatar-MyButtons {
   width: 100px;
   display: flex;
   flex-direction: column;
 }
 
+.UserAvatar-Buttons {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 @media (max-width: 450px) {
-  .UserAvatar-Buttons {
+  .UserAvatar-MyButtons {
     font-size: 8pt;
     width: 65px;
   }

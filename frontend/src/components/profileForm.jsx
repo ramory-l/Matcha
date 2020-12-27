@@ -56,7 +56,12 @@ class ProfileForm extends Form {
     firstName: Joi.string().required().label("First Name"),
     lastName: Joi.string().required().label("Last Name"),
     gender: Joi.string().optional(),
-    birthday: Joi.any().optional(),
+    birthday: Joi.date()
+      .iso()
+      .min("1920-01-01")
+      .max("2002-12-31")
+      .required()
+      .label("Birthday"),
     description: Joi.any().optional(),
     latitude: Joi.number().required().label("Latitude"),
     longitude: Joi.number().required().label("Longitude"),

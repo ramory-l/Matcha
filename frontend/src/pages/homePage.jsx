@@ -13,6 +13,7 @@ const UsersWithLoading = WithLoading(Users);
 const HomePage = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
+  const [blackList, setBlackList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [likesDislikes, setLikesDislikes] = useState([]);
   const pageSize = useState(10)[0];
@@ -24,8 +25,10 @@ const HomePage = (props) => {
         "likesDislikes",
         true
       );
+      const { data: blackList } = await userService.getUserBlacklist();
       const { tag } = queryString.parse(props.location.search);
       setLikesDislikes(likesDislikes);
+      setBlackList(blackList);
       if (tag) {
         const { data: usersWithTag } = await getUsersWithTag(tag);
         setUsers(usersWithTag);
@@ -38,6 +41,8 @@ const HomePage = (props) => {
   }, [props.location.search]);
 
   const filtered = users.filter((user) => {
+    if (blackList.filter((blocked) => blocked.id === user.id).length)
+      user.isBlocked = true;
     if (likesDislikes["likes"].filter((like) => like.id === user.id).length)
       user.isLiked = true;
     if (
@@ -45,7 +50,7 @@ const HomePage = (props) => {
         .length
     )
       user.isDisliked = true;
-    return user.id !== auth.getCurrentUser().id;
+    return user.id !== auth.getCurrentUser().id && !user.isBlocked;
   });
   const paginatedUsers = paginate(filtered, currentPage, pageSize);
 

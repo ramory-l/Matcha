@@ -142,7 +142,7 @@ class Form extends Component {
   }
 
   renderDatePicker(name, label, readonly) {
-    const { data } = this.state;
+    const { data, errors } = this.state;
     return (
       <DatePicker
         name={name}
@@ -150,6 +150,7 @@ class Form extends Component {
         value={data[name]}
         readonly={readonly}
         onChange={this.handleChange}
+        error={errors[name]}
       />
     );
   }
