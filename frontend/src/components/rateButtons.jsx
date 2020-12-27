@@ -61,9 +61,7 @@ const RateButtons = ({ user, rateUpdateFunction }) => {
         type="button"
         className={`btn btn-sm btn-outline-success ${userLikeValue}`}
       >
-        <span role="img" aria-label="like">
-          &#128077;
-        </span>
+        <i className="fa fa-thumbs-up" aria-hidden="true"></i>
       </button>
       <button
         disabled={!user.avatar}
@@ -71,9 +69,7 @@ const RateButtons = ({ user, rateUpdateFunction }) => {
         type="button"
         className={`btn btn-sm btn-outline-danger ${userDislikeValue}`}
       >
-        <span role="img" aria-label="dislike">
-          &#128078;
-        </span>
+        <i className="fa fa-thumbs-down" aria-hidden="true"></i>
       </button>
     </div>
   );

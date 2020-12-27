@@ -49,7 +49,7 @@ const UserAvatar = (props) => {
               <strong>
                 {user.lastLoginDate
                   ? moment(user.lastLoginDate).format("YYYY-MM-DD")
-                  : "Здох"}
+                  : "RIP"}
               </strong>{" "}
               <br />
             </span>

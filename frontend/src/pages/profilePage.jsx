@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { toast } from "react-toastify";
 import WithLoading from "../components/common/withLoading";
 import User from "../components/user";
 import BaseContext from "../contexts/baseContext";
@@ -27,16 +28,22 @@ const ProfilePage = (props) => {
           : props.match.params.username;
       const { data: user } = await getUser(username);
       if (user && user.username !== auth.getCurrentUser().sub) {
-        await createGuest(user.id);
-        const guestNotification = {
-          from: getCurrentUser().id,
-          to: user.id,
-          message: `${getCurrentUser().sub} visited your profile!`,
-          createTs: Date.now(),
-          type: "notification",
-        };
-        if (baseContext.webSocket)
-          baseContext.webSocket.send(JSON.stringify(guestNotification));
+        try {
+          await createGuest(user.id);
+          const guestNotification = {
+            from: getCurrentUser().id,
+            to: user.id,
+            message: `${getCurrentUser().sub} visited your profile!`,
+            createTs: Date.now(),
+            type: "notification",
+          };
+          if (baseContext.webSocket)
+            baseContext.webSocket.send(JSON.stringify(guestNotification));
+        } catch (ex) {
+          if (ex && ex.response) {
+            toast.error(ex.response);
+          }
+        }
       }
       const { data: likesDislikes } = await getUserRates("likesDislikes", true);
       if (likesDislikes) {

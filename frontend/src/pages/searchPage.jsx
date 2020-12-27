@@ -47,7 +47,9 @@ const SearchPage = () => {
       "likesDislikes",
       true
     );
+    const { data: blackList } = await userService.getUserBlacklist();
     userForm.likesDislikes = likesDislikes;
+    userForm.blackList = blackList;
     const filteredUsers = users.filter((user) => {
       return user.avatar !== null
         ? findSimilarityInForms(userForm, user)

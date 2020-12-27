@@ -76,7 +76,6 @@ export function updateUser(user) {
   const tempUser = { ...user };
   delete tempUser.username;
   delete tempUser.email;
-  console.log(tempUser);
   tempUser.birthday = moment(user.birthday).valueOf();
   return http.put(`${apiEndpoint}/`, tempUser, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },

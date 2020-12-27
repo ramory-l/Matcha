@@ -1,5 +1,4 @@
 import React from "react";
-import "./styles/datePicker.scss";
 
 const DatePicker = ({ name, label, value, readonly, error, onChange }) => {
   return (

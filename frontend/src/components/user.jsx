@@ -40,7 +40,13 @@ const User = (props) => {
   };
   return (
     <UserContext.Provider
-      value={{ userAvatar, handleUserAvatarUpdate, images, handleNewImages }}
+      value={{
+        isMe,
+        userAvatar,
+        handleUserAvatarUpdate,
+        images,
+        handleNewImages,
+      }}
     >
       <div className="row">
         <div className="col-3">

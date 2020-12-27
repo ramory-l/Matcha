@@ -41,7 +41,7 @@ const BasePage = (props) => {
 
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
-        if (data.type !== "message") {
+        if (data.type !== "system_notification") {
           toast(
             <UserNotification
               dataType={data.type}
