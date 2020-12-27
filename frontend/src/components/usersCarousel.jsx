@@ -14,11 +14,10 @@ const UsersCarousel = ({ users }) => {
     const activeUser = document.querySelector(".carousel-item.active");
     const activeUserId = activeUser.firstChild.alt;
     newUsers.shift();
-    setTimeout(() => setFetchedUsers(newUsers), 1000);
+    setTimeout(() => setFetchedUsers(newUsers), 500);
     await rateUser(activeUserId, action);
   };
 
-  console.log(fetchedUsers);
   return (
     <div
       id="carouselExampleControls"
