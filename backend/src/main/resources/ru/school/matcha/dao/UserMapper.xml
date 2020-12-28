@@ -90,6 +90,12 @@
         ON CONFLICT DO NOTHING
     </insert>
 
+    <insert id="createImageForFullUser" keyProperty="image.id">
+        INSERT INTO images(name, link, external_id, user_id)
+        VALUES (#{image.name}, #{image.link}, #{image.externalId}, #{image.userId})
+        ON CONFLICT DO NOTHING
+    </insert>
+
     <update id="updateUserById">
         UPDATE "user" SET
         <if test="username != null">
@@ -248,7 +254,8 @@
 
     <select id="getUserBlackList" resultMap="UserWithMinimumInfo">
         SELECT *
-        FROM black_list INNER JOIN "user" u on black_list."from" = u.id
+        FROM black_list
+                 INNER JOIN "user" u on black_list."from" = u.id
         WHERE "from" = #{userId}
     </select>
 

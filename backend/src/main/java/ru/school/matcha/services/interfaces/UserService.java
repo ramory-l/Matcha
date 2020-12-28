@@ -1,6 +1,7 @@
 package ru.school.matcha.services.interfaces;
 
 import ru.school.matcha.domain.User;
+import ru.school.matcha.domain.UserFullForBatch;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface UserService {
 
     Long createUser(User user);
 
-    void batchCreateUsers(List<User> users);
+    void batchCreateUsers(List<UserFullForBatch> users);
 
     void updateUser(User user);
 

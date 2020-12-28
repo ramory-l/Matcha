@@ -11,6 +11,7 @@
         <typeAlias type='ru.school.matcha.domain.User' alias='User'/>
         <typeAlias type='ru.school.matcha.domain.User' alias='Like'/>
         <typeAlias type='ru.school.matcha.domain.Message' alias='Message'/>
+        <typeAlias type='ru.school.matcha.domain.UserFullForBatch' alias='UserFullForBatch'/>
     </typeAliases>
     <environments default='development'>
         <environment id='development'>

@@ -1,12 +1,10 @@
 package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.school.matcha.converters.Converter;
-import ru.school.matcha.converters.MessageConverter;
-import ru.school.matcha.converters.UserConverter;
-import ru.school.matcha.converters.UserFullConverter;
+import ru.school.matcha.converters.*;
 import ru.school.matcha.domain.Message;
 import ru.school.matcha.domain.User;
+import ru.school.matcha.domain.UserFullForBatch;
 import ru.school.matcha.dto.*;
 import ru.school.matcha.enums.Location;
 import ru.school.matcha.enums.Response;
@@ -34,6 +32,7 @@ public class UserController {
     private final static Converter<UserFullDto, User> userFullConverter = new UserFullConverter();
     private final static Converter<UserDto, User> userConverter = new UserConverter();
     private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
+    private final static Converter<UserFullForBatchDto, UserFullForBatch> userFullForBatchConverter = new UserFullForBatchConverter();
 
     private final static UserService userService = new UserServiceImpl();
     private final static MessageService messageService = new MessageServiceImpl();
@@ -53,10 +52,10 @@ public class UserController {
 
     public static Route batchUsersCreate = (request, response) -> {
         AuthorizationController.authorize(request, Role.ADMIN);
-        Serializer<UserFullDto> serializer = new Serializer<>();
-        List<UserFullDto> userFullDtoList = serializer.deserializeList(request.body(), UserFullDto.class);
-        List<User> users = userFullConverter.createFromDtos(userFullDtoList);
-        userService.batchCreateUsers(users);
+        Serializer<UserFullForBatchDto> serializer = new Serializer<>();
+        List<UserFullForBatchDto> userFullDtoList = serializer.deserializeList(request.body(), UserFullForBatchDto.class);
+        List<UserFullForBatch> userFullForBatchList = userFullForBatchConverter.createFromDtos(userFullDtoList);
+        userService.batchCreateUsers(userFullForBatchList);
         response.status(Response.POST.getStatus());
         return "";
     };

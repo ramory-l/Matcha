@@ -3,15 +3,13 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
-import ru.school.matcha.domain.Like;
+import ru.school.matcha.domain.*;
 import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.services.interfaces.*;
 import ru.school.matcha.utils.MailUtil;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
-import ru.school.matcha.domain.Form;
-import ru.school.matcha.domain.User;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.PasswordCipher;
 
@@ -140,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void batchCreateUsers(List<User> users) {
+    public void batchCreateUsers(List<UserFullForBatch> users) {
         SqlSession sqlSession = null;
         FormService formService = new FormServiceImpl();
         try {
@@ -156,6 +154,7 @@ public class UserServiceImpl implements UserService {
                 user.setRate(0L);
                 user.setIsVerified(true);
                 userMapper.createFullUser(user);
+                userMapper.createImageForFullUser(user);
             });
             sqlSession.commit();
         } catch (Exception ex) {
@@ -169,6 +168,18 @@ public class UserServiceImpl implements UserService {
                 sqlSession.close();
             }
         }
+        avatarHelper(users);
+    }
+
+    private void avatarHelper(List<UserFullForBatch> users) {
+        users.forEach(userFullForBatch -> {
+            User user = new User();
+            user.setId(userFullForBatch.getId());
+            Image image = new Image();
+            image.setId(userFullForBatch.getImage().getId());
+            user.setAvatar(image);
+            updateUser(user);
+        });
     }
 
     @Override
