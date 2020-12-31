@@ -3,6 +3,7 @@ package ru.school.matcha.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import ru.school.matcha.domain.User;
+import ru.school.matcha.domain.UserFullForBatch;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,9 @@ public interface UserMapper {
 
     void createUser(@Param("user") User user, @Param("formId") Long formId);
 
-    void createFullUser(User users);
+    void createFullUser(UserFullForBatch user);
+
+    void createImageForFullUser(UserFullForBatch user);
 
     void updateUserById(User user);
 
@@ -44,9 +47,13 @@ public interface UserMapper {
 
     List<User> getUserBlackList(Long userId);
 
-    void updateLastLoginDateUsers(List<Long> ids);
+    void updateLastLoginDateUsers(@Param("listIds") List<Long> listIds);
 
-    void offlineUser(Long id);
+    void updateOfflineUsers(@Param("listIds") List<Long> listIds);
+
+    void userIsOffline(Long id);
+
+    void userIsOnline(Long id);
 
     void addingComplaint(@Param("from") Long from, @Param("to") Long to, @Param("message") String message);
 

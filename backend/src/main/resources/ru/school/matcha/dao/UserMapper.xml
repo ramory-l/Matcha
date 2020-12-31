@@ -90,6 +90,12 @@
         ON CONFLICT DO NOTHING
     </insert>
 
+    <insert id="createImageForFullUser" keyProperty="image.id">
+        INSERT INTO images(name, link, external_id, user_id)
+        VALUES (#{image.name}, #{image.link}, #{image.externalId}, #{image.userId})
+        ON CONFLICT DO NOTHING
+    </insert>
+
     <update id="updateUserById">
         UPDATE "user" SET
         <if test="username != null">
@@ -154,17 +160,32 @@
     </update>
 
     <update id="updateLastLoginDateUsers">
-        UPDATE "user" SET last_login_date = now() AND is_online = true
+        UPDATE "user" SET last_login_date = now(), is_online = true
         WHERE id IN
-        <foreach collection="ids" open="(" close=")" separator=", " item="id">
+        <foreach collection="listIds" open="(" close=")" separator=", " item="id">
             #{id}
         </foreach>
     </update>
 
-    <update id="offlineUser">
+    <update id="userIsOffline">
         UPDATE "user"
-        SET is_online = false
-        WHERE id = #{userId}
+        SET is_online       = false,
+            last_login_date = now()
+        WHERE id = #{id}
+    </update>
+
+    <update id="userIsOnline">
+        UPDATE "user"
+        SET is_online = true
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateOfflineUsers">
+        UPDATE "user" SET is_online = false
+        WHERE id NOT IN
+        <foreach collection="listIds" open="(" close=")" separator=", " item="id">
+            #{id}
+        </foreach>
     </update>
 
     <delete id="deleteFromBlackList">
@@ -224,16 +245,6 @@
         WHERE email = #{email}
     </select>
 
-    <select id="getMatcha" resultMap="User">
-        SELECT *
-        FROM likes
-        WHERE "to" = #{id}
-        UNION
-        SELECT *
-        FROM likes
-        WHERE "from" = #{id}
-    </select>
-
     <select id="getUserFromBlackList" resultMap="UserWithMinimumInfo">
         SELECT *
         FROM black_list
@@ -244,6 +255,7 @@
     <select id="getUserBlackList" resultMap="UserWithMinimumInfo">
         SELECT *
         FROM black_list
+                 INNER JOIN "user" u on black_list."from" = u.id
         WHERE "from" = #{userId}
     </select>
 

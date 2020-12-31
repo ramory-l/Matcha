@@ -1,6 +1,7 @@
 package ru.school.matcha.services.interfaces;
 
 import ru.school.matcha.domain.User;
+import ru.school.matcha.domain.UserFullForBatch;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface UserService {
 
     Long createUser(User user);
 
-    void batchCreateUsers(List<User> users);
+    void batchCreateUsers(List<UserFullForBatch> users);
 
     void updateUser(User user);
 
@@ -46,10 +47,12 @@ public interface UserService {
 
     void checkOnBlackList(long from, long to);
 
-    void updateLastLoginDateUsers(List<Long> ids);
+    void updateActivityStatusForUsers(List<Long> ids);
 
     void userIsFake(long from, long to, String message);
 
-    void offlineUser(Long userId);
+    void userIsOffline(Long userId);
+
+    void userIsOnline(Long userId);
 
 }

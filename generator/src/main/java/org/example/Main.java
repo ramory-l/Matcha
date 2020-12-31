@@ -2,12 +2,15 @@ package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.file.*;
@@ -16,14 +19,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
+
     private final static String RANDOM_WORDS = "/8000words";
     private final static String NAMES = "/names";
     private final static String SURNAMES = "/surnames";
+    private final static String IMAGES = "/images";
     private final static Random random = new Random();
 
     public static void main(String[] args) {
         random.setSeed(5);
-        // int count = Integer.parseInt(args[0]);
         int count = 500;
         List<String> randomWords = getFile(RANDOM_WORDS);
         List<String> names = getFile(NAMES);
@@ -31,6 +35,12 @@ public class Main {
         Set<String> passwords = generatePassword(randomWords, count);
         Map<String, String> usernameToEmail = generateUsernameToEmails(generateUsername(randomWords, count));
         List<User> users = generateUsers(usernameToEmail, passwords, names, surnames, count);
+        List<String> images = getFile(IMAGES);
+        StringBuilder stringBuilder = new StringBuilder("");
+        images.forEach(stringBuilder::append);
+        String jsonImages = stringBuilder.toString();
+        List<Image> imageList = deserializeListImages(jsonImages);
+        distributionImages(users, imageList);
         ObjectMapper objectMapper = new ObjectMapper();
         StringWriter stringWriter = new StringWriter();
         try {
@@ -40,19 +50,34 @@ public class Main {
         }
         String request = stringWriter.toString();
 //        writeToFile(request);
-        sendRequest(request, authorize());
+         sendRequestAboutCreate(request, authorize("admin", "root"));
     }
 
-    private static String authorize() {
+    private static void distributionImages(List<User> users, List<Image> images) {
+        users.forEach(user -> user.setImage(images.stream().filter(image -> image.getUserId().equals(user.getId())).findFirst().get()));
+    }
+
+    private static List<Image> deserializeListImages(String json) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            CollectionType javaType = objectMapper.getTypeFactory().constructCollectionType(List.class, Image.class);
+            return objectMapper.readValue(json, javaType);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String authorize(String username, String password) {
         String jwt = "";
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://backend:8080/api/auth/login");
+            HttpPost httpPost = new HttpPost("http://localhost:8080/api/auth/login");
             ObjectMapper objectMapper = new ObjectMapper();
             StringWriter stringWriter = new StringWriter();
             Map<String, String> data = new HashMap<>();
-            data.put("username", "admin");
-            data.put("password", "root");
+            data.put("username", username);
+            data.put("password", password);
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(cleanWriter(stringWriter), data);
             StringEntity entity = new StringEntity(stringWriter.toString());
             httpPost.setEntity(entity);
@@ -69,10 +94,10 @@ public class Main {
     }
 
 
-    private static void sendRequest(String json, String jwt) {
+    private static void sendRequestAboutCreate(String json, String jwt) {
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://backend:8080/api/users/batch");
+            HttpPost httpPost = new HttpPost("http://localhost:8080/api/users/batch");
             StringEntity entity = new StringEntity(json);
             httpPost.setEntity(entity);
             httpPost.setHeader("Accept", "application/json");
@@ -180,9 +205,11 @@ public class Main {
         Iterator<String> passIterator = passwords.iterator();
         Iterator<Map.Entry<String, String>> usernameToEmailIterator = usernameToEmail.entrySet().iterator();
         List<User> users = new ArrayList<>();
+        long userId = 2L;
         while (users.size() < count) {
             User user = new User();
             Map.Entry<String, String> pair = usernameToEmailIterator.next();
+            user.setId(userId);
             user.setUsername(pair.getKey());
             user.setEmail(pair.getValue());
             user.setPassword(passIterator.next());
@@ -194,6 +221,7 @@ public class Main {
             user.setBirthday(generateBirthday());
             user.setDescription(generateDescription());
             users.add(user);
+            userId++;
         }
         return users;
     }

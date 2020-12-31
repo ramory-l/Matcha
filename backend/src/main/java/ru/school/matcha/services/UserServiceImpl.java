@@ -3,22 +3,18 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
-import ru.school.matcha.domain.Like;
-import ru.school.matcha.domain.Matcha;
+import ru.school.matcha.domain.*;
 import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
 import ru.school.matcha.services.interfaces.*;
 import ru.school.matcha.utils.MailUtil;
 import ru.school.matcha.utils.MyBatisUtil;
 import ru.school.matcha.dao.UserMapper;
-import ru.school.matcha.domain.Form;
-import ru.school.matcha.domain.User;
 import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.PasswordCipher;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -67,18 +63,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getMatcha(Long id) {
         List<User> users = new ArrayList<>();
-        List<Matcha> matcha = likeService.getMatches(id);
-        matcha.forEach(match -> {
-            List<Matcha> ms = matcha
-                    .stream()
-                    .filter(m -> m.getFrom().equals(match.getTo()))
-                    .collect(Collectors.toList());
-            ms.forEach(test -> {
-                User user = getUserById(test.getTo());
-                if (!users.contains(user) && !user.getId().equals(id)) {
-                    users.add(user);
-                }
-            });
+        List<Like> allLikesWithMentionUser = likeService.getAllLikesWithMentionUserById(id);
+        allLikesWithMentionUser.stream().filter(like -> like.getFrom().equals(id)).forEach(like -> {
+            if (allLikesWithMentionUser.stream().anyMatch(otherLike -> otherLike.getFrom().equals(like.getTo()))) {
+                users.add(getUserById(like.getTo()));
+            }
         });
         return users;
     }
@@ -149,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void batchCreateUsers(List<User> users) {
+    public void batchCreateUsers(List<UserFullForBatch> users) {
         SqlSession sqlSession = null;
         FormService formService = new FormServiceImpl();
         try {
@@ -165,6 +154,7 @@ public class UserServiceImpl implements UserService {
                 user.setRate(0L);
                 user.setIsVerified(true);
                 userMapper.createFullUser(user);
+                userMapper.createImageForFullUser(user);
             });
             sqlSession.commit();
         } catch (Exception ex) {
@@ -178,6 +168,18 @@ public class UserServiceImpl implements UserService {
                 sqlSession.close();
             }
         }
+        avatarHelper(users);
+    }
+
+    private void avatarHelper(List<UserFullForBatch> users) {
+        users.forEach(userFullForBatch -> {
+            User user = new User();
+            user.setId(userFullForBatch.getId());
+            Image image = new Image();
+            image.setId(userFullForBatch.getImage().getId());
+            user.setAvatar(image);
+            updateUser(user);
+        });
     }
 
     @Override
@@ -430,12 +432,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateLastLoginDateUsers(List<Long> ids) {
+    public void updateActivityStatusForUsers(List<Long> listIds) {
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            userMapper.updateLastLoginDateUsers(ids);
+            userMapper.updateLastLoginDateUsers(listIds);
             sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
@@ -478,18 +480,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void offlineUser(Long userId) {
+    public void userIsOffline(Long userId) {
         SqlSession sqlSession = null;
         try {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            userMapper.offlineUser(userId);
+            userMapper.userIsOffline(userId);
             sqlSession.commit();
         } catch (Exception ex) {
             if (nonNull(sqlSession)) {
                 sqlSession.rollback();
             }
             throw new MatchaException("Error to offline. " + ex.getMessage());
+        } finally {
+            if (nonNull(sqlSession)) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
+    public void userIsOnline(Long userId) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.userIsOnline(userId);
+            sqlSession.commit();
+        } catch (Exception ex) {
+            if (nonNull(sqlSession)) {
+                sqlSession.rollback();
+            }
+            throw new MatchaException("Error to online. " + ex.getMessage());
         } finally {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
