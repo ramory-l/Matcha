@@ -42,14 +42,20 @@ const BasePage = (props) => {
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
         if (data.type !== "system_notification") {
-          toast(
-            <UserNotification
-              dataType={data.type}
-              avatarLink={data.avatar?.link}
-              username={data.username}
-              message={data.message}
-            />
-          );
+          if (
+            data.type === "message" &&
+            props.history.location.pathname === `/messages/${data.username}`
+          ) {
+          } else {
+            toast(
+              <UserNotification
+                dataType={data.type}
+                avatarLink={data.avatar?.link}
+                username={data.username}
+                message={data.message}
+              />
+            );
+          }
         }
       };
 
@@ -58,7 +64,7 @@ const BasePage = (props) => {
         console.log("closed");
       };
     }
-  }, [webSocket, props.match.pathname]);
+  }, [webSocket, props]);
 
   return (
     <>

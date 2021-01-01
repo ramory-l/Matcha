@@ -57,7 +57,10 @@ const RateButtons = ({ user, rateUpdateFunction }) => {
     <div className="RateButtons">
       <button
         disabled={!user.avatar}
-        onClick={() => handleRateChange("like")}
+        onClick={(e) => {
+          e.preventDefault();
+          handleRateChange("like");
+        }}
         type="button"
         className={`btn btn-sm btn-outline-success ${userLikeValue}`}
       >
@@ -65,7 +68,10 @@ const RateButtons = ({ user, rateUpdateFunction }) => {
       </button>
       <button
         disabled={!user.avatar}
-        onClick={() => handleRateChange("dislike")}
+        onClick={(e) => {
+          e.preventDefault();
+          handleRateChange("dislike");
+        }}
         type="button"
         className={`btn btn-sm btn-outline-danger ${userDislikeValue}`}
       >

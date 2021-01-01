@@ -72,7 +72,7 @@ public class Main {
         String jwt = "";
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://localhost:8080/api/auth/login");
+            HttpPost httpPost = new HttpPost("http://backend:8080/api/auth/login");
             ObjectMapper objectMapper = new ObjectMapper();
             StringWriter stringWriter = new StringWriter();
             Map<String, String> data = new HashMap<>();
@@ -97,7 +97,7 @@ public class Main {
     private static void sendRequestAboutCreate(String json, String jwt) {
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://localhost:8080/api/users/batch");
+            HttpPost httpPost = new HttpPost("http://backend:8080/api/users/batch");
             StringEntity entity = new StringEntity(json);
             httpPost.setEntity(entity);
             httpPost.setHeader("Accept", "application/json");

@@ -48,7 +48,7 @@ const UserAvatar = (props) => {
               Last Seen:{" "}
               <strong>
                 {user.lastLoginDate
-                  ? moment(user.lastLoginDate).format("YYYY-MM-DD")
+                  ? moment(user.lastLoginDate).format("DD-MM-YYYY, h:mm:ss a")
                   : "RIP"}
               </strong>{" "}
               <br />

@@ -8,7 +8,10 @@ const UserCard = (props) => {
   const [rate, setRate] = useState(user.rate);
 
   return (
-    <Link to={`/profile/${user.username}`} style={{ color: "Indigo" }}>
+    <Link
+      to={`/profile/${user.username}`}
+      style={{ color: "Indigo", textDecoration: "none" }}
+    >
       <div className="card my-2">
         <div className="card-image">
           <img
