@@ -61,7 +61,7 @@ const BasePage = (props) => {
 
       return () => {
         webSocket.close();
-        console.log("closed");
+        console.log("deleted");
       };
     }
   }, [webSocket, props]);

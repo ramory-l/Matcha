@@ -2,6 +2,7 @@ import React from "react";
 import Form from "./common/form";
 import Joi from "joi";
 import { resetPassword } from "../services/userService";
+import { toast } from "react-toastify";
 
 class ResetPasswordForm extends Form {
   state = {
@@ -36,6 +37,7 @@ class ResetPasswordForm extends Form {
       delete user.new_password_confirm;
       await resetPassword(user);
       this.props.history.push("/auth/login");
+      toast.info("Check your email to change your password");
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
         const errors = { ...this.state.errors };

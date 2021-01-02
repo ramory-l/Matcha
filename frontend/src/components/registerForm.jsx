@@ -5,6 +5,7 @@ import Joi from "joi";
 import auth from "../services/authService";
 import * as userService from "../services/userService";
 import "./styles/authForm.scss";
+import { toast } from "react-toastify";
 
 class RegisterForm extends Form {
   state = {
@@ -41,7 +42,8 @@ class RegisterForm extends Form {
     try {
       const response = await userService.register(this.state.data);
       auth.loginWithJwt(response.headers["x-auth-token"]);
-      window.location = "/";
+      this.props.history.push("/");
+      toast.info("Check your email to verify your profile!");
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };
@@ -52,6 +54,7 @@ class RegisterForm extends Form {
   };
 
   render() {
+    console.log(this.props);
     return (
       <form className="RegisterForm" onSubmit={this.handleSubmit}>
         <span className="RegisterForm-Title">Register Form</span>
