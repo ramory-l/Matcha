@@ -1,7 +1,6 @@
 package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -9,8 +8,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-
-import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.file.*;
@@ -24,6 +21,9 @@ public class Main {
     private final static String NAMES = "/names";
     private final static String SURNAMES = "/surnames";
     private final static String IMAGES = "/images";
+    private final static String HASHTAGS = "/hashtags";
+    private final static String HOST = "http://localhost:8080/api";
+
     private final static Random random = new Random();
 
     public static void main(String[] args) {
@@ -36,7 +36,7 @@ public class Main {
         Map<String, String> usernameToEmail = generateUsernameToEmails(generateUsername(randomWords, count));
         List<User> users = generateUsers(usernameToEmail, passwords, names, surnames, count);
         List<String> images = getFile(IMAGES);
-        StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder();
         images.forEach(stringBuilder::append);
         String jsonImages = stringBuilder.toString();
         List<Image> imageList = deserializeListImages(jsonImages);
@@ -50,7 +50,69 @@ public class Main {
         }
         String request = stringWriter.toString();
 //        writeToFile(request);
-         sendRequestAboutCreate(request, authorize("admin", "root"));
+        sendRequestAboutCreate(request, authorize("admin", "root"));
+        createOtherData(users);
+    }
+
+    private static void createOtherData(List<User> users) {
+        users.forEach(user -> {
+            String jwt = authorize(user.getUsername(), user.getPassword());
+            for (int likeCount = 0; likeCount < 15; likeCount++) {
+                int randomLike = random(users.size() - 1, 0);
+                createLike(user.getId(), randomLike, jwt);
+            }
+            for (int guestCount = 0; guestCount < 15; guestCount++) {
+                int randomGuest = random(users.size() - 1, 0);
+                createGuest(user.getId(), randomGuest, jwt);
+            }
+            List<String> tags = getFile(HASHTAGS);
+            for (int tagCount = 0; tagCount < 5; tagCount++) {
+                String tag = tags.get(random(tags.size() - 1, 0));
+                createTag(user.getId(), tag, jwt);
+            }
+        });
+    }
+
+    private static void createGuest(Long id, int to, String jwt) {
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(HOST + "/users/guests/from/" + id + "/to/" + to);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("x-auth-token", "T_" + jwt);
+            client.execute(httpPost);
+            client.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void createLike(Long id, int to, String jwt) {
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(HOST + "/users/likes/from/" + id + "/to/" + to);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("x-auth-token", "T_" + jwt);
+            client.execute(httpPost);
+            client.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void createTag(Long id, String tag, String jwt) {
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(HOST + "/users/" + id + "/tags/" + tag);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("x-auth-token", "T_" + jwt);
+            client.execute(httpPost);
+            client.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static void distributionImages(List<User> users, List<Image> images) {
@@ -72,7 +134,7 @@ public class Main {
         String jwt = "";
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://localhost:8080/api/auth/login");
+            HttpPost httpPost = new HttpPost(HOST + "/auth/login");
             ObjectMapper objectMapper = new ObjectMapper();
             StringWriter stringWriter = new StringWriter();
             Map<String, String> data = new HashMap<>();
@@ -85,7 +147,7 @@ public class Main {
             httpPost.setHeader("Content-type", "application/json");
             HttpResponse response = client.execute(httpPost);
             String body = EntityUtils.toString(response.getEntity());
-            jwt = body.substring(1, body.toString().length() - 1);
+            jwt = body.substring(1, body.length() - 1);
             client.close();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -93,11 +155,10 @@ public class Main {
         return jwt;
     }
 
-
     private static void sendRequestAboutCreate(String json, String jwt) {
         try {
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpPost httpPost = new HttpPost("http://localhost:8080/api/users/batch");
+            HttpPost httpPost = new HttpPost(HOST + "/users/batch");
             StringEntity entity = new StringEntity(json);
             httpPost.setEntity(entity);
             httpPost.setHeader("Accept", "application/json");
@@ -288,4 +349,5 @@ public class Main {
         int diff = max - min;
         return random.nextInt(diff + 1) + min;
     }
+
 }
