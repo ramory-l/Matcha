@@ -14,4 +14,7 @@ public class Form {
     private boolean love;
     private boolean sex;
     private boolean flirt;
+    private Integer ageFrom;
+    private Integer ageTo;
+
 }

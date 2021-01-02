@@ -23,6 +23,8 @@ public class FormConverter extends Converter<FormDto, Form> {
         result.setSex(source.isSex());
         result.setMan(source.isMan());
         result.setWoman(source.isWoman());
+        result.setAgeFrom(source.getAgeFrom());
+        result.setAgeTo(source.getAgeTo());
         return result;
     }
 
@@ -38,6 +40,8 @@ public class FormConverter extends Converter<FormDto, Form> {
         result.setSex(source.isSex());
         result.setMan(source.isMan());
         result.setWoman(source.isWoman());
+        result.setAgeFrom(source.getAgeFrom());
+        result.setAgeTo(source.getAgeTo());
         return result;
     }
 }

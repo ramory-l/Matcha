@@ -331,6 +331,9 @@ public class Main {
         form.setLove(random.nextBoolean());
         form.setSex(random.nextBoolean());
         form.setFlirt(random.nextBoolean());
+        int ageFrom = random(30, 18);
+        form.setAgeFrom(ageFrom);
+        form.setAgeTo(random(80, ageFrom));
         return form;
     }
 
