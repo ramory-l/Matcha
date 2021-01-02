@@ -139,6 +139,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<Tag> getMutualTags(Long firstUserId, Long secondUserId) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
+            return tagMapper.getMutualTags(firstUserId, secondUserId);
+        }
+    }
+
+    @Override
     public Tag getTagByName(String name) {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);

@@ -58,4 +58,13 @@
                  INNER JOIN tags ON tag_id = tags.id
     </select>
 
+    <select id="getMutualTags" resultMap="Tag">
+        SELECT *
+        FROM (SELECT tag_id
+              FROM (SELECT * FROM user_ref_tags WHERE user_id = #{firstUserId} OR user_id = #{secondUserId}) as tags
+              GROUP BY tag_id
+              HAVING count(tag_id) > 1) as mutual_tags
+                 INNER JOIN tags ON tag_id = tags.id
+    </select>
+
 </mapper>

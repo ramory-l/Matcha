@@ -22,4 +22,6 @@ public interface TagService {
 
     List<Tag> getTopTags(Long count);
 
+    List<Tag> getMutualTags(Long firstUserId, Long secondUserId);
+
 }
