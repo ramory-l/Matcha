@@ -18,6 +18,8 @@ public interface TagMapper {
 
     List<Tag> getTags();
 
+    List<Tag> getTopTags(Long count);
+
     Optional<Tag> getTagByName(String name);
 
     List<Tag> getTagsByUserId(Long userId);
