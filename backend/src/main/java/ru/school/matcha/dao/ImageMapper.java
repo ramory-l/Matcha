@@ -17,6 +17,8 @@ public interface ImageMapper {
 
     List<Image> getImagesByUserId(Long userId);
 
+    Optional<Image> getImageByExternalId(String externalId);
+
     Long getCountImagesByUserId(Long userId);
 
     void deleteImageById(Long id);

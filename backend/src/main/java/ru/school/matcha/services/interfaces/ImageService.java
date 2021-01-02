@@ -16,6 +16,8 @@ public interface ImageService {
 
     Long getCountImagesByUserId(Long userId);
 
+    Image getImageByExternalId(String externalId);
+
     void deleteImageById(Long id);
 
 }

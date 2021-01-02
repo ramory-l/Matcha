@@ -154,7 +154,11 @@ public class UserServiceImpl implements UserService {
                 user.setRate(0L);
                 user.setIsVerified(true);
                 userMapper.createFullUser(user);
-                userMapper.createImageForFullUser(user);
+                try {
+                    imageService.getImageByExternalId(user.getImage().getExternalId());
+                } catch (NotFoundException ex) {
+                    userMapper.createImageForFullUser(user);
+                }
             });
             sqlSession.commit();
         } catch (Exception ex) {
