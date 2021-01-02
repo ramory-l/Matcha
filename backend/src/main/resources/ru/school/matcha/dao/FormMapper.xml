@@ -9,6 +9,8 @@
         <result property="love" column="love"/>
         <result property="sex" column="sex"/>
         <result property="flirt" column="flirt"/>
+        <result property="ageFrom" column="age_from"/>
+        <result property="ageTo" column="age_to"/>
     </resultMap>
 
     <insert id="createForm" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
@@ -17,13 +19,17 @@
                           friendship,
                           love,
                           sex,
-                          flirt)
+                          flirt,
+                          age_from,
+                          age_to)
         VALUES (#{man},
                 #{woman},
                 #{friendship},
                 #{love},
                 #{sex},
-                #{flirt})
+                #{flirt},
+                #{ageFrom},
+                #{ageTo})
     </insert>
 
     <update id="updateFormById">
@@ -44,7 +50,13 @@
             sex = #{sex},
         </if>
         <if test="flirt != null">
-            flirt = #{flirt}
+            flirt = #{flirt},
+        </if>
+        <if test="ageFrom != null">
+            age_from = #{ageFrom},
+        </if>
+        <if test="ageTo != null">
+            age_to = #{ageTo}
         </if>
         WHERE id = #{id}
     </update>

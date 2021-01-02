@@ -3,6 +3,7 @@ package ru.school.matcha.controllers;
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.converters.*;
 import ru.school.matcha.domain.Message;
+import ru.school.matcha.domain.Tag;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.domain.UserFullForBatch;
 import ru.school.matcha.dto.*;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
+import static java.util.Objects.nonNull;
 import static spark.Spark.halt;
 
 @Slf4j
@@ -33,6 +35,8 @@ public class UserController {
     private final static Converter<UserDto, User> userConverter = new UserConverter();
     private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
     private final static Converter<UserFullForBatchDto, UserFullForBatch> userFullForBatchConverter = new UserFullForBatchConverter();
+    private final static Converter<UserWithTagsDto, User> userWithTagsConverter = new UserWithTagsConverter();
+    private final static Converter<TagDto, Tag> tagConverter = new TagConverter();
 
     private final static UserService userService = new UserServiceImpl();
     private final static MessageService messageService = new MessageServiceImpl();
@@ -106,7 +110,11 @@ public class UserController {
         Long id = parseLong(request.params("id"));
         List<User> users = userService.getMatcha(id);
         response.status(Response.GET.getStatus());
-        return userConverter.createFromEntities(users);
+        List<UserWithTagsDto> result = userWithTagsConverter.createFromEntities(users);
+        if (nonNull(result)) {
+            result.forEach(user -> user.setTags(tagConverter.createFromEntities(tagService.getMutualTags(id, user.getId()))));
+        }
+        return result;
     };
 
     public static Route resetPassword = (request, response) -> {

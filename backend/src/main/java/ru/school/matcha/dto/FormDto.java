@@ -14,5 +14,7 @@ public class FormDto {
     private boolean love;
     private boolean sex;
     private boolean flirt;
+    private Integer ageFrom;
+    private Integer ageTo;
 
 }

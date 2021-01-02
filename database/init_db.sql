@@ -17,7 +17,9 @@ create table form
     friendship boolean default false not null,
     love       boolean default false not null,
     sex        boolean default false not null,
-    flirt      boolean default false not null
+    flirt      boolean default false not null,
+    age_from   integer default 0     not null,
+    age_to     integer default 0     not null
 );
 
 create table "user"

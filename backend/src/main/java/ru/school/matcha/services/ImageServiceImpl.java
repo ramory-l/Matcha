@@ -12,7 +12,10 @@ import ru.school.matcha.utils.CloudinaryAPI;
 import ru.school.matcha.utils.ImageCoder;
 import ru.school.matcha.utils.MyBatisUtil;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -64,9 +67,21 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Override
+    public Image getImageByExternalId(String externalId) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
+            return imageMapper.getImageByExternalId(externalId).orElseThrow(NotFoundException::new);
+        }
+    }
+
     private void deleteImageFromServer(String fileName) {
-        final String FILE_PATH = "backend/images/";
-        File file = new File(FILE_PATH + fileName);
+        Path filepath = Paths.get("backend/images/" + fileName);
+        try {
+           Files.deleteIfExists(filepath);
+        } catch (IOException ex) {
+            log.debug(ex.getMessage());
+        }
     }
 
     @Override

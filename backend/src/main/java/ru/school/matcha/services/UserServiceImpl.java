@@ -95,6 +95,8 @@ public class UserServiceImpl implements UserService {
                 defaultForm.setLove(false);
                 defaultForm.setSex(false);
                 defaultForm.setFlirt(false);
+                defaultForm.setAgeFrom(0);
+                defaultForm.setAgeTo(0);
                 User newUser = new User();
                 newUser.setUsername(user.getUsername());
                 newUser.setPassword(user.getPassword());
@@ -154,7 +156,11 @@ public class UserServiceImpl implements UserService {
                 user.setRate(0L);
                 user.setIsVerified(true);
                 userMapper.createFullUser(user);
-                userMapper.createImageForFullUser(user);
+                try {
+                    imageService.getImageByExternalId(user.getImage().getExternalId());
+                } catch (NotFoundException ex) {
+                    userMapper.createImageForFullUser(user);
+                }
             });
             sqlSession.commit();
         } catch (Exception ex) {

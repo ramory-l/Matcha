@@ -59,7 +59,10 @@ public class MatchaApplication {
                     post("/from/:from/to/:to", LikeController.createDislike, new JsonTransformer());
                     delete("/from/:from/to/:to", LikeController.deleteDislike, new JsonTransformer());
                 });
-                path(Path.TAGS.getUrl(), () -> get("/:tagName", UserController.getUsersByTagName, new JsonTransformer()));
+                path(Path.TAGS.getUrl(), () -> {
+                    get("/:tagName", UserController.getUsersByTagName, new JsonTransformer());
+                    get("/top/:count", TagController.getTopTags, new JsonTransformer());
+                });
                 path(Path.GUESTS.getUrl(), () -> post("/from/:from/to/:to", GuestController.createGuest, new JsonTransformer()));
                 path(Path.IMAGES.getUrl(), () -> {
                     post("/", ImageController.createImage, new JsonTransformer());

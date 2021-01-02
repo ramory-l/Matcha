@@ -13,7 +13,8 @@
     </insert>
 
     <insert id="createUserRefTag">
-        INSERT INTO user_ref_tags(tag_id, user_id) VALUES (#{tagId}, #{userId})
+        INSERT INTO user_ref_tags(tag_id, user_id)
+        VALUES (#{tagId}, #{userId})
     </insert>
 
     <delete id="deleteTagById">
@@ -23,7 +24,10 @@
     </delete>
 
     <delete id="deleteUserRefTag">
-        DELETE FROM user_ref_tags WHERE user_id = #{userId} AND tag_id = #{tagId}
+        DELETE
+        FROM user_ref_tags
+        WHERE user_id = #{userId}
+          AND tag_id = #{tagId}
     </delete>
 
     <select id="getTags" resultMap="Tag">
@@ -41,6 +45,26 @@
         SELECT *
         FROM tags
         WHERE tag = #{name}
+    </select>
+
+    <select id="getTopTags" resultMap="Tag">
+        SELECT tags.*
+        FROM (SELECT urt.tag_id as tag_id, count(urt.tag_id) AS count
+              FROM "user"
+                       INNER JOIN user_ref_tags urt on "user".id = urt.user_id
+              GROUP BY tag_id
+              ORDER BY count DESC
+              LIMIT #{count}) AS top
+                 INNER JOIN tags ON tag_id = tags.id
+    </select>
+
+    <select id="getMutualTags" resultMap="Tag">
+        SELECT *
+        FROM (SELECT tag_id
+              FROM (SELECT * FROM user_ref_tags WHERE user_id = #{firstUserId} OR user_id = #{secondUserId}) as tags
+              GROUP BY tag_id
+              HAVING count(tag_id) > 1) as mutual_tags
+                 INNER JOIN tags ON tag_id = tags.id
     </select>
 
 </mapper>
