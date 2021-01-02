@@ -12,8 +12,6 @@ import { ws } from "../config.json";
 import { toast } from "react-toastify";
 import UserNotification from "../components/userNotification";
 import BaseContext from "../contexts/baseContext";
-import jquery from "jquery";
-import httpService from "../services/httpService";
 
 const BasePage = (props) => {
   const [user, setUser] = useState({});
@@ -21,10 +19,6 @@ const BasePage = (props) => {
 
   useEffect(() => {
     const user = auth.getCurrentUser();
-    jquery.getJSON("https://api.ipify.org?format=json", function (data) {
-      console.log(data.ip);
-      httpService.get(`http://ip-api.com/json/${data.ip}`).then(console.log);
-    });
     setWebSocket(new WebSocket(`${ws}T_${getJwt()}`));
     setUser(user);
   }, []);

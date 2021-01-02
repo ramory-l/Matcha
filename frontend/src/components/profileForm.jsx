@@ -6,11 +6,14 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import TagForm from "./tagForm";
 import ProfileImages from "./profileImages";
+import jquery from "jquery";
+import httpService from "../services/httpService";
 import "./styles/profileForm.scss";
 
 class ProfileForm extends Form {
   state = {
     data: {
+      id: "",
       firstName: "",
       lastName: "",
       gender: "",
@@ -41,6 +44,7 @@ class ProfileForm extends Form {
 
   mapToViewModel(user) {
     return {
+      id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       gender: user.gender || "",
@@ -53,6 +57,7 @@ class ProfileForm extends Form {
   }
 
   schema = Joi.object({
+    id: Joi.number().required(),
     firstName: Joi.string().required().label("First Name"),
     lastName: Joi.string().required().label("Last Name"),
     gender: Joi.string().optional(),
@@ -76,14 +81,26 @@ class ProfileForm extends Form {
 
   handleGetCoordsButton = (e) => {
     e.preventDefault();
-    navigator.geolocation.getCurrentPosition((position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      const user = { ...this.state.data };
-      user.latitude = latitude;
-      user.longitude = longitude;
-      this.setState({ data: user });
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const user = { ...this.state.data };
+        user.latitude = latitude;
+        user.longitude = longitude;
+        this.setState({ data: user });
+      },
+      (error) => {
+        jquery.getJSON("https://api.ipify.org?format=json", (data) => {
+          httpService.get(`http://ip-api.com/json/${data.ip}`).then((res) => {
+            const user = { ...this.state.data };
+            user.latitude = res.data.lat;
+            user.longitude = res.data.lon;
+            this.setState({ data: user });
+          });
+        });
+      }
+    );
   };
 
   render() {
