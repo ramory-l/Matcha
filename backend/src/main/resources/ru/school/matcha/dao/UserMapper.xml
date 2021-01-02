@@ -253,9 +253,9 @@
     </select>
 
     <select id="getUserBlackList" resultMap="UserWithMinimumInfo">
-        SELECT *
+        SELECT u.*
         FROM black_list
-                 INNER JOIN "user" u on black_list."from" = u.id
+                 INNER JOIN "user" u on black_list."to" = u.id
         WHERE "from" = #{userId}
     </select>
 
