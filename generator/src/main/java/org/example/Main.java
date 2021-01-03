@@ -22,7 +22,7 @@ public class Main {
     private final static String SURNAMES = "/surnames";
     private final static String IMAGES = "/images";
     private final static String HASHTAGS = "/hashtags";
-    private final static String HOST = "http://localhost:8080/api";
+    private final static String HOST = "http://backend:8080/api";
 
     private final static Random random = new Random();
 
