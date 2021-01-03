@@ -17,14 +17,13 @@ public class FormConverter extends Converter<FormDto, Form> {
         }
         FormDto result = new FormDto();
         result.setId(source.getId());
-        result.setFlirt(source.isFlirt());
-        result.setFriendship(source.isFriendship());
-        result.setLove(source.isLove());
-        result.setSex(source.isSex());
         result.setMan(source.isMan());
         result.setWoman(source.isWoman());
         result.setAgeFrom(source.getAgeFrom());
         result.setAgeTo(source.getAgeTo());
+        result.setRateFrom(source.getRateFrom());
+        result.setRateTo(source.getRateTo());
+        result.setRadius(source.getRadius());
         return result;
     }
 
@@ -34,14 +33,13 @@ public class FormConverter extends Converter<FormDto, Form> {
         }
         Form result = new Form();
         result.setId(source.getId());
-        result.setFlirt(source.isFlirt());
-        result.setFriendship(source.isFriendship());
-        result.setLove(source.isLove());
-        result.setSex(source.isSex());
         result.setMan(source.isMan());
         result.setWoman(source.isWoman());
         result.setAgeFrom(source.getAgeFrom());
         result.setAgeTo(source.getAgeTo());
+        result.setRateFrom(source.getRateFrom());
+        result.setRateTo(source.getRateTo());
+        result.setRadius(source.getRadius());
         return result;
     }
 }

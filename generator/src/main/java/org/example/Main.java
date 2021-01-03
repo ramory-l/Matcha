@@ -327,13 +327,13 @@ public class Main {
             form.setMan(false);
             form.setWoman(true);
         }
-        form.setFriendship(random.nextBoolean());
-        form.setLove(random.nextBoolean());
-        form.setSex(random.nextBoolean());
-        form.setFlirt(random.nextBoolean());
         int ageFrom = random(30, 18);
         form.setAgeFrom(ageFrom);
         form.setAgeTo(random(80, ageFrom));
+        int rateFrom = random(5, 1);
+        form.setRateFrom(rateFrom);
+        form.setRateTo(random(99, rateFrom));
+        form.setRadius(random(50, 1));
         return form;
     }
 

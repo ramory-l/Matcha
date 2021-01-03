@@ -91,12 +91,6 @@ public class UserServiceImpl implements UserService {
                 Form defaultForm = new Form();
                 defaultForm.setMan(false);
                 defaultForm.setWoman(false);
-                defaultForm.setFriendship(false);
-                defaultForm.setLove(false);
-                defaultForm.setSex(false);
-                defaultForm.setFlirt(false);
-                defaultForm.setAgeFrom(0);
-                defaultForm.setAgeTo(0);
                 User newUser = new User();
                 newUser.setUsername(user.getUsername());
                 newUser.setPassword(user.getPassword());
