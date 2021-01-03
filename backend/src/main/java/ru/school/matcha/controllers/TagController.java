@@ -50,9 +50,8 @@ public class TagController {
     };
 
     public static Route getTopTags = (request, response) -> {
-        Long count = parseLong(request.params("count"));
         AuthorizationController.authorize(request, Role.USER);
-        List<Tag> tagList = tagService.getTopTags(count);
+        List<Tag> tagList = tagService.getTopTags();
         response.status(Response.GET.getStatus());
         return tagConverter.createFromEntities(tagList);
     };

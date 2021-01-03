@@ -131,10 +131,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getTopTags(Long count) {
+    public List<Tag> getTopTags() {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
-            return tagMapper.getTopTags(count);
+            return tagMapper.getTopTags();
         }
     }
 
