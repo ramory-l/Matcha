@@ -61,7 +61,7 @@ public class MatchaApplication {
                 });
                 path(Path.TAGS.getUrl(), () -> {
                     get("/:tagName", UserController.getUsersByTagName, new JsonTransformer());
-                    get("/top", TagController.getTopTags, new JsonTransformer());
+                    get("/top/", TagController.getTopTags, new JsonTransformer());
                 });
                 path(Path.GUESTS.getUrl(), () -> post("/from/:from/to/:to", GuestController.createGuest, new JsonTransformer()));
                 path(Path.IMAGES.getUrl(), () -> {
