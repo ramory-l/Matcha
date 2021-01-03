@@ -41,6 +41,7 @@ public class MatchaApplication {
                 get("/password/:hash", UserController.editPassword, new JsonTransformer());
                 get("/verified/:hash", UserController.verified, new JsonTransformer());
                 get("/matcha/:id", UserController.getMatcha, new JsonTransformer());
+                get("/search/:id", UserController.search, new JsonTransformer());
                 get("/messages/limit/:limit/offset/:offset/first/:first/second/:second", UserController.getMessages, new JsonTransformer());
                 get("/blacklist/:userId", UserController.getUserBlackList, new JsonTransformer());
                 put("/password/reset", UserController.resetPassword, new JsonTransformer());

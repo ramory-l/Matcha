@@ -3,6 +3,8 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
+import org.joda.time.DateTime;
+import org.joda.time.Years;
 import ru.school.matcha.domain.*;
 import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
@@ -14,7 +16,9 @@ import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.PasswordCipher;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -33,6 +37,42 @@ public class UserServiceImpl implements UserService {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getAllUsers(userId);
+        }
+    }
+
+    @Override
+    public List<User> search(long userId, Form form, List<String> tags) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<User> preResult = userMapper.search(userId, form, tags);
+            User reqUser = userMapper.getUserById(userId).orElseThrow(NotFoundException::new);
+            if (preResult.isEmpty()) {
+                return preResult;
+            }
+            return preResult
+                    .parallelStream()
+                    .filter(user -> {
+                        if (user.getBirthday() != null) {
+                            Date userBirthday = user.getBirthday();
+                            int years = Years.yearsBetween(new DateTime(userBirthday), new DateTime()).getYears();
+                            if (years <= form.getAgeFrom() || years >= form.getAgeTo()) {
+                                return false;
+                            }
+                        }
+                        if (form.getRadius() > 0 && user.getLatitude() != 0 && user.getLongitude() != 0 &&
+                                reqUser.getLatitude() != 0 && reqUser.getLongitude() != 0) {
+                            double y1 = user.getLatitude();
+                            double y2 = reqUser.getLatitude();
+                            double x1 = user.getLongitude();
+                            double x2 = reqUser.getLongitude();
+                            double ac = Math.abs(y2 - y1);
+                            double cb = Math.abs(x2 - x1);
+                            double distance = Math.hypot(ac, cb);
+                            return !(distance > form.getRadius());
+                        }
+                        return true;
+                    })
+                    .collect(Collectors.toList());
         }
     }
 

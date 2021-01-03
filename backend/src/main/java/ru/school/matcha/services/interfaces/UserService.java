@@ -1,5 +1,6 @@
 package ru.school.matcha.services.interfaces;
 
+import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
 import ru.school.matcha.domain.UserFullForBatch;
 
@@ -8,6 +9,8 @@ import java.util.List;
 public interface UserService {
 
     List<User> getAllUsers(long userId);
+
+    List<User> search(long userId, Form form, List<String> tags);
 
     User getUserById(Long id);
 

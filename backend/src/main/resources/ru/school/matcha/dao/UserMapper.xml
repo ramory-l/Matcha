@@ -266,4 +266,14 @@
           AND "from" = #{from}
     </select>
 
+    <select id="search" resultMap="User">
+        SELECT *
+        FROM "user"
+        WHERE id != #{userId}
+              <if test="form.man">AND gender ilike 'man'</if>
+              <if test="form.woman">AND gender ilike 'woman'</if>
+              <if test="form.rateFrom != null">AND rate >= #{form.rateFrom}</if>
+              <if test="form.rateTo != null">AND rate <= #{form.rateTo}</if>
+    </select>
+
 </mapper>
