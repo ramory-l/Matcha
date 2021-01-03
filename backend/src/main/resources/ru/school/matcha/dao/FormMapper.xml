@@ -37,18 +37,6 @@
         <if test="woman != null">
             woman = #{woman},
         </if>
-        <if test="friendship != null">
-            friendship = #{friendship},
-        </if>
-        <if test="love != null">
-            love = #{love},
-        </if>
-        <if test="sex != null">
-            sex = #{sex},
-        </if>
-        <if test="flirt != null">
-            flirt = #{flirt},
-        </if>
         <if test="ageFrom != null">
             age_from = #{ageFrom},
         </if>

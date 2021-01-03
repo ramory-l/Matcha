@@ -75,13 +75,17 @@ public class UserController {
                 parseInt(request.queryParams("radius"))
         );
         String tags = request.queryParams("tags");
+        List<String> tagList = null;
+        if (tags != null || !tags.isEmpty()) {
+            tagList = Arrays.asList(tags.split(","));
+        }
         long id = parseLong(request.params("id")),
                 userId = AuthorizationController.authorize(request, Role.USER);
         if (userId != 0 && id != userId) {
             halt(403, "Access is denied");
         }
         Form form = formConverter.convertFromDto(formDto);
-        List<User> users = userService.search(id, form, Arrays.asList(tags.split(",")));
+        List<User> users = userService.search(id, form, tagList);
         List<UserDto> result = userConverter.createFromEntities(users);
         response.status(Response.GET.getStatus());
         return result;

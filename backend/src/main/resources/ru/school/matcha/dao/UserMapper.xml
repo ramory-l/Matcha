@@ -267,13 +267,25 @@
     </select>
 
     <select id="search" resultMap="User">
+        SELECT DISTINCT *
+        FROM (SELECT "users".*
+        FROM (
         SELECT *
         FROM "user"
         WHERE id != #{userId}
-              <if test="form.man">AND gender ilike 'man'</if>
-              <if test="form.woman">AND gender ilike 'woman'</if>
-              <if test="form.rateFrom != null">AND rate >= #{form.rateFrom}</if>
-              <if test="form.rateTo != null">AND rate <= #{form.rateTo}</if>
+        <if test="form.man">AND gender ilike 'man'</if>
+        <if test="form.woman">AND gender ilike 'woman'</if>
+        <if test="form.rateFrom != null">AND rate &gt;= #{form.rateFrom}</if>
+        <if test="form.rateTo != null">AND rate &lt;= #{form.rateTo}</if>) as users
+        INNER JOIN user_ref_tags urt ON id = urt.user_id
+        INNER JOIN tags t on urt.tag_id = t.id
+        <if test="tags != null">
+            WHERE tag IN (
+            <foreach collection="tags" open="(" close=")" separator=", " item="tag">
+                #{tag}
+            </foreach>
+        </if>
+        )) as us
     </select>
 
 </mapper>
