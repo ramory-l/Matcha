@@ -280,12 +280,12 @@
         INNER JOIN user_ref_tags urt ON id = urt.user_id
         INNER JOIN tags t on urt.tag_id = t.id
         <if test="tags != null">
-            WHERE tag IN (
+            WHERE tag IN
             <foreach collection="tags" open="(" close=")" separator=", " item="tag">
                 #{tag}
             </foreach>
         </if>
-        )) as us
+        ) as us
     </select>
 
 </mapper>
