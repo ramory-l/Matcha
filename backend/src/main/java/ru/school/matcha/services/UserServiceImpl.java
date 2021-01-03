@@ -468,7 +468,7 @@ public class UserServiceImpl implements UserService {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             if (userMapper.getUserComplaint(from, to) > 0) {
-                throw new MatchaException("User already in black list");
+                throw new MatchaException("Complaint already created");
             }
             userMapper.addingComplaint(from, to, message);
             sqlSession.commit();
