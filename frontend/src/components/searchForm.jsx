@@ -1,7 +1,7 @@
 import React from "react";
-import { updateUserForm } from "../services/formService";
 import Form from "./common/form";
 import Joi from "joi";
+import ReactTags from "react-tag-autocomplete";
 import "./styles/searchForm.scss";
 
 class SearchForm extends Form {
@@ -17,7 +17,40 @@ class SearchForm extends Form {
       lon: 0,
     },
     errors: {},
+    tags: [
+      { id: 1, name: "Apples" },
+      { id: 2, name: "Pears" },
+    ],
+    suggestions: [
+      {
+        id: 184,
+        name: "Thailand",
+      },
+      {
+        id: 86,
+        name: "India",
+      },
+    ],
   };
+
+  reactTags = React.createRef();
+
+  onDelete(i) {
+    const tags = this.state.tags.slice(0);
+    tags.splice(i, 1);
+    this.setState({
+      ...this.state.data,
+      tags,
+    });
+  }
+
+  onAddition(tag) {
+    const tags = [].concat(this.state.tags, tag);
+    this.setState({
+      ...this.state.data,
+      tags,
+    });
+  }
 
   schema = Joi.object({
     man: Joi.boolean().required().label("Man"),
@@ -48,13 +81,17 @@ class SearchForm extends Form {
         </div>
         <div className="SearchForm-Location">
           <div className="Location-Title">Location:</div>
-          {this.renderInput("lat", "Latitude")}
-          {this.renderInput("lon", "Longitude")}
+          {this.renderInput("radius", "Radius")}
         </div>
         <div className="SearchForm-Tags">
           <div className="Tags-Title">Tags:</div>
-          {this.renderInput("lat", "Latitude")}
-          {this.renderInput("lon", "Longitude")}
+          <ReactTags
+            ref={this.reactTags}
+            tags={this.state.tags}
+            suggestions={this.state.suggestions}
+            onDelete={this.onDelete.bind(this)}
+            onAddition={this.onAddition.bind(this)}
+          />
         </div>
       </form>
     );

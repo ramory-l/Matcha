@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Loading from "./common/loading";
 import Table from "./common/table";
 import _ from "lodash";
@@ -36,18 +37,35 @@ const MatchesTable = (props) => {
     {
       path: "avatar",
       label: "Avatar",
-      content: (avatar) => (
+      content: (user) => (
         <img
-          alt={avatar.url}
+          alt={user.username}
           style={{ width: "5vw" }}
-          src={`${avatar?.url ? avatar.url : "/default-avatar.png"}`}
+          src={`${
+            user.avatar?.link ? user.avatar.link : "/default-avatar.png"
+          }`}
         />
       ),
       noSort: true,
     },
-    { path: "username", label: "Username" },
+    {
+      path: "username",
+      label: "Username",
+      content: (user) => {
+        return (
+          <Link style={{ color: "black" }} to={`/profile/${user.username}`}>
+            {user.username}
+          </Link>
+        );
+      },
+    },
     { path: "gender", label: "Gender" },
     { path: "birthday", label: "Age" },
+    {
+      path: "tags",
+      label: "Common tags",
+      content: (user) => <p>{user.tags.length}</p>,
+    },
   ];
 
   const handleSort = (sortColumn) => {
