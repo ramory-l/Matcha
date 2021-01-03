@@ -76,7 +76,7 @@ public class UserController {
         );
         String tags = request.queryParams("tags");
         List<String> tagList = null;
-        if (tags != null || !tags.isEmpty()) {
+        if (tags != null && !tags.equals("")) {
             tagList = Arrays.asList(tags.split(","));
         }
         long id = parseLong(request.params("id")),
