@@ -4,7 +4,7 @@ import { getCurrentUser } from "../services/authService";
 import { rateUser, unrateUser } from "../services/userService";
 import "./styles/rateButtons.scss";
 
-const RateButtons = ({ user, rateUpdateFunction }) => {
+const RateButtons = ({ user, rateUpdateFunction, isBlocked }) => {
   const userLikeValue = user.isLiked ? "active" : "";
   const userDislikeValue = user.isDisliked ? "active" : "";
   const baseContext = useContext(BaseContext);
@@ -56,7 +56,7 @@ const RateButtons = ({ user, rateUpdateFunction }) => {
   return (
     <div className="RateButtons">
       <button
-        disabled={!user.avatar}
+        disabled={!user.avatar || isBlocked}
         onClick={(e) => {
           e.preventDefault();
           handleRateChange("like");
@@ -67,7 +67,7 @@ const RateButtons = ({ user, rateUpdateFunction }) => {
         <i className="fa fa-thumbs-up" aria-hidden="true"></i>
       </button>
       <button
-        disabled={!user.avatar}
+        disabled={!user.avatar || isBlocked}
         onClick={(e) => {
           e.preventDefault();
           handleRateChange("dislike");

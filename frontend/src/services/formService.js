@@ -14,6 +14,7 @@ export function getUserForm() {
 export function updateUserForm(userForm) {
   const tempForm = { ...userForm };
   delete tempForm.likesDislikes;
+  delete tempForm.blackList;
   return http.put(`${apiEndpoint}/`, tempForm, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });

@@ -1,6 +1,7 @@
 import React from "react";
 
-const CheckBox = ({ label, name, onChange = null, checked = false }) => {
+const CheckBox = ({ label, name, onChange = null, value }) => {
+  console.log(value);
   return (
     <div className="form-group form-check">
       <input
@@ -9,7 +10,7 @@ const CheckBox = ({ label, name, onChange = null, checked = false }) => {
         className="form-check-input"
         name={name}
         id={name}
-        checked={checked}
+        value={value}
       />
       <label className="form-check-label" htmlFor={name}>
         {label}

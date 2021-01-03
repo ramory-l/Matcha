@@ -3,7 +3,11 @@ import UserContext from "../contexts/userContext";
 import ImageFileInput from "./imageFileInput";
 import RateButtons from "./rateButtons";
 import LinkButton from "./common/linkButton";
-import { getUserBlacklist, getUserMatches } from "../services/userService";
+import {
+  getUserBlacklist,
+  getUserMatches,
+  unblockUser,
+} from "../services/userService";
 import ReportModal from "./reportModal";
 import moment from "moment";
 import "./styles/userAvatar.scss";
@@ -11,19 +15,31 @@ import "./styles/userAvatar.scss";
 const UserAvatar = (props) => {
   const { user, isMe, editMode, onEditModeChange } = props;
   const [rate, setRate] = useState(user.rate);
-  const [matches, setMatches] = useState([]);
-  const [blackList, setBlackList] = useState([]);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [isMatch, setIsMatch] = useState(false);
   const userContext = useContext(UserContext);
 
   useEffect(() => {
     async function getMatches() {
       const { data: matches } = await getUserMatches();
       const { data: blackList } = await getUserBlacklist();
-      setBlackList(blackList);
-      setMatches(matches);
+      const isBlocked = !!blackList.filter((blocked) => blocked.id === user.id)
+        .length;
+      const isMatch = !!matches.filter(
+        (match) => match.username === user.username
+      ).length;
+      if (!isMe && isBlocked) {
+        setIsBlocked(isBlocked);
+      } else {
+        setIsMatch(isMatch);
+      }
     }
     getMatches();
-  }, []);
+  }, [isMe, user]);
+
+  const handleUserBlock = () => {
+    setIsBlocked(true);
+  };
 
   return (
     <div className="UserAvatar">
@@ -80,9 +96,12 @@ const UserAvatar = (props) => {
         </div>
       ) : (
         <div className="UserAvatar-Buttons">
-          <RateButtons user={user} rateUpdateFunction={setRate} />
-          {matches.filter((match) => match.username === user.username)
-            .length ? (
+          <RateButtons
+            user={user}
+            rateUpdateFunction={setRate}
+            isBlocked={isBlocked}
+          />
+          {isMatch ? (
             <LinkButton
               to={`/messages/${user.username}`}
               className="btn btn-info"
@@ -90,8 +109,16 @@ const UserAvatar = (props) => {
               Send Message
             </LinkButton>
           ) : null}
-          {blackList.filter((blocked) => blocked.id === user.id).length ? (
-            <button className="btn btn-success">Unblock</button>
+          {isBlocked ? (
+            <button
+              onClick={() => {
+                unblockUser(user.id);
+                setIsBlocked(false);
+              }}
+              className="btn btn-success"
+            >
+              Unblock
+            </button>
           ) : (
             <>
               <button
@@ -105,6 +132,7 @@ const UserAvatar = (props) => {
                 modalTarget="reportModal"
                 modalTitle="Report User"
                 userIdToReport={user.id}
+                onBlock={handleUserBlock}
               />
             </>
           )}

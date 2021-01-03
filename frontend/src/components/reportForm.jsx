@@ -19,6 +19,7 @@ class ReportForm extends Form {
   doSubmit = async () => {
     try {
       await reportUser(this.props.userIdToReport, this.state.data.reportText);
+      this.props.onBlock();
       toast.success("You successfully reported this user!");
     } catch (ex) {
       toast.error("Error to send a report!");
@@ -30,6 +31,7 @@ class ReportForm extends Form {
     e.preventDefault();
     try {
       await blockUser(this.props.userIdToReport);
+      this.props.onBlock();
       toast.success("You successfully blocked this user!");
     } catch (ex) {
       toast.error("Error to block user!");
@@ -44,10 +46,13 @@ class ReportForm extends Form {
           "reportText",
           "Please describe your report below:"
         )}
-        {this.renderButton("Send Report", "btn btn-danger")}
+        <button disabled={this.validate()} className="btn btn-danger">
+          Send Report
+        </button>
         <button
           onClick={(e) => this.blockUser(e)}
           className="btn btn-danger ml-2"
+          data-dismiss="modal"
         >
           Block User
         </button>

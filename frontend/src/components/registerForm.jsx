@@ -54,7 +54,6 @@ class RegisterForm extends Form {
   };
 
   render() {
-    console.log(this.props);
     return (
       <form className="RegisterForm" onSubmit={this.handleSubmit}>
         <span className="RegisterForm-Title">Register Form</span>

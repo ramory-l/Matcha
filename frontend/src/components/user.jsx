@@ -12,6 +12,7 @@ import { getUserImages } from "../services/imageService";
 import { updateUser } from "../services/userService";
 import { toast } from "react-toastify";
 import "./styles/user.scss";
+import BlackListTable from "./blackListTable";
 
 const User = (props) => {
   const [images, setImages] = useState([]);
@@ -60,6 +61,7 @@ const User = (props) => {
                 { title: "My guests", path: "/profile/me/guests" },
                 { title: "My likers", path: "/profile/me/likers" },
                 { title: "My matches", path: "/profile/me/matches" },
+                { title: "My blacklist", path: "/profile/me/blacklist" },
                 { title: "Settings", path: "/profile/me/settings" },
               ]}
             />
@@ -86,7 +88,12 @@ const User = (props) => {
                   render={() => <SettingForm {...props} />}
                 />
               ) : null}
-
+              {isMe ? (
+                <Route
+                  path={`${match.path}/blacklist`}
+                  render={() => <BlackListTable {...props} />}
+                />
+              ) : null}
               <Route
                 exact
                 path={`${match.path}`}

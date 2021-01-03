@@ -91,7 +91,7 @@ export function getUserTags(userId) {
 export function reportUser(userToId, reportText) {
   const userFromId = auth.getCurrentUser().id;
   return http.post(
-    `${apiEndpoint}/fake/from/${userFromId}/to/${userToId}`,
+    `${apiEndpoint}/report/from/${userFromId}/to/${userToId}`,
     reportText,
     {
       headers: { "x-auth-token": `T_${auth.getJwt()}` },
@@ -104,6 +104,16 @@ export function blockUser(userToId) {
   return http.post(
     `${apiEndpoint}/blacklist/from/${userFromId}/to/${userToId}`,
     null,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}
+
+export function unblockUser(userToId) {
+  const userFromId = auth.getCurrentUser().id;
+  return http.delete(
+    `${apiEndpoint}/blacklist/from/${userFromId}/to/${userToId}`,
     {
       headers: { "x-auth-token": `T_${auth.getJwt()}` },
     }
