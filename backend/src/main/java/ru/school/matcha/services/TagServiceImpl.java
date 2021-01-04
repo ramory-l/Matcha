@@ -50,7 +50,7 @@ public class TagServiceImpl implements TagService {
             Tag tag;
             if (!tagOptional.isPresent()) {
                 tag = new Tag();
-                tag.setTag(tagName);
+                tag.setName(tagName);
                 createTag(tag);
             } else {
                 tag = tagOptional.get();
