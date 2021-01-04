@@ -63,7 +63,7 @@
 
     <insert id="createFullUser">
         INSERT INTO "user"(username, first_name, last_name, password, email, gender, birthday, description, rate,
-                           form_id, is_verified)
+                           form_id, is_verified, latitude, longitude)
         VALUES (#{username},
                 #{firstName},
                 #{lastName},
@@ -74,7 +74,9 @@
                 #{description},
                 #{rate},
                 #{form.id},
-                #{isVerified})
+                #{isVerified},
+                #{latitude},
+                #{longitude})
         ON CONFLICT DO NOTHING
     </insert>
 

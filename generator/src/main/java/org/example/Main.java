@@ -281,10 +281,16 @@ public class Main {
             user.setForm(generateForm());
             user.setBirthday(generateBirthday());
             user.setDescription(generateDescription());
+            user.setLatitude(generateCoordinates(55.374740D, 57.555665D));
+            user.setLongitude(generateCoordinates(33.434777D, 50.814525D));
             users.add(user);
             userId++;
         }
         return users;
+    }
+
+    private static double generateCoordinates(double leftLimit, double rightLimit) {
+        return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
     }
 
     private static Date generateBirthday() {
