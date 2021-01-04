@@ -1,34 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactTags from "react-tag-autocomplete";
+import { getCurrentUser } from "../services/authService";
+import { getTopTags } from "../services/tagsService";
 import { getUserTags } from "../services/userService";
 import "./styles/tagsInput.scss";
 
 const TagsInput = ({ userId, editMode, isSearchForm }) => {
   const [tags, setTags] = useState([]);
-  const [suggestions, setSuggestions] = useState([
-    {
-      id: 184,
-      name: "Thailand",
-    },
-    {
-      id: 86,
-      name: "India",
-    },
-  ]);
+  const [suggestions, setSuggestions] = useState([]);
   const tagInput = useRef(null);
 
   useEffect(() => {
     const fetchTags = async () => {
-      const { data: tags } = await getUserTags(userId);
-      const newTags = tags.map((tagName) => {
+      const { data: tags } = isSearchForm
+        ? await getUserTags(getCurrentUser().sub)
+        : await getUserTags(userId);
+      const { data: suggestions } = await getTopTags();
+      const modifiedTags = tags.map((tagName) => {
         return {
+          id: tagName.id,
           name: tagName.tag,
         };
       });
-      setTags(newTags);
+      const modifiedSuggestions = suggestions.map((tagName) => {
+        return {
+          id: tagName.id,
+          name: tagName.tag,
+        };
+      });
+      setTags(modifiedTags);
+      setSuggestions(modifiedSuggestions);
     };
     fetchTags();
-  }, [userId]);
+  }, [userId, isSearchForm]);
 
   const handleDelete = (i) => {
     const newTags = tags.slice(0);
@@ -52,7 +56,6 @@ const TagsInput = ({ userId, editMode, isSearchForm }) => {
             <a
               href={`/?tag=${tag.name}`}
               key={tag.id}
-              onClick={(e) => this.handleTagClick(e, editMode)}
               className={`badge badge-info mx-1`}
             >
               {`#${tag.name}`}
@@ -71,6 +74,7 @@ const TagsInput = ({ userId, editMode, isSearchForm }) => {
       onDelete={handleDelete}
       onAddition={handleAddition}
       autoresize={false}
+      allowNew={true}
     />
   );
 };

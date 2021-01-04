@@ -14,6 +14,12 @@ export function createTag(tagName) {
   );
 }
 
+export function getTopTags() {
+  return http.get(`${apiEndpoint}/tags/top/`, {
+    headers: { "x-auth-token": `T_${auth.getJwt()}` },
+  });
+}
+
 export function deleteTag(tagName) {
   return http.delete(
     `${apiEndpoint}/${auth.getCurrentUser().id}/tags/${tagName}`,
