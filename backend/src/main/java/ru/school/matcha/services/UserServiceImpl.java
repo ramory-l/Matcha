@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
                             double ac = Math.abs(y2 - y1);
                             double cb = Math.abs(x2 - x1);
                             double distance = Math.hypot(ac, cb);
-                            return !(distance > form.getRadius());
+                            return distance <= form.getRadius();
                         }
                         return true;
                     })
