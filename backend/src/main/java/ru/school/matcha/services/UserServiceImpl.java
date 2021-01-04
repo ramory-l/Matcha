@@ -242,13 +242,17 @@ public class UserServiceImpl implements UserService {
                 }
             }
             if (nonNull(user.getEmail())) {
-                if (nonNull(getUserByEmail(user.getEmail()))) {
+                try {
+                    getUserByEmail(user.getEmail());
                     throw new MatchaException("User with such email already exist");
+                } catch (NotFoundException ignored) {
                 }
             }
             if (nonNull(user.getUsername())) {
-                if (nonNull(getUserById(user.getId()))) {
+                try {
+                    getUserByUsername(user.getUsername());
                     throw new MatchaException("User with such username already exist");
+                } catch (NotFoundException ignored) {
                 }
             }
             userMapper.updateUserById(user);
