@@ -5,6 +5,7 @@ import ru.school.matcha.converters.AuthConverter;
 import ru.school.matcha.converters.Converter;
 import ru.school.matcha.domain.Auth;
 import ru.school.matcha.dto.AuthDto;
+import ru.school.matcha.enums.Response;
 import ru.school.matcha.serializators.Serializer;
 import ru.school.matcha.services.AuthenticationServiceImpl;
 import ru.school.matcha.services.interfaces.AuthenticationService;
@@ -23,6 +24,14 @@ public class AuthenticateController {
         AuthDto authDto = authDtoSerializer.deserialize(request.body(), AuthDto.class);
         Auth authData = authConverter.convertFromDto(authDto);
         return authenticationService.authenticate(authData.getUsername(), authData.getPassword());
+    };
+
+    public static Route checkPassword = (request, response) -> {
+        AuthDto authDto = authDtoSerializer.deserialize(request.body(), AuthDto.class);
+        Auth authData = authConverter.convertFromDto(authDto);
+        authenticationService.checkPassword(authData.getUsername(), authData.getPassword());
+        response.status(Response.GET.getStatus());
+        return "OK";
     };
 
 }

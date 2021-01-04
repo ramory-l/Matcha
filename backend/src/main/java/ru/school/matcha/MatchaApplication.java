@@ -24,8 +24,10 @@ public class MatchaApplication {
         MailUtil.initMail();
         CloudinaryAPI.init();
         path(Path.API.getUrl(), () -> {
-            path(Path.AUTH.getUrl(), () ->
-                    post("/login", AuthenticateController.authenticate, new JsonTransformer()));
+            path(Path.AUTH.getUrl(), () -> {
+                post("/login", AuthenticateController.authenticate, new JsonTransformer());
+                get("/check/password", AuthenticateController.checkPassword, new JsonTransformer());
+            });
             post(Path.USERS.getUrl(), UserController.createUser, new JsonTransformer());
             path(Path.USERS.getUrl(), () -> {
                 post("/batch", UserController.batchUsersCreate, new JsonTransformer());
