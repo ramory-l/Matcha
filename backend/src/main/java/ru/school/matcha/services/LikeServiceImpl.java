@@ -65,7 +65,7 @@ public class LikeServiceImpl implements LikeService {
         if (userId == 1) {
             return true;
         }
-        return imageService.getCountImagesByUserId(userId) != 0;
+        return imageService.getCountImagesByUserId(userId) != 0 && nonNull(userService.getUserById(userId).getAvatar());
     }
 
     @Override
