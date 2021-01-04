@@ -10,6 +10,6 @@ public interface AuthenticationService {
 
     String authenticate(String username, String password) throws AuthenticationException, InvalidKeySpecException, NoSuchAlgorithmException;
 
-    void checkPassword(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException;
+    void checkPassword(String username, String password, User user) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException;
 
 }

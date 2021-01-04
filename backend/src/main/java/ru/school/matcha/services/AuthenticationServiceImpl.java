@@ -29,13 +29,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!user.getIsVerified()) {
             throw new AuthenticationException(String.format("User with username: %s not verified", username));
         }
-        checkPassword(username, password);
+        checkPassword(username, password, user);
         return jwtTokenProvider.createToken(user.getId(), user.getUsername(), user.getRole());
     }
 
     @Override
-    public void checkPassword(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException {
-        User user = userService.getUserByUsername(username);
+    public void checkPassword(String username, String password, User user) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException {
         String encryptedPassword = userService.getUserEncryptPasswordById(user.getId());
         if (!PasswordCipher.validatePassword(password, encryptedPassword)) {
             throw new AuthenticationException("Users password is wrong");
