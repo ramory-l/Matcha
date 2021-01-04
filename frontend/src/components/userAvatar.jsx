@@ -98,7 +98,7 @@ const UserAvatar = (props) => {
             rateUpdateFunction={setRate}
             isBlocked={isBlocked}
           />
-          {isMatch ? (
+          {isMatch && !isBlocked ? (
             <LinkButton
               to={`/messages/${user.username}`}
               className="btn btn-info"
@@ -112,7 +112,7 @@ const UserAvatar = (props) => {
                 unblockUser(user.id);
                 setIsBlocked(false);
               }}
-              className="btn btn-success"
+              className="btn btn-success mt-2"
             >
               Unblock
             </button>

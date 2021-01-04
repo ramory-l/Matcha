@@ -16,20 +16,8 @@ const TagsInput = ({ userId, editMode, isSearchForm }) => {
         ? await getUserTags(getCurrentUser().sub)
         : await getUserTags(userId);
       const { data: suggestions } = await getTopTags();
-      const modifiedTags = tags.map((tagName) => {
-        return {
-          id: tagName.id,
-          name: tagName.tag,
-        };
-      });
-      const modifiedSuggestions = suggestions.map((tagName) => {
-        return {
-          id: tagName.id,
-          name: tagName.tag,
-        };
-      });
-      setTags(modifiedTags);
-      setSuggestions(modifiedSuggestions);
+      setTags(tags);
+      setSuggestions(suggestions);
     };
     fetchTags();
   }, [userId, isSearchForm]);

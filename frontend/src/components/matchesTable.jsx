@@ -68,7 +68,7 @@ const MatchesTable = (props) => {
       content: (user) => {
         const tagsStr = user.tags
           .map((tag) => {
-            return `#${tag.tag}`;
+            return `#${tag.name}`;
           })
           .join(", ");
         return <HelpBox textInBox={tagsStr} text={user.tags.length} />;
