@@ -1,0 +1,17 @@
+.StatusIndicator {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.online {
+  background-color: greenyellow;
+  box-shadow: 0 0 10px 3px greenyellow;
+}
+
+.offline {
+  background-color: gray;
+  box-shadow: 0 0 10px 3px gray;
+}

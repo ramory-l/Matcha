@@ -10,6 +10,7 @@ import {
 } from "../services/userService";
 import ReportModal from "./reportModal";
 import moment from "moment";
+import StatusIndicator from "./common/statusIndicator";
 import "./styles/userAvatar.scss";
 
 const UserAvatar = (props) => {
@@ -44,11 +45,7 @@ const UserAvatar = (props) => {
   return (
     <div className="UserAvatar">
       <figure className="figure">
-        <div
-          className={`UserAvatar-StatusIndicator ${
-            user.isOnline ? "online" : "offline"
-          }`}
-        ></div>
+        <StatusIndicator isOnline={user.isOnline} />
         <img
           src={
             userContext.userAvatar?.link

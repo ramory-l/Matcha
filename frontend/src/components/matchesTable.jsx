@@ -5,6 +5,7 @@ import Table from "./common/table";
 import _ from "lodash";
 import moment from "moment";
 import { getUserMatches } from "../services/userService";
+import HelpBox from "./common/helpBox";
 
 const MatchesTable = (props) => {
   const [sortColumn, setSortColumn] = useState({
@@ -64,7 +65,14 @@ const MatchesTable = (props) => {
     {
       path: "tags",
       label: "Common tags",
-      content: (user) => <p>{user.tags.length}</p>,
+      content: (user) => {
+        const tagsStr = user.tags
+          .map((tag) => {
+            return `#${tag.tag}`;
+          })
+          .join(", ");
+        return <HelpBox textInBox={tagsStr} text={user.tags.length} />;
+      },
     },
   ];
 

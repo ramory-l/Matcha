@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import StatusIndicator from "./common/statusIndicator";
 import RateButtons from "./rateButtons";
 import "./styles/userCard.scss";
 
@@ -14,6 +15,7 @@ const UserCard = (props) => {
     >
       <div className="card my-2">
         <div className="card-image">
+          <StatusIndicator isOnline={user.isOnline} />
           <img
             src={user.avatar?.link ? user.avatar.link : "/default-avatar.png"}
             className="card-img-top"

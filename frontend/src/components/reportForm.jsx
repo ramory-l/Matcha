@@ -3,6 +3,7 @@ import Form from "./common/form";
 import Joi from "joi";
 import { blockUser, reportUser } from "../services/userService";
 import { toast } from "react-toastify";
+import jQuery from "jquery";
 
 class ReportForm extends Form {
   state = {
@@ -19,11 +20,15 @@ class ReportForm extends Form {
   doSubmit = async () => {
     try {
       await reportUser(this.props.userIdToReport, this.state.data.reportText);
-      this.props.onBlock();
       toast.success("You successfully reported this user!");
     } catch (ex) {
-      toast.error("Error to send a report!");
-      console.log(ex);
+      if (ex && ex.response) {
+        toast.error(ex.response.data);
+      }
+    } finally {
+      let $reportModal = jQuery("#reportModal");
+      $reportModal.modal("hide");
+      this.props.onBlock();
     }
   };
 
@@ -34,8 +39,7 @@ class ReportForm extends Form {
       this.props.onBlock();
       toast.success("You successfully blocked this user!");
     } catch (ex) {
-      toast.error("Error to block user!");
-      console.log(ex);
+      if (ex && ex.response) toast.error(ex.response.data);
     }
   };
 

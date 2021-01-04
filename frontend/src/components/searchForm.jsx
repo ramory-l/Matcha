@@ -1,8 +1,8 @@
 import React from "react";
 import Form from "./common/form";
 import Joi from "joi";
-import ReactTags from "react-tag-autocomplete";
 import "./styles/searchForm.scss";
+import TagsInput from "./tagsInput";
 
 class SearchForm extends Form {
   state = {
@@ -85,13 +85,7 @@ class SearchForm extends Form {
         </div>
         <div className="SearchForm-Tags">
           <div className="Tags-Title">Tags:</div>
-          <ReactTags
-            ref={this.reactTags}
-            tags={this.state.tags}
-            suggestions={this.state.suggestions}
-            onDelete={this.onDelete.bind(this)}
-            onAddition={this.onAddition.bind(this)}
-          />
+          <TagsInput isSearchForm={true} />
         </div>
       </form>
     );

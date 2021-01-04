@@ -4,11 +4,11 @@ import Form from "./common/form";
 import * as userService from "../services/userService";
 import moment from "moment";
 import { toast } from "react-toastify";
-import TagForm from "./tagForm";
 import ProfileImages from "./profileImages";
 import jquery from "jquery";
 import httpService from "../services/httpService";
 import "./styles/profileForm.scss";
+import TagsInput from "./tagsInput";
 
 class ProfileForm extends Form {
   state = {
@@ -126,7 +126,7 @@ class ProfileForm extends Form {
         {this.renderTextArea("description", "Description", readonly)}
         {this.renderInput("latitude", "Latitude", readonly)}
         {this.renderInput("longitude", "Longitude", readonly)}
-        <TagForm userId={user.id} editMode={editMode} />
+        <TagsInput userId={user.id} editMode={editMode} />
         {readonly ? null : this.renderButton("Save")}
         {readonly ? null : (
           <button

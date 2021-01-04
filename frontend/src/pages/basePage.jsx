@@ -30,35 +30,29 @@ const BasePage = (props) => {
       };
 
       webSocket.onclose = () => {
-        console.log("closed");
+        console.log("closed (basePage)");
       };
 
       webSocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
         if (data.type !== "system_notification") {
-          if (
-            data.type === "message" &&
-            props.history.location.pathname === `/messages/${data.username}`
-          ) {
-          } else {
-            toast(
-              <UserNotification
-                dataType={data.type}
-                avatarLink={data.avatar?.link}
-                username={data.username}
-                message={data.message}
-              />
-            );
-          }
+          toast(
+            <UserNotification
+              dataType={data.type}
+              avatarLink={data.avatar?.link}
+              username={data.username}
+              message={data.message}
+            />
+          );
         }
       };
 
       return () => {
         webSocket.close();
-        console.log("deleted");
+        console.log("deleted (basePage)");
       };
     }
-  }, [webSocket, props]);
+  }, [webSocket]);
 
   return (
     <>

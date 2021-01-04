@@ -72,10 +72,10 @@ export function getMessagesWithUser(secondUserId, limit, offset) {
   );
 }
 
-export function updateUser(user) {
+export function updateUser(user, email = false) {
   const tempUser = { ...user };
   delete tempUser.username;
-  delete tempUser.email;
+  if (!email) delete tempUser.email;
   tempUser.birthday = moment(user.birthday).valueOf();
   return http.put(`${apiEndpoint}/`, tempUser, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
