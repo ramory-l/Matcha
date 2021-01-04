@@ -62,7 +62,10 @@ public class LikeServiceImpl implements LikeService {
     }
 
     private boolean checkAbilityLike(long userId) {
-        return imageService.getCountImagesByUserId(userId) != 0;
+        if (userId == 1) {
+            return true;
+        }
+        return imageService.getCountImagesByUserId(userId) != 0 && nonNull(userService.getUserById(userId).getAvatar());
     }
 
     @Override

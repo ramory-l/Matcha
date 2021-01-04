@@ -2,10 +2,7 @@ package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.school.matcha.converters.*;
-import ru.school.matcha.domain.Message;
-import ru.school.matcha.domain.Tag;
-import ru.school.matcha.domain.User;
-import ru.school.matcha.domain.UserFullForBatch;
+import ru.school.matcha.domain.*;
 import ru.school.matcha.dto.*;
 import ru.school.matcha.enums.Location;
 import ru.school.matcha.enums.Response;
@@ -21,6 +18,7 @@ import ru.school.matcha.services.interfaces.UserService;
 import spark.Route;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -37,6 +35,7 @@ public class UserController {
     private final static Converter<UserFullForBatchDto, UserFullForBatch> userFullForBatchConverter = new UserFullForBatchConverter();
     private final static Converter<UserWithTagsDto, User> userWithTagsConverter = new UserWithTagsConverter();
     private final static Converter<TagDto, Tag> tagConverter = new TagConverter();
+    private final static Converter<FormDto, Form> formConverter = new FormConverter();
 
     private final static UserService userService = new UserServiceImpl();
     private final static MessageService messageService = new MessageServiceImpl();
@@ -62,6 +61,34 @@ public class UserController {
         userService.batchCreateUsers(userFullForBatchList);
         response.status(Response.POST.getStatus());
         return "";
+    };
+
+    public static Route search = (request, response) -> {
+        FormDto formDto = new FormDto(
+                null,
+                Boolean.parseBoolean(request.queryParams("man")),
+                Boolean.parseBoolean(request.queryParams("woman")),
+                parseInt(request.queryParams("agefrom")),
+                parseInt(request.queryParams("ageto")),
+                parseInt(request.queryParams("ratefrom")),
+                parseInt(request.queryParams("rateto")),
+                parseInt(request.queryParams("radius"))
+        );
+        String tags = request.queryParams("tags");
+        List<String> tagList = null;
+        if (tags != null && !tags.equals("")) {
+            tagList = Arrays.asList(tags.split(","));
+        }
+        long id = parseLong(request.params("id")),
+                userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && id != userId) {
+            halt(403, "Access is denied");
+        }
+        Form form = formConverter.convertFromDto(formDto);
+        List<User> users = userService.search(id, form, tagList);
+        List<UserDto> result = userConverter.createFromEntities(users);
+        response.status(Response.GET.getStatus());
+        return result;
     };
 
     public static Route getAllUsers = (request, response) -> {

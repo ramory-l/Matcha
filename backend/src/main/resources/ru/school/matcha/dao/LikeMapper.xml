@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="getLikes" resultMap="Like">
-        SELECT username,
+        SELECT username, u.avatar_id,
         <if test="outgoing == null or !outgoing">"from" as id</if>
         <if test="outgoing">"to" as id</if>
         FROM likes

@@ -19,5 +19,7 @@ public class User {
     private String description;
     private Form form;
     private Image image;
+    private Double latitude;
+    private Double longitude;
 
 }

@@ -18,7 +18,7 @@ public interface TagMapper {
 
     List<Tag> getTags();
 
-    List<Tag> getTopTags(Long count);
+    List<Tag> getTopTags();
 
     Optional<Tag> getTagByName(String name);
 

@@ -22,7 +22,7 @@ public class Main {
     private final static String SURNAMES = "/surnames";
     private final static String IMAGES = "/images";
     private final static String HASHTAGS = "/hashtags";
-    private final static String HOST = "http://localhost:8080/api";
+    private final static String HOST = "http://backend:8080/api";
 
     private final static Random random = new Random();
 
@@ -281,10 +281,16 @@ public class Main {
             user.setForm(generateForm());
             user.setBirthday(generateBirthday());
             user.setDescription(generateDescription());
+            user.setLatitude(generateCoordinates(55.374740D, 57.555665D));
+            user.setLongitude(generateCoordinates(33.434777D, 50.814525D));
             users.add(user);
             userId++;
         }
         return users;
+    }
+
+    private static double generateCoordinates(double leftLimit, double rightLimit) {
+        return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
     }
 
     private static Date generateBirthday() {
@@ -327,13 +333,13 @@ public class Main {
             form.setMan(false);
             form.setWoman(true);
         }
-        form.setFriendship(random.nextBoolean());
-        form.setLove(random.nextBoolean());
-        form.setSex(random.nextBoolean());
-        form.setFlirt(random.nextBoolean());
         int ageFrom = random(30, 18);
         form.setAgeFrom(ageFrom);
         form.setAgeTo(random(80, ageFrom));
+        int rateFrom = random(5, 1);
+        form.setRateFrom(rateFrom);
+        form.setRateTo(random(99, rateFrom));
+        form.setRadius(random(50, 1));
         return form;
     }
 

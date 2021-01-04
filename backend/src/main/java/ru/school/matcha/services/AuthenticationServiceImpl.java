@@ -21,7 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private static final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
 
     @Override
-    public String authenticate(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException {
+    public String authenticate(String username, String password) throws AuthenticationException, InvalidKeySpecException, NoSuchAlgorithmException {
         User user = userService.getUserByUsername(username);
         if (isNull(user)) {
             throw new AuthenticationException(String.format("User with username: %s not found", username));
@@ -29,11 +29,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!user.getIsVerified()) {
             throw new AuthenticationException(String.format("User with username: %s not verified", username));
         }
+        checkPassword(username, password, user);
+        return jwtTokenProvider.createToken(user.getId(), user.getUsername(), user.getRole());
+    }
+
+    @Override
+    public void checkPassword(String username, String password, User user) throws InvalidKeySpecException, NoSuchAlgorithmException, AuthenticationException {
         String encryptedPassword = userService.getUserEncryptPasswordById(user.getId());
         if (!PasswordCipher.validatePassword(password, encryptedPassword)) {
             throw new AuthenticationException("Users password is wrong");
         }
-        return jwtTokenProvider.createToken(user.getId(), user.getUsername(), user.getRole());
     }
 
 }

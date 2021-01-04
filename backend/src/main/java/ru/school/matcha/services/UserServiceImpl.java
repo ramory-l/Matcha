@@ -3,6 +3,8 @@ package ru.school.matcha.services;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
+import org.joda.time.DateTime;
+import org.joda.time.Years;
 import ru.school.matcha.domain.*;
 import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.security.jwt.JwtTokenProvider;
@@ -14,7 +16,9 @@ import ru.school.matcha.exceptions.MatchaException;
 import ru.school.matcha.security.PasswordCipher;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -33,6 +37,42 @@ public class UserServiceImpl implements UserService {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             return userMapper.getAllUsers(userId);
+        }
+    }
+
+    @Override
+    public List<User> search(long userId, Form form, List<String> tags) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<User> preResult = userMapper.search(userId, form, tags);
+            User reqUser = userMapper.getUserById(userId).orElseThrow(NotFoundException::new);
+            if (preResult.isEmpty()) {
+                return preResult;
+            }
+            return preResult
+                    .parallelStream()
+                    .filter(user -> {
+                        if (user.getBirthday() != null) {
+                            Date userBirthday = user.getBirthday();
+                            int years = Years.yearsBetween(new DateTime(userBirthday), new DateTime()).getYears();
+                            if (years <= form.getAgeFrom() || years >= form.getAgeTo()) {
+                                return false;
+                            }
+                        }
+                        if (form.getRadius() > 0 && user.getLatitude() != 0 && user.getLongitude() != 0 &&
+                                reqUser.getLatitude() != 0 && reqUser.getLongitude() != 0) {
+                            double y1 = user.getLatitude();
+                            double y2 = reqUser.getLatitude();
+                            double x1 = user.getLongitude();
+                            double x2 = reqUser.getLongitude();
+                            double ac = Math.abs(y2 - y1);
+                            double cb = Math.abs(x2 - x1);
+                            double distance = Math.hypot(ac, cb);
+                            return distance <= form.getRadius();
+                        }
+                        return true;
+                    })
+                    .collect(Collectors.toList());
         }
     }
 
@@ -91,12 +131,6 @@ public class UserServiceImpl implements UserService {
                 Form defaultForm = new Form();
                 defaultForm.setMan(false);
                 defaultForm.setWoman(false);
-                defaultForm.setFriendship(false);
-                defaultForm.setLove(false);
-                defaultForm.setSex(false);
-                defaultForm.setFlirt(false);
-                defaultForm.setAgeFrom(0);
-                defaultForm.setAgeTo(0);
                 User newUser = new User();
                 newUser.setUsername(user.getUsername());
                 newUser.setPassword(user.getPassword());
@@ -208,13 +242,17 @@ public class UserServiceImpl implements UserService {
                 }
             }
             if (nonNull(user.getEmail())) {
-                if (nonNull(getUserByEmail(user.getEmail()))) {
+                try {
+                    getUserByEmail(user.getEmail());
                     throw new MatchaException("User with such email already exist");
+                } catch (NotFoundException ignored) {
                 }
             }
             if (nonNull(user.getUsername())) {
-                if (nonNull(getUserById(user.getId()))) {
+                try {
+                    getUserByUsername(user.getUsername());
                     throw new MatchaException("User with such username already exist");
+                } catch (NotFoundException ignored) {
                 }
             }
             userMapper.updateUserById(user);
@@ -468,7 +506,7 @@ public class UserServiceImpl implements UserService {
             sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
             if (userMapper.getUserComplaint(from, to) > 0) {
-                throw new MatchaException("User already in black list");
+                throw new MatchaException("Complaint already created");
             }
             userMapper.addingComplaint(from, to, message);
             sqlSession.commit();

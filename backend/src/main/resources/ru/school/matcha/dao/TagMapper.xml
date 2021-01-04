@@ -54,7 +54,7 @@
                        INNER JOIN user_ref_tags urt on "user".id = urt.user_id
               GROUP BY tag_id
               ORDER BY count DESC
-              LIMIT #{count}) AS top
+             ) AS top
                  INNER JOIN tags ON tag_id = tags.id
     </select>
 

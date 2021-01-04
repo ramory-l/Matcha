@@ -20,7 +20,7 @@ public interface TagService {
 
     void deleteUserRefTag(String tagName, Long userId);
 
-    List<Tag> getTopTags(Long count);
+    List<Tag> getTopTags();
 
     List<Tag> getMutualTags(Long firstUserId, Long secondUserId);
 

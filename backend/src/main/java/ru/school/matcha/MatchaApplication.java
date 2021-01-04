@@ -24,8 +24,10 @@ public class MatchaApplication {
         MailUtil.initMail();
         CloudinaryAPI.init();
         path(Path.API.getUrl(), () -> {
-            path(Path.AUTH.getUrl(), () ->
-                    post("/login", AuthenticateController.authenticate, new JsonTransformer()));
+            path(Path.AUTH.getUrl(), () -> {
+                post("/login", AuthenticateController.authenticate, new JsonTransformer());
+                get("/check/password", AuthenticateController.checkPassword, new JsonTransformer());
+            });
             post(Path.USERS.getUrl(), UserController.createUser, new JsonTransformer());
             path(Path.USERS.getUrl(), () -> {
                 post("/batch", UserController.batchUsersCreate, new JsonTransformer());
@@ -41,6 +43,7 @@ public class MatchaApplication {
                 get("/password/:hash", UserController.editPassword, new JsonTransformer());
                 get("/verified/:hash", UserController.verified, new JsonTransformer());
                 get("/matcha/:id", UserController.getMatcha, new JsonTransformer());
+                get("/search/:id", UserController.search, new JsonTransformer());
                 get("/messages/limit/:limit/offset/:offset/first/:first/second/:second", UserController.getMessages, new JsonTransformer());
                 get("/blacklist/:userId", UserController.getUserBlackList, new JsonTransformer());
                 put("/password/reset", UserController.resetPassword, new JsonTransformer());
@@ -61,7 +64,7 @@ public class MatchaApplication {
                 });
                 path(Path.TAGS.getUrl(), () -> {
                     get("/:tagName", UserController.getUsersByTagName, new JsonTransformer());
-                    get("/top/:count", TagController.getTopTags, new JsonTransformer());
+                    get("/top/", TagController.getTopTags, new JsonTransformer());
                 });
                 path(Path.GUESTS.getUrl(), () -> post("/from/:from/to/:to", GuestController.createGuest, new JsonTransformer()));
                 path(Path.IMAGES.getUrl(), () -> {
