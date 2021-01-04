@@ -17,7 +17,7 @@ public class TagConverter extends Converter<TagDto, Tag> {
         }
         TagDto result = new TagDto();
         result.setId(source.getId());
-        result.setTag(source.getTag());
+        result.setName(source.getName());
         return result;
     }
 
@@ -27,7 +27,7 @@ public class TagConverter extends Converter<TagDto, Tag> {
         }
         Tag result = new Tag();
         result.setId(source.getId());
-        result.setTag(source.getTag());
+        result.setName(source.getName());
         return result;
     }
 

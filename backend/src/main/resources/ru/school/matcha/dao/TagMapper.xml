@@ -3,13 +3,13 @@
 
     <resultMap id="Tag" type="ru.school.matcha.domain.Tag">
         <id property="id" column="id"/>
-        <result property="tag" column="tag"/>
+        <result property="name" column="tag"/>
         <result property="createTs" column="create_ts"/>
     </resultMap>
 
     <insert id="createTag" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
         INSERT INTO tags(tag)
-        VALUES (#{tag})
+        VALUES (#{name})
     </insert>
 
     <insert id="createUserRefTag">
