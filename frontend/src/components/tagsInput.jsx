@@ -33,6 +33,7 @@ const TagsInput = ({ userId, editMode, isSearchForm, onHandleTags }) => {
   const handleDelete = async (i) => {
     const newTags = tags.slice(0);
     const tag = newTags.splice(i, 1);
+    if (!tag[0]) return;
     await deleteTag(tag[0].name);
     if (isSearchForm) {
       const tagsStr = newTags

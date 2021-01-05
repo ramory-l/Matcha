@@ -35,7 +35,7 @@ class SearchForm extends Form {
       .label("Age From"),
     age_confirm: Joi.number().required().max(90).label("Age To"),
     radius: Joi.number().optional().min(0).empty("").label("Radius"),
-    tags: Joi.string().optional().label("Tags"),
+    tags: Joi.string().optional().empty("").label("Tags"),
   });
 
   handleTags = (tags) => {
