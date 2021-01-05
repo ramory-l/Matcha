@@ -274,7 +274,7 @@
         FROM (
         SELECT *
         FROM "user"
-        WHERE id != #{userId}
+        WHERE id != #{userId} AND id NOT IN (SELECT "to" FROM black_list WHERE "from" = #{userId})
         <if test="form.man">AND gender ilike 'man'</if>
         <if test="form.woman">AND gender ilike 'woman'</if>
         <if test="!form.man and !form.woman">AND gender ILIKE 'man' AND gender ILIKE 'woman'</if>

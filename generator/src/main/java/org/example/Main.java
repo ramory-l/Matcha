@@ -57,19 +57,25 @@ public class Main {
     private static void createOtherData(List<User> users) {
         users.forEach(user -> {
             String jwt = authorize(user.getUsername(), user.getPassword());
+            Set<Integer> likeSet = new HashSet<>();
             for (int likeCount = 0; likeCount < 15; likeCount++) {
                 int randomLike = random(users.size() - 1, 0);
-                createLike(user.getId(), randomLike, jwt);
+                likeSet.add(randomLike);
             }
+            likeSet.forEach(like -> createLike(user.getId(), like, jwt));
+
             for (int guestCount = 0; guestCount < 15; guestCount++) {
                 int randomGuest = random(users.size() - 1, 0);
                 createGuest(user.getId(), randomGuest, jwt);
             }
+
             List<String> tags = getFile(HASHTAGS);
+            Set<String> tagSet = new HashSet<>();
             for (int tagCount = 0; tagCount < 5; tagCount++) {
                 String tag = tags.get(random(tags.size() - 1, 0));
-                createTag(user.getId(), tag, jwt);
+                tagSet.add(tag);
             }
+            tagSet.forEach(tag -> createTag(user.getId(), tag, jwt));
         });
     }
 
@@ -116,7 +122,13 @@ public class Main {
     }
 
     private static void distributionImages(List<User> users, List<Image> images) {
-        users.forEach(user -> user.setImage(images.stream().filter(image -> image.getUserId().equals(user.getId())).findFirst().get()));
+        users.forEach(user -> user.setImage(images
+                        .stream()
+                        .filter(image -> image.getUserId().equals(user.getId()))
+                        .findFirst()
+                        .get()
+                )
+        );
     }
 
     private static List<Image> deserializeListImages(String json) {

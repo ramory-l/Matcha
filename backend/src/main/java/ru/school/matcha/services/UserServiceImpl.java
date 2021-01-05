@@ -55,7 +55,13 @@ public class UserServiceImpl implements UserService {
                         if (user.getBirthday() != null) {
                             Date userBirthday = user.getBirthday();
                             int years = Years.yearsBetween(new DateTime(userBirthday), new DateTime()).getYears();
-                            if (years <= form.getAgeFrom() || years >= form.getAgeTo()) {
+                            if (isNull(form.getAgeFrom()) && isNull(form.getAgeTo())) {
+                                return false;
+                            }
+                            if (nonNull(form.getAgeFrom()) && years <= form.getAgeFrom()) {
+                                return false;
+                            }
+                            if (nonNull(form.getAgeTo()) && years >= form.getAgeTo()) {
                                 return false;
                             }
                         }
@@ -139,6 +145,11 @@ public class UserServiceImpl implements UserService {
                 newUser.setLastName(user.getLastName());
                 newUser.setRate(0L);
                 newUser.setIsVerified(false);
+                defaultForm.setAgeFrom(0);
+                defaultForm.setAgeTo(0);
+                defaultForm.setRateFrom(0);
+                defaultForm.setRateTo(0);
+                defaultForm.setRadius(0);
                 defaultForm.setId(formService.createForm(defaultForm).getId());
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
