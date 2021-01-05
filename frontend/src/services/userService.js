@@ -128,7 +128,16 @@ export function getUserBlacklist() {
 }
 
 export function searchForUsers(params) {
-  const { man, woman, ageFrom, ageTo, rateFrom, rateTo, radius, tags } = params;
+  const {
+    man,
+    woman,
+    to_age: ageFrom,
+    age_confirm: ageTo,
+    to_rate: rateFrom,
+    rate_confirm: rateTo,
+    radius,
+    tags,
+  } = params;
   const userId = auth.getCurrentUser().id;
   return http.get(
     `${apiEndpoint}/search/${userId}?man=${man}&woman=${woman}&agefrom=${ageFrom}&ageto=${ageTo}${

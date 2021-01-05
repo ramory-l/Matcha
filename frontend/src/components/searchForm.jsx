@@ -9,10 +9,10 @@ class SearchForm extends Form {
     data: {
       man: false,
       woman: false,
-      rateFrom: "",
-      rateTo: "",
-      ageFrom: 18,
-      ageTo: 80,
+      to_rate: "",
+      rate_confirm: "",
+      to_age: 18,
+      age_confirm: 80,
       radius: "",
       tags: "",
     },
@@ -22,11 +22,19 @@ class SearchForm extends Form {
   schema = Joi.object({
     man: Joi.boolean().required().label("Man"),
     woman: Joi.boolean().required().label("Woman"),
-    rateFrom: Joi.number().optional().empty("").label("Rate From"),
-    rateTo: Joi.number().optional().empty("").label("Rate To"),
-    ageFrom: Joi.number().min(18).required().label("Age From"),
-    ageTo: Joi.number().min(18).max(90).required().label("Age To"),
-    radius: Joi.number().optional().empty("").label("Radius"),
+    to_rate: Joi.number()
+      .less(Joi.ref("rate_confirm"))
+      .optional()
+      .empty("")
+      .label("Rate From"),
+    rate_confirm: Joi.number().optional().empty("").label("Rate To"),
+    to_age: Joi.number()
+      .less(Joi.ref("age_confirm"))
+      .min(18)
+      .required()
+      .label("Age From"),
+    age_confirm: Joi.number().required().max(90).label("Age To"),
+    radius: Joi.number().optional().min(0).empty("").label("Radius"),
     tags: Joi.string().optional().label("Tags"),
   });
 
@@ -47,10 +55,10 @@ class SearchForm extends Form {
         </div>
         <div className="SearchForm-Options">
           <div className="Options-Title">Options:</div>
-          {this.renderInput("rateFrom", "Rate From")}
-          {this.renderInput("rateTo", "Rate To")}
-          {this.renderInput("ageFrom", "Age From")}
-          {this.renderInput("ageTo", "Age To")}
+          {this.renderInput("to_rate", "Rate From")}
+          {this.renderInput("rate_confirm", "Rate To")}
+          {this.renderInput("to_age", "Age From")}
+          {this.renderInput("age_confirm", "Age To")}
         </div>
         <div className="SearchForm-Location">
           <div className="Location-Title">Location:</div>

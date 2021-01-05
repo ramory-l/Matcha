@@ -16,12 +16,14 @@ const TagsInput = ({ userId, editMode, isSearchForm, onHandleTags }) => {
         ? await getUserTags(getCurrentUser().id)
         : await getUserTags(userId);
       const { data: suggestions } = await getTopTags();
-      const tagsStr = tags
-        .map((tag) => {
-          return `${tag.name}`;
-        })
-        .join(",");
-      onHandleTags(tagsStr);
+      if (isSearchForm) {
+        const tagsStr = tags
+          .map((tag) => {
+            return `${tag.name}`;
+          })
+          .join(",");
+        onHandleTags(tagsStr);
+      }
       setTags(tags);
       setSuggestions(suggestions);
     };
@@ -32,12 +34,28 @@ const TagsInput = ({ userId, editMode, isSearchForm, onHandleTags }) => {
     const newTags = tags.slice(0);
     const tag = newTags.splice(i, 1);
     await deleteTag(tag[0].name);
+    if (isSearchForm) {
+      const tagsStr = newTags
+        .map((tag) => {
+          return `${tag.name}`;
+        })
+        .join(",");
+      onHandleTags(tagsStr);
+    }
     setTags(newTags);
   };
 
   const handleAddition = async (tag) => {
     const newTags = [].concat(tags, tag);
     await createTag(tag.name);
+    if (isSearchForm) {
+      const tagsStr = newTags
+        .map((tag) => {
+          return `${tag.name}`;
+        })
+        .join(",");
+      onHandleTags(tagsStr);
+    }
     setTags(newTags);
   };
 

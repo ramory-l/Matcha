@@ -15,3 +15,10 @@
   background-color: gray;
   box-shadow: 0 0 10px 3px gray;
 }
+
+@media (max-width: 500px) {
+  .StatusIndicator {
+    width: 10px;
+    height: 10px;
+  }
+}
