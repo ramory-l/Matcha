@@ -82,7 +82,9 @@ class Form extends Component {
     }
 
     const data = { ...this.state.data };
-    data[input.name] = input.value;
+    if (input.type === "checkbox") data[input.name] = input.checked;
+    else data[input.name] = input.value;
+
     this.setState({ data, errors });
   };
 
@@ -100,7 +102,7 @@ class Form extends Component {
       <CheckBox
         label={label}
         name={name}
-        value={data[name]}
+        checked={data[name]}
         onChange={onChange || this.handleChange}
         error={errors[name]}
       />

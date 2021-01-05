@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactTags from "react-tag-autocomplete";
 import { getCurrentUser } from "../services/authService";
-import { getTopTags } from "../services/tagsService";
+import { createTag, deleteTag, getTopTags } from "../services/tagsService";
 import { getUserTags } from "../services/userService";
 import "./styles/tagsInput.scss";
 
-const TagsInput = ({ userId, editMode, isSearchForm }) => {
+const TagsInput = ({ userId, editMode, isSearchForm, onHandleTags }) => {
   const [tags, setTags] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const tagInput = useRef(null);
@@ -13,23 +13,31 @@ const TagsInput = ({ userId, editMode, isSearchForm }) => {
   useEffect(() => {
     const fetchTags = async () => {
       const { data: tags } = isSearchForm
-        ? await getUserTags(getCurrentUser().sub)
+        ? await getUserTags(getCurrentUser().id)
         : await getUserTags(userId);
       const { data: suggestions } = await getTopTags();
+      const tagsStr = tags
+        .map((tag) => {
+          return `${tag.name}`;
+        })
+        .join(",");
+      onHandleTags(tagsStr);
       setTags(tags);
       setSuggestions(suggestions);
     };
     fetchTags();
-  }, [userId, isSearchForm]);
+  }, [userId, isSearchForm, onHandleTags]);
 
-  const handleDelete = (i) => {
+  const handleDelete = async (i) => {
     const newTags = tags.slice(0);
-    newTags.splice(i, 1);
+    const tag = newTags.splice(i, 1);
+    await deleteTag(tag[0].name);
     setTags(newTags);
   };
 
-  const handleAddition = (tag) => {
+  const handleAddition = async (tag) => {
     const newTags = [].concat(tags, tag);
+    await createTag(tag.name);
     setTags(newTags);
   };
 

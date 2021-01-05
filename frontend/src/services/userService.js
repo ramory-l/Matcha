@@ -126,3 +126,18 @@ export function getUserBlacklist() {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
   });
 }
+
+export function searchForUsers(params) {
+  const { man, woman, ageFrom, ageTo, rateFrom, rateTo, radius, tags } = params;
+  const userId = auth.getCurrentUser().id;
+  return http.get(
+    `${apiEndpoint}/search/${userId}?man=${man}&woman=${woman}&agefrom=${ageFrom}&ageto=${ageTo}${
+      rateFrom ? `&ratefrom=${rateFrom}` : ""
+    }${rateTo ? `&rateto=${rateTo}` : ""}${radius ? `&radius=${radius}` : ""}${
+      tags ? `&tags=${tags}` : ""
+    }`,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}
