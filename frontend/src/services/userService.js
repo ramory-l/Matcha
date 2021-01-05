@@ -142,9 +142,9 @@ export function searchForUsers(params) {
   return http.get(
     `${apiEndpoint}/search/${userId}?man=${man}&woman=${woman}&agefrom=${ageFrom}&ageto=${ageTo}${
       rateFrom ? `&ratefrom=${rateFrom}` : ""
-    }${rateTo ? `&rateto=${rateTo}` : ""}${radius ? `&radius=${radius}` : ""}${
-      tags ? `&tags=${tags}` : ""
-    }`,
+    }${rateTo ? `&rateto=${rateTo}` : ""}${
+      radius ? `&radius=${radius}` : `&radius=${0}`
+    }${tags ? `&tags=${tags}` : ""}`,
     {
       headers: { "x-auth-token": `T_${auth.getJwt()}` },
     }

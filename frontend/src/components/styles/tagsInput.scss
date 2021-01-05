@@ -12,6 +12,7 @@
 
   /* clicking anywhere will focus the input */
   cursor: text;
+  z-index: 1;
 }
 
 .react-tags.is-focused {
