@@ -59,13 +59,13 @@ public class Main {
             String jwt = authorize(user.getUsername(), user.getPassword());
             Set<Integer> likeSet = new HashSet<>();
             for (int likeCount = 0; likeCount < 15; likeCount++) {
-                int randomLike = random(users.size() - 1, 0);
+                int randomLike = random(users.size() - 1, 1);
                 likeSet.add(randomLike);
             }
             likeSet.forEach(like -> createLike(user.getId(), like, jwt));
 
             for (int guestCount = 0; guestCount < 15; guestCount++) {
-                int randomGuest = random(users.size() - 1, 0);
+                int randomGuest = random(users.size() - 1, 1);
                 createGuest(user.getId(), randomGuest, jwt);
             }
 
