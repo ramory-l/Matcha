@@ -145,6 +145,11 @@ public class UserServiceImpl implements UserService {
                 newUser.setLastName(user.getLastName());
                 newUser.setRate(0L);
                 newUser.setIsVerified(false);
+                defaultForm.setAgeFrom(0);
+                defaultForm.setAgeTo(0);
+                defaultForm.setRateFrom(0);
+                defaultForm.setRateTo(0);
+                defaultForm.setRadius(0);
                 defaultForm.setId(formService.createForm(defaultForm).getId());
                 formId = defaultForm.getId();
                 userMapper.createUser(newUser, defaultForm.getId());
