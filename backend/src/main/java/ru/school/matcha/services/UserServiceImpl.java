@@ -55,7 +55,13 @@ public class UserServiceImpl implements UserService {
                         if (user.getBirthday() != null) {
                             Date userBirthday = user.getBirthday();
                             int years = Years.yearsBetween(new DateTime(userBirthday), new DateTime()).getYears();
-                            if (years <= form.getAgeFrom() || years >= form.getAgeTo()) {
+                            if (isNull(form.getAgeFrom()) && isNull(form.getAgeTo())) {
+                                return false;
+                            }
+                            if (nonNull(form.getAgeFrom()) && years <= form.getAgeFrom()) {
+                                return false;
+                            }
+                            if (nonNull(form.getAgeTo()) && years >= form.getAgeTo()) {
                                 return false;
                             }
                         }

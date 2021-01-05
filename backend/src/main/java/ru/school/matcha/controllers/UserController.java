@@ -64,14 +64,18 @@ public class UserController {
     };
 
     public static Route search = (request, response) -> {
+        Integer ageFrom = nonNull(request.queryParams("agefrom")) ? parseInt(request.queryParams("agefrom")) : null;
+        Integer ageTo = nonNull(request.queryParams("ageto")) ? parseInt(request.queryParams("ageto")) : null;
+        Integer rateTo = nonNull(request.queryParams("rateto")) ? parseInt(request.queryParams("rateto")) : null;
+        Integer rateFrom = nonNull(request.queryParams("ratefrom")) ? parseInt(request.queryParams("ratefrom")) : null;
         FormDto formDto = new FormDto(
                 null,
                 Boolean.parseBoolean(request.queryParams("man")),
                 Boolean.parseBoolean(request.queryParams("woman")),
-                parseInt(request.queryParams("agefrom")),
-                parseInt(request.queryParams("ageto")),
-                parseInt(request.queryParams("ratefrom")),
-                parseInt(request.queryParams("rateto")),
+                ageFrom,
+                ageTo,
+                rateFrom,
+                rateTo,
                 parseInt(request.queryParams("radius"))
         );
         String tags = request.queryParams("tags");
