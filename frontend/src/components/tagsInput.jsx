@@ -34,7 +34,7 @@ const TagsInput = ({ userId, editMode, isSearchForm, onHandleTags }) => {
     const newTags = tags.slice(0);
     const tag = newTags.splice(i, 1);
     if (!tag[0]) return;
-    await deleteTag(tag[0].name);
+    if (!isSearchForm) await deleteTag(tag[0].name);
     if (isSearchForm) {
       const tagsStr = newTags
         .map((tag) => {
@@ -48,7 +48,7 @@ const TagsInput = ({ userId, editMode, isSearchForm, onHandleTags }) => {
 
   const handleAddition = async (tag) => {
     const newTags = [].concat(tags, tag);
-    await createTag(tag.name);
+    if (!isSearchForm) await createTag(tag.name);
     if (isSearchForm) {
       const tagsStr = newTags
         .map((tag) => {
