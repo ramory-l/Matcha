@@ -122,9 +122,9 @@ class SearchForm extends Form {
               >
                 Sort by distance{" "}
                 {this.context.sortBy.order === "asc" ? (
-                  <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                  <i className="fa fa-sort-asc" aria-hidden="true"></i>
                 ) : (
-                  <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                  <i className="fa fa-sort-desc" aria-hidden="true"></i>
                 )}
               </button>
               <button
@@ -138,9 +138,9 @@ class SearchForm extends Form {
               >
                 Sort by rate{" "}
                 {this.context.sortBy.order === "asc" ? (
-                  <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                  <i className="fa fa-sort-asc" aria-hidden="true"></i>
                 ) : (
-                  <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                  <i className="fa fa-sort-desc" aria-hidden="true"></i>
                 )}
               </button>
               <button
@@ -154,9 +154,9 @@ class SearchForm extends Form {
               >
                 Sort by age{" "}
                 {this.context.sortBy.order === "asc" ? (
-                  <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                  <i className="fa fa-sort-asc" aria-hidden="true"></i>
                 ) : (
-                  <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                  <i className="fa fa-sort-desc" aria-hidden="true"></i>
                 )}
               </button>
             </div>
