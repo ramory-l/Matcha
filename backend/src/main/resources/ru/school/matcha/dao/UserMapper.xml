@@ -275,8 +275,9 @@
         SELECT *
         FROM "user"
         WHERE id != #{userId} AND id NOT IN (SELECT "to" FROM black_list WHERE "from" = #{userId})
-        <if test="form.man">AND gender ilike 'man'</if>
-        <if test="form.woman">AND gender ilike 'woman'</if>
+        <if test="form.man and !form.woman">AND gender ilike 'man'</if>
+        <if test="form.woman and !form.man">AND gender ilike 'woman'</if>
+        <if test="form.man and form.woman">AND gender ILIKE 'man' OR gender ILIKE 'woman'</if>
         <if test="!form.man and !form.woman">AND gender ILIKE 'man' OR gender ILIKE 'woman'</if>
         <if test="form.rateFrom != null">AND rate &gt;= #{form.rateFrom}</if>
         <if test="form.rateTo != null">AND rate &lt;= #{form.rateTo}</if>) as users
