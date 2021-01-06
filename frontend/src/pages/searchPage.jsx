@@ -48,6 +48,7 @@ const SearchPage = () => {
     const { data: foundedUsers } = await searchForUsers(getUserForm());
     const { data: likesDislikes } = await getUserRates("likesDislikes", true);
     const filtered = foundedUsers.filter((user) => {
+      if (user.id === getCurrentUser().id) return false;
       if (likesDislikes.likes.filter((like) => user.id === like.id).length)
         return false;
       if (
