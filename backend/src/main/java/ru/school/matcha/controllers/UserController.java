@@ -134,7 +134,7 @@ public class UserController {
         String hash = request.params("hash");
         userService.updatePassword(hash);
         response.status(Response.GET.getStatus());
-        return "";
+        return "Password edited";
     };
 
     public static Route getMatcha = (request, response) -> {
@@ -194,7 +194,7 @@ public class UserController {
         String hash = request.params("hash");
         userService.verified(hash);
         response.status(Response.GET.getStatus());
-        return "";
+        return "Profile verified";
     };
 
     public static Route addToBlackList = (request, response) -> {
