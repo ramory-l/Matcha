@@ -68,6 +68,9 @@ public class UserController {
         Integer ageTo = nonNull(request.queryParams("ageto")) ? parseInt(request.queryParams("ageto")) : null;
         Integer rateTo = nonNull(request.queryParams("rateto")) ? parseInt(request.queryParams("rateto")) : null;
         Integer rateFrom = nonNull(request.queryParams("ratefrom")) ? parseInt(request.queryParams("ratefrom")) : null;
+        if (ageFrom < 0 || ageTo < 0) {
+            throw new NumberFormatException();
+        }
         FormDto formDto = new FormDto(
                 null,
                 Boolean.parseBoolean(request.queryParams("man")),
@@ -134,7 +137,7 @@ public class UserController {
         String hash = request.params("hash");
         userService.updatePassword(hash);
         response.status(Response.GET.getStatus());
-        return "";
+        return "Password edited";
     };
 
     public static Route getMatcha = (request, response) -> {
@@ -194,7 +197,7 @@ public class UserController {
         String hash = request.params("hash");
         userService.verified(hash);
         response.status(Response.GET.getStatus());
-        return "";
+        return "Profile verified";
     };
 
     public static Route addToBlackList = (request, response) -> {

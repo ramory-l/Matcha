@@ -122,6 +122,15 @@ public class UserServiceImpl implements UserService {
     public Long createUser(User user) {
         checkAllDataForNewUser(user);
         String username = user.getUsername();
+        String email = user.getEmail();
+        try {
+            getUserByUsername(username);
+            throw new MatchaException("User with username already exist");
+        } catch (NotFoundException ignored) {}
+        try {
+            getUserByEmail(email);
+            throw new MatchaException("User with email already exist");
+        } catch (NotFoundException ignored) {}
         try {
             try {
                 user.setPassword(PasswordCipher.generateStrongPasswordHash(user.getPassword()));
