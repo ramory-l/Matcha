@@ -1,20 +1,47 @@
 .SearchForm {
   display: flex;
+  flex-direction: row;
   width: 100%;
   border: 1px solid black;
   border-radius: 5px;
   padding: 10px;
-  background: rgba(180, 228, 240, 0.5);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-  font-family: "Cinzel Decorative", cursive;
 }
 
 .SearchForm-Gender {
   margin-right: 50px;
+  .Gender-Title {
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 5px;
+  }
 }
 
-.SearchForm-Targets {
+.SearchForm-Options {
   margin-right: 50px;
+  .Options-Title {
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 5px;
+  }
+}
+
+.SearchForm-Location {
+  margin-right: 50px;
+  .Location-Title {
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 5px;
+  }
+}
+
+.SearchForm-Tags {
+  width: 100%;
+  .Tags-Title {
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 5px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -22,13 +49,13 @@
     margin-right: 5px;
   }
 
-  .SearchForm-Targets {
+  .SearchForm-Options {
     margin-right: 5px;
   }
 }
 
-@media (max-width: 350px) {
+@media (max-width: 500px) {
   .SearchForm {
-    display: block;
+    flex-direction: column;
   }
 }

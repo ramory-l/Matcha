@@ -48,6 +48,10 @@ export function findSimilarityInForms(userForm, anotherUser) {
   // console.log(Number(moment(anotherUser.birthday).fromNow(true).slice(0, 3)));
   const likes = userForm.likesDislikes.likes;
   const dislikes = userForm.likesDislikes.dislikes;
+  const blackList = userForm.blackList;
+
+  if (blackList.filter((blocked) => blocked.id === anotherUser.id).length)
+    return false;
 
   if (
     likes.filter((like) => like.id === anotherUser.id).length ||

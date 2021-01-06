@@ -33,6 +33,10 @@ export function getJwt() {
   return localStorage.getItem(tokenKey);
 }
 
+export function getJwtFromEndpoint(username, password) {
+  return http.post(apiEndpoint, { username, password });
+}
+
 export default {
   login,
   logout,

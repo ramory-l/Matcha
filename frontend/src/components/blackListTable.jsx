@@ -2,36 +2,37 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Loading from "./common/loading";
 import Table from "./common/table";
+import { getUserBlacklist } from "../services/userService";
 import _ from "lodash";
 import moment from "moment";
-import { getUserMatches } from "../services/userService";
-import HelpBox from "./common/helpBox";
 
-const MatchesTable = (props) => {
+const BlackListTable = (props) => {
   const [sortColumn, setSortColumn] = useState({
     path: "username",
     order: "asc",
   });
-  const [matches, setmatches] = useState([]);
+  const [blackList, setBlackList] = useState([]);
 
   useEffect(() => {
-    async function fetchMatches() {
-      const { data: matches } = await getUserMatches();
-      const modifiedMatches = matches.map((match) => {
-        const newMatch = { ...match };
-        const age = moment().diff(newMatch.birthday, "years");
-        newMatch.gender = newMatch.gender ? newMatch.gender : "No gender";
-        newMatch.birthday = isNaN(age) ? "No age" : age;
-        return newMatch;
+    async function fetchBlackList() {
+      const { data: blackList } = await getUserBlacklist();
+      const modifiedBlackList = blackList.map((blockedUser) => {
+        const newBlockedUser = { ...blockedUser };
+        const age = moment().diff(newBlockedUser.birthday, "years");
+        newBlockedUser.gender = newBlockedUser.gender
+          ? newBlockedUser.gender
+          : "No gender";
+        newBlockedUser.birthday = isNaN(age) ? "No age" : age;
+        return newBlockedUser;
       });
       const sorted = _.orderBy(
-        modifiedMatches,
+        modifiedBlackList,
         [sortColumn.path],
         [sortColumn.order]
       );
-      setmatches(sorted);
+      setBlackList(sorted);
     }
-    fetchMatches();
+    fetchBlackList();
   }, [sortColumn]);
 
   const columns = [
@@ -62,28 +63,16 @@ const MatchesTable = (props) => {
     },
     { path: "gender", label: "Gender" },
     { path: "birthday", label: "Age" },
-    {
-      path: "tags",
-      label: "Common tags",
-      content: (user) => {
-        const tagsStr = user.tags
-          .map((tag) => {
-            return `#${tag.name}`;
-          })
-          .join(", ");
-        return <HelpBox textInBox={tagsStr} text={user.tags.length} />;
-      },
-    },
   ];
 
   const handleSort = (sortColumn) => {
     setSortColumn(sortColumn);
   };
 
-  return matches ? (
+  return blackList ? (
     <Table
       columns={columns}
-      data={matches}
+      data={blackList}
       onSort={handleSort}
       sortColumn={sortColumn}
       style={{
@@ -96,4 +85,4 @@ const MatchesTable = (props) => {
   );
 };
 
-export default MatchesTable;
+export default BlackListTable;

@@ -3,12 +3,19 @@
   .carousel-inner {
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.247);
+    .carousel-item {
+      img {
+        height: 400px;
+      }
+    }
     .carousel-caption {
-      padding: 0;
+      line-height: 5px;
       right: 0;
       bottom: 0;
       left: 0;
+      padding: 0;
       background-color: rgba(0, 0, 0, 0.582);
+      font-family: "Cinzel Decorative", cursive;
       h5,
       p {
         color: white;
@@ -28,9 +35,11 @@
 
 @media (max-width: 500px) {
   .carousel.modified {
+    width: 100%;
     .carousel-inner {
       .carousel-caption {
-        height: 35px;
+        height: 90px;
+        bottom: -20px;
         h5,
         p {
           font-size: 7pt;
@@ -44,17 +53,20 @@
       right: 15px;
     }
     i {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      background-color: black;
+      border-radius: 50px;
       font-size: 2em;
     }
   }
 }
 
-@media (max-width: 350px) {
+@media (max-width: 800px) {
   .carousel.modified {
-    .carousel-inner {
-      .carousel-caption {
-        height: 30px;
-      }
-    }
+    width: 100%;
   }
 }

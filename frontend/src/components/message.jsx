@@ -15,7 +15,7 @@ const Message = ({ messageData, recipient }) => {
         {messageData.message}
       </span>
       <span className="Message-Date">
-        {moment(messageData.createTs).format("YYYY-MM-DD, h:mm:ss a")}
+        {moment(messageData.createTs).format("DD-MM-YYYY, h:mm:ss a")}
       </span>
     </div>
   );

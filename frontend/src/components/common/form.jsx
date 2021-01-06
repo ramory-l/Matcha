@@ -82,7 +82,9 @@ class Form extends Component {
     }
 
     const data = { ...this.state.data };
-    data[input.name] = input.value;
+    if (input.type === "checkbox") data[input.name] = input.checked;
+    else data[input.name] = input.value;
+
     this.setState({ data, errors });
   };
 
@@ -95,7 +97,16 @@ class Form extends Component {
   }
 
   renderCheckbox(name, label, onChange) {
-    return <CheckBox label={label} name={name} onChange={onChange} />;
+    const { data, errors } = this.state;
+    return (
+      <CheckBox
+        label={label}
+        name={name}
+        checked={data[name]}
+        onChange={onChange || this.handleChange}
+        error={errors[name]}
+      />
+    );
   }
 
   renderInput(name, label, readonly = false, type = "text") {
@@ -142,7 +153,7 @@ class Form extends Component {
   }
 
   renderDatePicker(name, label, readonly) {
-    const { data } = this.state;
+    const { data, errors } = this.state;
     return (
       <DatePicker
         name={name}
@@ -150,6 +161,7 @@ class Form extends Component {
         value={data[name]}
         readonly={readonly}
         onChange={this.handleChange}
+        error={errors[name]}
       />
     );
   }

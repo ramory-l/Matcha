@@ -1,6 +1,6 @@
 import React from "react";
 
-const CheckBox = ({ label, name, onChange = null, checked = false }) => {
+const CheckBox = ({ label, name, onChange = null, checked }) => {
   return (
     <div className="form-group form-check">
       <input
