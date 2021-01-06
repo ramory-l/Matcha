@@ -31,7 +31,6 @@ const UsersCarousel = ({ users, myData }) => {
       [searchContext.sortBy.path],
       [searchContext.sortBy.order]
     );
-    console.log(searchContext.sortBy);
     setFetchedUsers(sorted);
   }, [users, searchContext.sortBy, myData]);
 

@@ -110,7 +110,7 @@ class SearchForm extends Form {
                 isSearchForm={true}
                 onTagsForSearchForm={this.handleTagsForSearchForm}
               />
-              {this.renderButton("Search")}
+              {this.renderButton("Search", "btn btn-primary mt-2")}
               <button
                 onClick={() =>
                   this.handleSort({
@@ -118,7 +118,7 @@ class SearchForm extends Form {
                     order: this.context.sortBy.order,
                   })
                 }
-                className="btn btn-dark mx-2"
+                className="btn btn-dark mx-2 mt-2"
               >
                 Sort by distance{" "}
                 {this.context.sortBy.order === "asc" ? (
@@ -134,7 +134,7 @@ class SearchForm extends Form {
                     order: this.context.sortBy.order,
                   })
                 }
-                className="btn btn-secondary mr-2"
+                className="btn btn-secondary mr-2 mt-2"
               >
                 Sort by rate{" "}
                 {this.context.sortBy.order === "asc" ? (
@@ -150,7 +150,7 @@ class SearchForm extends Form {
                     order: this.context.sortBy.order,
                   })
                 }
-                className="btn btn-success"
+                className="btn btn-success mt-2"
               >
                 Sort by age{" "}
                 {this.context.sortBy.order === "asc" ? (
