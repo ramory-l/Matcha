@@ -42,7 +42,7 @@ const BlackListTable = (props) => {
       content: (user) => (
         <img
           alt={user.username}
-          style={{ width: "5vw" }}
+          style={{ width: "50px" }}
           src={`${
             user.avatar?.link ? user.avatar.link : "/default-avatar.png"
           }`}

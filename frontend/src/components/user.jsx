@@ -11,8 +11,8 @@ import MatchesTable from "./matchesTable";
 import { getUserImages } from "../services/imageService";
 import { updateUser } from "../services/userService";
 import { toast } from "react-toastify";
-import "./styles/user.scss";
 import BlackListTable from "./blackListTable";
+import "./styles/user.scss";
 
 const User = (props) => {
   const [images, setImages] = useState([]);

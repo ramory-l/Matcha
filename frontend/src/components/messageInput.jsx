@@ -4,7 +4,7 @@ const MessageInput = ({ onMessageSend }) => {
   const [message, setMessage] = useState("");
 
   const handleSendButtonPress = () => {
-    if (message) {
+    if (message.trim()) {
       onMessageSend(message);
       setMessage("");
     }

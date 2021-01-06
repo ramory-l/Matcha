@@ -9,6 +9,7 @@ const RateButtons = ({ user, rateUpdateFunction, isBlocked }) => {
   const userLikeValue = user.isLiked ? "active" : "";
   const userDislikeValue = user.isDisliked ? "active" : "";
   const baseContext = useContext(BaseContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchLiker() {
@@ -28,7 +29,7 @@ const RateButtons = ({ user, rateUpdateFunction, isBlocked }) => {
     };
 
     const actionValue = action === "like" ? 1 : -1;
-
+    setIsLoading(true);
     if (!user.isLiked && !user.isDisliked) {
       await rateUser(user.id, action);
       if (action === "like") user.isLiked = true;
@@ -60,12 +61,13 @@ const RateButtons = ({ user, rateUpdateFunction, isBlocked }) => {
         baseContext.webSocket.send(JSON.stringify(likeDislikeNotification));
       }
     }
+    setIsLoading(false);
   };
 
   return (
     <div className="RateButtons">
       <button
-        disabled={!user.avatar || isBlocked || !likerAvatar}
+        disabled={!user.avatar || isBlocked || !likerAvatar || isLoading}
         onClick={(e) => {
           e.preventDefault();
           handleRateChange("like");
@@ -76,7 +78,7 @@ const RateButtons = ({ user, rateUpdateFunction, isBlocked }) => {
         <i className="fa fa-thumbs-up" aria-hidden="true"></i>
       </button>
       <button
-        disabled={!user.avatar || isBlocked || !likerAvatar}
+        disabled={!user.avatar || isBlocked || !likerAvatar || isLoading}
         onClick={(e) => {
           e.preventDefault();
           handleRateChange("dislike");

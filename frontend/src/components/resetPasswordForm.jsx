@@ -19,10 +19,14 @@ class ResetPasswordForm extends Form {
       .email({ tlds: false })
       .required()
       .label("Email address"),
-    to_new_password: Joi.string().required().label("New Password"),
+    to_new_password: Joi.string()
+      .required()
+      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
+      .label("New Password"),
     new_password_confirm: Joi.any()
       .equal(Joi.ref("to_new_password"))
       .required()
+      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
       .label("Confirm new password")
       .options({
         messages: {
@@ -50,7 +54,7 @@ class ResetPasswordForm extends Form {
   render() {
     return (
       <form className="RegisterForm" onSubmit={this.handleSubmit}>
-        <h1>Reset Password Form</h1>
+        <span className="RegisterForm-Title">Reset Password Form</span>
         {this.renderInput("email", "Email address")}
         {this.renderInput("to_new_password", "New Password", false, "password")}
         {this.renderInput(

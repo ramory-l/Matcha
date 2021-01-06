@@ -8,15 +8,13 @@ import "./styles/imageFileInput.scss";
 
 const ImageFileInput = ({ name, label, userId }) => {
   const [newLabel, setNewLabel] = useState(label);
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const [image, setImage] = useState(null);
   const userContext = useContext(UserContext);
 
   const handleChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      // file.name.length > 13
-      //   ? setNewLabel(file.name.slice(0, 7) + "...")
-      //   : setNewLabel(file.name);
       setNewLabel(file.name);
       const filename = file.name.split(".")[0];
       const imageBase64 = await toBase64(file);
@@ -32,9 +30,11 @@ const ImageFileInput = ({ name, label, userId }) => {
   const handleUploadButtonClick = async () => {
     if (image) {
       try {
+        setIsImageLoading(true);
         await uploadImage(image);
         userContext.handleNewImages();
         toast.success("Successfully added new image!");
+        setIsImageLoading(false);
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
           toast.error("You can upload max 5 photos!");
@@ -47,6 +47,7 @@ const ImageFileInput = ({ name, label, userId }) => {
     <FileInput
       name={name}
       label={newLabel}
+      isLoading={isImageLoading}
       divClassName="DivFileInput"
       className="ImageFileInput"
       onChange={handleChange}

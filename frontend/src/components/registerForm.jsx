@@ -25,13 +25,17 @@ class RegisterForm extends Form {
     firstName: Joi.string().required().label("First Name"),
     lastName: Joi.string().required().label("Last Name"),
     email: Joi.string()
-      .email({ tlds: false })
+      .email({ minDomainSegments: 2, tlds: { allow: ["com", "ru"] } })
       .required()
       .label("Email address"),
-    to_password: Joi.string().required().label("Password"),
+    to_password: Joi.string()
+      .required()
+      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
+      .label("Password"),
     password_confirm: Joi.any()
       .equal(Joi.ref("to_password"))
       .required()
+      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
       .label("Confirm password")
       .options({
         messages: { "any.only": '"Password" and {{#label}} does not match' },

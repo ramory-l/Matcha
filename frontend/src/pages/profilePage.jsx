@@ -12,7 +12,11 @@ const UserWithLoading = WithLoading(User);
 const ProfilePage = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
-  let isMe = props.match.params.username === "me" ? true : false;
+  let isMe =
+    props.match.params.username === "me" ||
+    props.match.params.username === auth.getCurrentUser().sub
+      ? true
+      : false;
   const [editMode, setEditMode] = useState(false);
   const baseContext = useContext(BaseContext);
 

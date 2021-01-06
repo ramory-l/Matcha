@@ -21,6 +21,10 @@ const UserAvatar = (props) => {
   const userContext = useContext(UserContext);
 
   useEffect(() => {
+    setRate(user.rate);
+  }, [user]);
+
+  useEffect(() => {
     async function getMatches() {
       const { data: matches } = await getUserMatches();
       const { data: blackList } = await getUserBlacklist();

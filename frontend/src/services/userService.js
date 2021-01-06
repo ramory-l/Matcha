@@ -144,7 +144,9 @@ export function searchForUsers(params) {
 
   const userId = auth.getCurrentUser().id;
   return http.get(
-    `${apiEndpoint}/search/${userId}?man=${man}&woman=${woman}&agefrom=${ageFrom}&ageto=${ageTo}${
+    `${apiEndpoint}/search/${userId}?man=${man}&woman=${woman}${
+      ageFrom ? `&agefrom=${ageFrom}` : `&agefrom=${0}`
+    }${ageTo ? `&ageto=${ageTo}` : `&ageto=${0}`}${
       rateFrom ? `&ratefrom=${rateFrom}` : ""
     }${rateTo ? `&rateto=${rateTo}` : ""}${
       radius ? `&radius=${radius}` : `&radius=${0}`

@@ -35,9 +35,9 @@ class SearchForm extends Form {
     to_age: Joi.number()
       .less(Joi.ref("age_confirm"))
       .min(18)
-      .required()
+      .optional()
       .label("Age From"),
-    age_confirm: Joi.number().required().max(90).label("Age To"),
+    age_confirm: Joi.number().optional().max(90).label("Age To"),
     radius: Joi.number().optional().min(0).empty("").label("Radius"),
     tags: Joi.array().optional().label("Tags"),
   });
