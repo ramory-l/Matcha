@@ -79,24 +79,28 @@ const UsersCarousel = ({ users, myData }) => {
           </div>
         ))}
       </div>
-      <a
-        className="carousel-control-prev"
-        href="#carouselExampleControls"
-        role="button"
-        data-slide="next"
-        onClick={() => handleLikeDislike("like")}
-      >
-        <i className="fa fa-thumbs-up text-success" aria-hidden="true"></i>
-      </a>
-      <a
-        className="carousel-control-next"
-        href="#carouselExampleControls"
-        role="button"
-        data-slide="next"
-        onClick={() => handleLikeDislike("dislike")}
-      >
-        <i className="fa fa-thumbs-down text-danger" aria-hidden="true"></i>
-      </a>
+      {fetchedUsers.length ? (
+        <>
+          <a
+            className="carousel-control-prev"
+            href="#carouselExampleControls"
+            role="button"
+            data-slide="next"
+            onClick={() => handleLikeDislike("like")}
+          >
+            <i className="fa fa-thumbs-up text-success" aria-hidden="true"></i>
+          </a>
+          <a
+            className="carousel-control-next"
+            href="#carouselExampleControls"
+            role="button"
+            data-slide="next"
+            onClick={() => handleLikeDislike("dislike")}
+          >
+            <i className="fa fa-thumbs-down text-danger" aria-hidden="true"></i>
+          </a>
+        </>
+      ) : null}
     </div>
   );
 };
