@@ -2,6 +2,7 @@ import http from "./httpService";
 import { apiUrl } from "../config.json";
 import auth from "./authService";
 import moment from "moment";
+import { tagsToString } from "../utils/tagsUtils";
 
 const apiEndpoint = apiUrl + "/users";
 
@@ -138,13 +139,16 @@ export function searchForUsers(params) {
     radius,
     tags,
   } = params;
+
+  let tagsInString = tagsToString(tags);
+
   const userId = auth.getCurrentUser().id;
   return http.get(
     `${apiEndpoint}/search/${userId}?man=${man}&woman=${woman}&agefrom=${ageFrom}&ageto=${ageTo}${
       rateFrom ? `&ratefrom=${rateFrom}` : ""
     }${rateTo ? `&rateto=${rateTo}` : ""}${
       radius ? `&radius=${radius}` : `&radius=${0}`
-    }${tags ? `&tags=${tags}` : ""}`,
+    }${tagsInString ? `&tags=${tagsInString}` : ""}`,
     {
       headers: { "x-auth-token": `T_${auth.getJwt()}` },
     }
