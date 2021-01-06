@@ -14,3 +14,13 @@
     margin-left: 0;
   }
 }
+
+@media (max-width: 500px) {
+  .ProfileForm-FullName {
+    font-size: 16pt;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

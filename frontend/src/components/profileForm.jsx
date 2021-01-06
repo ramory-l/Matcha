@@ -109,7 +109,9 @@ class ProfileForm extends Form {
     const { firstName, lastName } = this.state.data;
     return (
       <form className="ProfileForm" onSubmit={this.handleSubmit}>
-        <h2>{editMode ? "Editing profile" : firstName + " " + lastName}</h2>
+        <h2 className="ProfileForm-FullName">
+          {editMode ? "Editing profile" : firstName + " " + lastName}
+        </h2>
         <ProfileImages
           userId={user.id}
           modalTitle={`${firstName}'s photos`}

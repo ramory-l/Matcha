@@ -26,7 +26,6 @@ class ResetPasswordForm extends Form {
     new_password_confirm: Joi.any()
       .equal(Joi.ref("to_new_password"))
       .required()
-      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
       .label("Confirm new password")
       .options({
         messages: {

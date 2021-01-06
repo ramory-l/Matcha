@@ -27,6 +27,7 @@ class RegisterForm extends Form {
     email: Joi.string()
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "ru"] } })
       .required()
+      .pattern(new RegExp("[A-Za-z0-9_]{1,40}@[a-z]{2,15}.[a-z0-9]{2,10}"))
       .label("Email address"),
     to_password: Joi.string()
       .required()
@@ -35,7 +36,6 @@ class RegisterForm extends Form {
     password_confirm: Joi.any()
       .equal(Joi.ref("to_password"))
       .required()
-      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
       .label("Confirm password")
       .options({
         messages: { "any.only": '"Password" and {{#label}} does not match' },

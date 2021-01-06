@@ -65,7 +65,7 @@ class SearchForm extends Form {
   }
 
   componentDidUpdate() {
-    if (Array.isArray(this.state.data.tags)) {
+    if (Array.isArray(this.state.data.tags) && !this.state.errors) {
       saveForm(this.state.data);
     }
   }
