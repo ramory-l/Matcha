@@ -68,6 +68,9 @@ public class UserController {
         Integer ageTo = nonNull(request.queryParams("ageto")) ? parseInt(request.queryParams("ageto")) : null;
         Integer rateTo = nonNull(request.queryParams("rateto")) ? parseInt(request.queryParams("rateto")) : null;
         Integer rateFrom = nonNull(request.queryParams("ratefrom")) ? parseInt(request.queryParams("ratefrom")) : null;
+        if (ageFrom < 0 || ageTo < 0) {
+            throw new NumberFormatException();
+        }
         FormDto formDto = new FormDto(
                 null,
                 Boolean.parseBoolean(request.queryParams("man")),
