@@ -21,9 +21,9 @@ class RegisterForm extends Form {
   };
 
   schema = Joi.object({
-    username: Joi.string().min(2).required().label("Username"),
-    firstName: Joi.string().required().label("First Name"),
-    lastName: Joi.string().required().label("Last Name"),
+    username: Joi.string().min(2).max(250).required().label("Username"),
+    firstName: Joi.string().max(250).required().label("First Name"),
+    lastName: Joi.string().max(250).required().label("Last Name"),
     email: Joi.string()
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "ru"] } })
       .required()

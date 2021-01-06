@@ -58,9 +58,9 @@ class ProfileForm extends Form {
 
   schema = Joi.object({
     id: Joi.number().required(),
-    firstName: Joi.string().required().label("First Name"),
-    lastName: Joi.string().required().label("Last Name"),
-    gender: Joi.string().optional(),
+    firstName: Joi.string().max(250).required().label("First Name"),
+    lastName: Joi.string().max(250).required().label("Last Name"),
+    gender: Joi.string().required(),
     birthday: Joi.date()
       .iso()
       .min("1920-01-01")

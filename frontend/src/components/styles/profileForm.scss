@@ -5,6 +5,13 @@
   min-height: 100%;
 }
 
+.ProfileForm-FullName {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .btn.btn-warning {
   margin-left: 10px;
 }
@@ -18,9 +25,5 @@
 @media (max-width: 500px) {
   .ProfileForm-FullName {
     font-size: 16pt;
-    width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 }

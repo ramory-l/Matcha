@@ -18,6 +18,7 @@ class ResetPasswordForm extends Form {
     email: Joi.string()
       .email({ tlds: false })
       .required()
+      .pattern(new RegExp("[A-Za-z0-9_]{1,40}@[a-z]{2,15}.[a-z0-9]{2,10}"))
       .label("Email address"),
     to_new_password: Joi.string()
       .required()
