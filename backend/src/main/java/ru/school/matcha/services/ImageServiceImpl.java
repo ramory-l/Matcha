@@ -66,14 +66,6 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-    @Override
-    public Image getImageByExternalId(String externalId) {
-        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
-            return imageMapper.getImageByExternalId(externalId).orElseThrow(NotFoundException::new);
-        }
-    }
-
     private void deleteImageFromServer(String fileName) {
         Path filepath = Paths.get("backend/images/" + fileName);
         try {
