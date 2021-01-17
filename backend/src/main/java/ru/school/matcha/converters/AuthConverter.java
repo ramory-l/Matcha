@@ -27,7 +27,7 @@ public class AuthConverter extends Converter<AuthDto, Auth> {
             return null;
         }
         if (isNull(source.getUsername()) || isNull(source.getPassword())) {
-            throw new MatchaException("Username or password exists");
+            throw new MatchaException("Username or password is incorrect");
         }
         Auth result = new Auth();
         result.setUsername(source.getUsername());

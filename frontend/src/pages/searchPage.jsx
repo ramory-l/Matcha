@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SearchUsers from "../components/searchUsers";
 import WithLoading from "../components/common/withLoading";
-import * as userService from "../services/userService";
-import { findSimilarityInForms } from "../utils/equal";
+import { getUserForm, saveForm } from "../services/formService";
+import { getUser, getUserRates, searchForUsers } from "../services/userService";
 import { getCurrentUser } from "../services/authService";
+import SearchContext from "../contexts/searchContext";
 import "./styles/searchPage.scss";
 
 const SearchUsersWithLoading = WithLoading(SearchUsers);
@@ -11,57 +12,66 @@ const SearchUsersWithLoading = WithLoading(SearchUsers);
 const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
-  const [userForm, setUserForm] = useState({});
+  const [myData, setMyData] = useState({});
+  const [sortBy, setSortBy] = useState({
+    path: "distance",
+    order: "asc",
+  });
 
   useEffect(() => {
-    async function fetchUsers() {
-      const { data: users } = await userService.getUsers();
-      const { data: user } = await userService.getUser(getCurrentUser().sub);
-      const userForm = user.form;
-      const { data: likesDislikes } = await userService.getUserRates(
-        "likesDislikes",
-        true
-      );
-      userForm.likesDislikes = likesDislikes;
-      const filteredUsers = users.filter((user) => {
-        return user.avatar !== null
-          ? findSimilarityInForms(userForm, user)
-          : false;
+    const searchUsers = async () => {
+      const { data: myData } = await getUser(getCurrentUser().sub);
+      setMyData(myData);
+      const form = getUserForm();
+      const { data: foundedUsers } = await searchForUsers(form);
+      const { data: likesDislikes } = await getUserRates("likesDislikes", true);
+      const filtered = foundedUsers.filter((user) => {
+        if (user.id === getCurrentUser().id) return false;
+        if (likesDislikes.likes.filter((like) => user.id === like.id).length)
+          return false;
+        if (
+          likesDislikes.dislikes.filter((dislike) => user.id === dislike.id)
+            .length
+        )
+          return false;
+        return true;
       });
-      setUserForm(userForm);
-      setUsers(filteredUsers);
+      setUsers(filtered);
       setIsLoading(false);
-    }
-    fetchUsers();
+    };
+    searchUsers();
   }, []);
 
-  const handleSearchButtonClick = async () => {
+  const handleSearchButtonClick = async (form) => {
+    saveForm(form);
     setIsLoading(true);
-    const { data: users } = await userService.getUsers();
-    const { data: user } = await userService.getUser(getCurrentUser().sub);
-    const userForm = user.form;
-    setUserForm(userForm);
-    const { data: likesDislikes } = await userService.getUserRates(
-      "likesDislikes",
-      true
-    );
-    userForm.likesDislikes = likesDislikes;
-    const filteredUsers = users.filter((user) => {
-      return user.avatar !== null
-        ? findSimilarityInForms(userForm, user)
-        : false;
+    const { data: foundedUsers } = await searchForUsers(getUserForm());
+    const { data: likesDislikes } = await getUserRates("likesDislikes", true);
+    const filtered = foundedUsers.filter((user) => {
+      if (user.id === getCurrentUser().id) return false;
+      if (likesDislikes.likes.filter((like) => user.id === like.id).length)
+        return false;
+      if (
+        likesDislikes.dislikes.filter((dislike) => user.id === dislike.id)
+          .length
+      )
+        return false;
+      return true;
     });
-    setUsers(filteredUsers);
+    setUsers(filtered);
     setIsLoading(false);
+    console.log("submitted");
   };
 
   return (
-    <SearchUsersWithLoading
-      users={users}
-      userForm={userForm}
-      isLoading={isLoading}
-      onSearchButtonClick={handleSearchButtonClick}
-    />
+    <SearchContext.Provider value={{ sortBy, setSortBy }}>
+      <SearchUsersWithLoading
+        users={users}
+        myData={myData}
+        isLoading={isLoading}
+        onSearchButtonClick={handleSearchButtonClick}
+      />
+    </SearchContext.Provider>
   );
 };
 

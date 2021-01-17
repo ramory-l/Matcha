@@ -4,10 +4,13 @@ import lombok.Data;
 
 @Data
 public class Form {
+
     private boolean man;
     private boolean woman;
-    private boolean friendship;
-    private boolean love;
-    private boolean sex;
-    private boolean flirt;
+    private Integer ageFrom;
+    private Integer ageTo;
+    private Integer rateFrom;
+    private Integer rateTo;
+    private Integer radius;
+
 }

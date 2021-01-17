@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import "./styles/pagination.scss";
@@ -33,28 +32,28 @@ const Pagination = ({
     <nav aria-label="Page navigation example">
       <ul className="pagination">
         <li className={startRange === 1 ? "page-item disabled" : "page-item"}>
-          <Link
-            to="#"
+          <span
+            style={{ cursor: "pointer" }}
             className="page-link"
             aria-label="Previous"
             onClick={() => handleRangeChange("prev")}
           >
             <span aria-hidden="true">&laquo;</span>
-          </Link>
+          </span>
         </li>
         {pages.map((page) => (
           <li
+            style={{ cursor: "pointer" }}
             key={page}
             className={page === currentPage ? "page-item active" : "page-item"}
           >
-            <Link
-              to="#"
+            <span
+              style={{ cursor: "pointer", color: "black" }}
               className="page-link"
-              style={{ color: "black" }}
               onClick={() => onPageChange(page)}
             >
               {page}
-            </Link>
+            </span>
           </li>
         ))}
         <li
@@ -62,14 +61,14 @@ const Pagination = ({
             endRange === pagesCount ? "page-item disabled" : "page-item"
           }
         >
-          <Link
-            to="#"
+          <span
+            style={{ cursor: "pointer" }}
             className="page-link"
             aria-label="Next"
             onClick={() => handleRangeChange("next")}
           >
             <span aria-hidden="true">&raquo;</span>
-          </Link>
+          </span>
         </li>
       </ul>
     </nav>

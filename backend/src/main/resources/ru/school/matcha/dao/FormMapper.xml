@@ -5,25 +5,28 @@
         <id property="id" column="id"/>
         <result property="man" column="man"/>
         <result property="woman" column="woman"/>
-        <result property="friendship" column="friendship"/>
-        <result property="love" column="love"/>
-        <result property="sex" column="sex"/>
-        <result property="flirt" column="flirt"/>
+        <result property="ageFrom" column="age_from"/>
+        <result property="ageTo" column="age_to"/>
+        <result property="rateFrom" column="rate_from"/>
+        <result property="rateTo" column="rate_to"/>
+        <result property="radius" column="radius"/>
     </resultMap>
 
     <insert id="createForm" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
         INSERT INTO form (man,
                           woman,
-                          friendship,
-                          love,
-                          sex,
-                          flirt)
+                          age_from,
+                          age_to,
+                          rate_from,
+                          rate_to,
+                          radius)
         VALUES (#{man},
                 #{woman},
-                #{friendship},
-                #{love},
-                #{sex},
-                #{flirt})
+                #{ageFrom},
+                #{ageTo},
+                #{rateFrom},
+                #{rateTo},
+                #{radius})
     </insert>
 
     <update id="updateFormById">
@@ -34,17 +37,20 @@
         <if test="woman != null">
             woman = #{woman},
         </if>
-        <if test="friendship != null">
-            friendship = #{friendship},
+        <if test="ageFrom != null">
+            age_from = #{ageFrom},
         </if>
-        <if test="love != null">
-            love = #{love},
+        <if test="ageTo != null">
+            age_to = #{ageTo},
         </if>
-        <if test="sex != null">
-            sex = #{sex},
+        <if test="rateFrom != null">
+            rate_from = #{rateFrom},
         </if>
-        <if test="flirt != null">
-            flirt = #{flirt}
+        <if test="rateTo != null">
+            rate_to = #{rateTo},
+        </if>
+        <if test="radius">
+            radius = #{radius}
         </if>
         WHERE id = #{id}
     </update>

@@ -3,6 +3,7 @@ import Loading from "./common/loading";
 import Table from "./common/table";
 import _ from "lodash";
 import { getUserRates } from "../services/userService";
+import { Link } from "react-router-dom";
 
 const LikersTable = (props) => {
   const [sortColumn, setSortColumn] = useState({
@@ -24,16 +25,31 @@ const LikersTable = (props) => {
     {
       path: "avatar",
       label: "Avatar",
-      content: (avatar) => (
-        <img
-          alt={avatar.url}
-          style={{ width: "5vw" }}
-          src={`${avatar?.url ? avatar.url : "/default-avatar.png"}`}
-        />
-      ),
+      content: (user) => {
+        console.log(user);
+        return (
+          <img
+            alt={user.username}
+            style={{ width: "50px" }}
+            src={`${
+              user.avatar?.link ? user.avatar.link : "/default-avatar.png"
+            }`}
+          />
+        );
+      },
       noSort: true,
     },
-    { path: "username", label: "Username" },
+    {
+      path: "username",
+      label: "Username",
+      content: (user) => {
+        return (
+          <Link style={{ color: "black" }} to={`/profile/${user.username}`}>
+            {user.username}
+          </Link>
+        );
+      },
+    },
   ];
 
   const handleSort = (sortColumn) => {

@@ -12,6 +12,8 @@ import ru.school.matcha.services.TagServiceImpl;
 import ru.school.matcha.services.interfaces.TagService;
 import spark.Route;
 
+import java.util.List;
+
 import static java.lang.Long.parseLong;
 
 @Slf4j
@@ -45,6 +47,13 @@ public class TagController {
         tagService.deleteUserRefTag(tagName, userId);
         response.status(Response.DELETE.getStatus());
         return "";
+    };
+
+    public static Route getTopTags = (request, response) -> {
+        AuthorizationController.authorize(request, Role.USER);
+        List<Tag> tagList = tagService.getTopTags();
+        response.status(Response.GET.getStatus());
+        return tagConverter.createFromEntities(tagList);
     };
 
 }

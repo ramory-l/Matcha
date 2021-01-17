@@ -2,6 +2,9 @@ import React from "react";
 import Joi from "joi";
 import Form from "./common/form";
 import "./styles/settingsForm.scss";
+import { resetPassword, updateUser } from "../services/userService";
+import { toast } from "react-toastify";
+import { getJwtFromEndpoint } from "../services/authService";
 
 class SettingForm extends Form {
   state = {
@@ -31,10 +34,12 @@ class SettingForm extends Form {
     email: Joi.string()
       .email({ tlds: false })
       .required()
+      .pattern(new RegExp("[A-Za-z0-9_]{1,40}@[a-z]{2,15}.[a-z0-9]{2,10}"))
       .label("Email address"),
     to_new_password: Joi.string()
       .optional()
       .allow(null, "")
+      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
       .label("New Password"),
     new_password_confirm: Joi.any()
       .equal(Joi.ref("to_new_password"))
@@ -48,8 +53,29 @@ class SettingForm extends Form {
     current_password: Joi.string().required().label("Current Password"),
   });
 
-  doSubmit = () => {
-    console.log("submitted");
+  doSubmit = async () => {
+    try {
+      const user = { ...this.state.data };
+      await getJwtFromEndpoint(this.props.user.username, user.current_password);
+      delete user.current_password;
+      delete user.new_password_confirm;
+      if (user.to_new_password) {
+        await resetPassword(user);
+        toast.info("Check your email to change your password");
+      }
+      delete user.to_new_password;
+      if (user.email !== this.props.user.email) {
+        user.id = this.props.user.id;
+        await updateUser(user, true);
+        toast.info("Your email is updated");
+      }
+    } catch (ex) {
+      if (ex.response) {
+        const errors = { ...this.state.errors };
+        errors.current_password = ex.response.data;
+        this.setState({ errors });
+      }
+    }
   };
 
   render() {

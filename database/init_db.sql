@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS complaints;
+DROP TABLE IF EXISTS black_list;
+DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS "likes";
 DROP TABLE IF EXISTS guests;
 DROP TABLE IF EXISTS images;
@@ -8,13 +11,14 @@ DROP TABLE IF EXISTS form;
 
 create table form
 (
-    id         bigserial primary key not null,
-    man        boolean default false not null,
-    woman      boolean default false not null,
-    friendship boolean default false not null,
-    love       boolean default false not null,
-    sex        boolean default false not null,
-    flirt      boolean default false not null
+    id        bigserial primary key not null,
+    man       boolean default false not null,
+    woman     boolean default false not null,
+    age_from  integer default 0     not null,
+    age_to    integer default 0     not null,
+    rate_from integer default 0     not null,
+    rate_to   integer default 0     not null,
+    radius    integer default 0     not null
 );
 
 create table "user"
@@ -117,16 +121,8 @@ create table complaints
 );
 
 INSERT INTO public.form (man,
-                         woman,
-                         friendship,
-                         love,
-                         sex,
-                         flirt)
+                         woman)
 VALUES (false,
-        false,
-        false,
-        false,
-        false,
         false);
 
 INSERT INTO public."user" (username,

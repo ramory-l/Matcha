@@ -71,7 +71,7 @@ class TagForm extends Form {
               onClick={(e) => this.handleTagClick(e, editMode)}
               className={`badge badge-${tagClass} mx-1`}
             >
-              {tag.tag}
+              {`#${tag.tag}`}
             </a>
           ))
         )}

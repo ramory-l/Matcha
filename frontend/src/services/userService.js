@@ -2,6 +2,7 @@ import http from "./httpService";
 import { apiUrl } from "../config.json";
 import auth from "./authService";
 import moment from "moment";
+import { tagsToString } from "../utils/tagsUtils";
 
 const apiEndpoint = apiUrl + "/users";
 
@@ -72,10 +73,10 @@ export function getMessagesWithUser(secondUserId, limit, offset) {
   );
 }
 
-export function updateUser(user) {
+export function updateUser(user, email = false) {
   const tempUser = { ...user };
   delete tempUser.username;
-  delete tempUser.email;
+  if (!email) delete tempUser.email;
   tempUser.birthday = moment(user.birthday).valueOf();
   return http.put(`${apiEndpoint}/`, tempUser, {
     headers: { "x-auth-token": `T_${auth.getJwt()}` },
@@ -91,7 +92,7 @@ export function getUserTags(userId) {
 export function reportUser(userToId, reportText) {
   const userFromId = auth.getCurrentUser().id;
   return http.post(
-    `${apiEndpoint}/fake/from/${userFromId}/to/${userToId}`,
+    `${apiEndpoint}/report/from/${userFromId}/to/${userToId}`,
     reportText,
     {
       headers: { "x-auth-token": `T_${auth.getJwt()}` },
@@ -104,6 +105,52 @@ export function blockUser(userToId) {
   return http.post(
     `${apiEndpoint}/blacklist/from/${userFromId}/to/${userToId}`,
     null,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}
+
+export function unblockUser(userToId) {
+  const userFromId = auth.getCurrentUser().id;
+  return http.delete(
+    `${apiEndpoint}/blacklist/from/${userFromId}/to/${userToId}`,
+    {
+      headers: { "x-auth-token": `T_${auth.getJwt()}` },
+    }
+  );
+}
+
+export function getUserBlacklist() {
+  const userId = auth.getCurrentUser().id;
+  return http.get(`${apiEndpoint}/blacklist/${userId}`, {
+    headers: { "x-auth-token": `T_${auth.getJwt()}` },
+  });
+}
+
+export function searchForUsers(params) {
+  const {
+    man,
+    woman,
+    to_age: ageFrom,
+    age_confirm: ageTo,
+    to_rate: rateFrom,
+    rate_confirm: rateTo,
+    radius,
+    tags,
+  } = params;
+
+  let tagsInString = tagsToString(tags);
+
+  const userId = auth.getCurrentUser().id;
+  return http.get(
+    `${apiEndpoint}/search/${userId}?man=${man}&woman=${woman}${
+      ageFrom ? `&agefrom=${ageFrom}` : `&agefrom=${0}`
+    }${ageTo ? `&ageto=${ageTo}` : `&ageto=${0}`}${
+      rateFrom ? `&ratefrom=${rateFrom}` : ""
+    }${rateTo ? `&rateto=${rateTo}` : ""}${
+      radius ? `&radius=${radius}` : `&radius=${0}`
+    }${tagsInString ? `&tags=${tagsInString}` : ""}`,
     {
       headers: { "x-auth-token": `T_${auth.getJwt()}` },
     }

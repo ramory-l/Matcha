@@ -1,12 +1,8 @@
 package ru.school.matcha.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.school.matcha.converters.Converter;
-import ru.school.matcha.converters.MessageConverter;
-import ru.school.matcha.converters.UserConverter;
-import ru.school.matcha.converters.UserFullConverter;
-import ru.school.matcha.domain.Message;
-import ru.school.matcha.domain.User;
+import ru.school.matcha.converters.*;
+import ru.school.matcha.domain.*;
 import ru.school.matcha.dto.*;
 import ru.school.matcha.enums.Location;
 import ru.school.matcha.enums.Response;
@@ -22,10 +18,12 @@ import ru.school.matcha.services.interfaces.UserService;
 import spark.Route;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
+import static java.util.Objects.nonNull;
 import static spark.Spark.halt;
 
 @Slf4j
@@ -34,6 +32,10 @@ public class UserController {
     private final static Converter<UserFullDto, User> userFullConverter = new UserFullConverter();
     private final static Converter<UserDto, User> userConverter = new UserConverter();
     private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
+    private final static Converter<UserFullForBatchDto, UserFullForBatch> userFullForBatchConverter = new UserFullForBatchConverter();
+    private final static Converter<UserWithTagsDto, User> userWithTagsConverter = new UserWithTagsConverter();
+    private final static Converter<TagDto, Tag> tagConverter = new TagConverter();
+    private final static Converter<FormDto, Form> formConverter = new FormConverter();
 
     private final static UserService userService = new UserServiceImpl();
     private final static MessageService messageService = new MessageServiceImpl();
@@ -53,12 +55,47 @@ public class UserController {
 
     public static Route batchUsersCreate = (request, response) -> {
         AuthorizationController.authorize(request, Role.ADMIN);
-        Serializer<UserFullDto> serializer = new Serializer<>();
-        List<UserFullDto> userFullDtoList = serializer.deserializeList(request.body(), UserFullDto.class);
-        List<User> users = userFullConverter.createFromDtos(userFullDtoList);
-        userService.batchCreateUsers(users);
+        Serializer<UserFullForBatchDto> serializer = new Serializer<>();
+        List<UserFullForBatchDto> userFullDtoList = serializer.deserializeList(request.body(), UserFullForBatchDto.class);
+        List<UserFullForBatch> userFullForBatchList = userFullForBatchConverter.createFromDtos(userFullDtoList);
+        userService.batchCreateUsers(userFullForBatchList);
         response.status(Response.POST.getStatus());
         return "";
+    };
+
+    public static Route search = (request, response) -> {
+        Integer ageFrom = nonNull(request.queryParams("agefrom")) ? parseInt(request.queryParams("agefrom")) : null;
+        Integer ageTo = nonNull(request.queryParams("ageto")) ? parseInt(request.queryParams("ageto")) : null;
+        Integer rateTo = nonNull(request.queryParams("rateto")) ? parseInt(request.queryParams("rateto")) : null;
+        Integer rateFrom = nonNull(request.queryParams("ratefrom")) ? parseInt(request.queryParams("ratefrom")) : null;
+        if (ageFrom < 0 || ageTo < 0) {
+            throw new NumberFormatException();
+        }
+        FormDto formDto = new FormDto(
+                null,
+                Boolean.parseBoolean(request.queryParams("man")),
+                Boolean.parseBoolean(request.queryParams("woman")),
+                ageFrom,
+                ageTo,
+                rateFrom,
+                rateTo,
+                parseInt(request.queryParams("radius"))
+        );
+        String tags = request.queryParams("tags");
+        List<String> tagList = null;
+        if (tags != null && !tags.equals("")) {
+            tagList = Arrays.asList(tags.split(","));
+        }
+        long id = parseLong(request.params("id")),
+                userId = AuthorizationController.authorize(request, Role.USER);
+        if (userId != 0 && id != userId) {
+            halt(403, "Access is denied");
+        }
+        Form form = formConverter.convertFromDto(formDto);
+        List<User> users = userService.search(id, form, tagList);
+        List<UserDto> result = userConverter.createFromEntities(users);
+        response.status(Response.GET.getStatus());
+        return result;
     };
 
     public static Route getAllUsers = (request, response) -> {
@@ -100,14 +137,18 @@ public class UserController {
         String hash = request.params("hash");
         userService.updatePassword(hash);
         response.status(Response.GET.getStatus());
-        return "";
+        return "Password edited";
     };
 
     public static Route getMatcha = (request, response) -> {
         Long id = parseLong(request.params("id"));
         List<User> users = userService.getMatcha(id);
         response.status(Response.GET.getStatus());
-        return userConverter.createFromEntities(users);
+        List<UserWithTagsDto> result = userWithTagsConverter.createFromEntities(users);
+        if (nonNull(result)) {
+            result.forEach(user -> user.setTags(tagConverter.createFromEntities(tagService.getMutualTags(id, user.getId()))));
+        }
+        return result;
     };
 
     public static Route resetPassword = (request, response) -> {
@@ -156,7 +197,7 @@ public class UserController {
         String hash = request.params("hash");
         userService.verified(hash);
         response.status(Response.GET.getStatus());
-        return "";
+        return "Profile verified";
     };
 
     public static Route addToBlackList = (request, response) -> {

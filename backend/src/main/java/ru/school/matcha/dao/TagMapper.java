@@ -18,9 +18,13 @@ public interface TagMapper {
 
     List<Tag> getTags();
 
+    List<Tag> getTopTags();
+
     Optional<Tag> getTagByName(String name);
 
     List<Tag> getTagsByUserId(Long userId);
+
+    List<Tag> getMutualTags(@Param("firstUserId") Long firstUserId, @Param("secondUserId") Long secondUserId);
 
     void deleteTagById(Long id);
 

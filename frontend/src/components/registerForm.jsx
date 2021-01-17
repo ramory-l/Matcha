@@ -5,6 +5,7 @@ import Joi from "joi";
 import auth from "../services/authService";
 import * as userService from "../services/userService";
 import "./styles/authForm.scss";
+import { toast } from "react-toastify";
 
 class RegisterForm extends Form {
   state = {
@@ -20,14 +21,18 @@ class RegisterForm extends Form {
   };
 
   schema = Joi.object({
-    username: Joi.string().min(2).required().label("Username"),
-    firstName: Joi.string().required().label("First Name"),
-    lastName: Joi.string().required().label("Last Name"),
+    username: Joi.string().min(2).max(250).required().label("Username"),
+    firstName: Joi.string().max(250).required().label("First Name"),
+    lastName: Joi.string().max(250).required().label("Last Name"),
     email: Joi.string()
-      .email({ tlds: false })
+      .email({ minDomainSegments: 2, tlds: { allow: ["com", "ru"] } })
       .required()
+      .pattern(new RegExp("[A-Za-z0-9_]{1,40}@[a-z]{2,15}.[a-z0-9]{2,10}"))
       .label("Email address"),
-    to_password: Joi.string().required().label("Password"),
+    to_password: Joi.string()
+      .required()
+      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
+      .label("Password"),
     password_confirm: Joi.any()
       .equal(Joi.ref("to_password"))
       .required()
@@ -41,7 +46,8 @@ class RegisterForm extends Form {
     try {
       const response = await userService.register(this.state.data);
       auth.loginWithJwt(response.headers["x-auth-token"]);
-      window.location = "/";
+      this.props.history.push("/");
+      toast.info("Check your email to verify your profile!");
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };

@@ -1,13 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import BaseContext from "../contexts/baseContext";
 import { getCurrentUser } from "../services/authService";
-import { rateUser, unrateUser } from "../services/userService";
+import { getUser, rateUser, unrateUser } from "../services/userService";
 import "./styles/rateButtons.scss";
 
-const RateButtons = ({ user, rateUpdateFunction }) => {
+const RateButtons = ({ user, rateUpdateFunction, isBlocked }) => {
+  const [likerAvatar, setLikerAvatar] = useState(false);
   const userLikeValue = user.isLiked ? "active" : "";
   const userDislikeValue = user.isDisliked ? "active" : "";
   const baseContext = useContext(BaseContext);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchLiker() {
+      const { data: liker } = await getUser(getCurrentUser().sub);
+      if (liker.avatar) setLikerAvatar(true);
+    }
+    fetchLiker();
+  }, []);
 
   const handleRateChange = async (action) => {
     const likeDislikeNotification = {
@@ -19,7 +29,7 @@ const RateButtons = ({ user, rateUpdateFunction }) => {
     };
 
     const actionValue = action === "like" ? 1 : -1;
-
+    setIsLoading(true);
     if (!user.isLiked && !user.isDisliked) {
       await rateUser(user.id, action);
       if (action === "like") user.isLiked = true;
@@ -51,29 +61,32 @@ const RateButtons = ({ user, rateUpdateFunction }) => {
         baseContext.webSocket.send(JSON.stringify(likeDislikeNotification));
       }
     }
+    setIsLoading(false);
   };
 
   return (
     <div className="RateButtons">
       <button
-        disabled={!user.avatar}
-        onClick={() => handleRateChange("like")}
+        disabled={!user.avatar || isBlocked || !likerAvatar || isLoading}
+        onClick={(e) => {
+          e.preventDefault();
+          handleRateChange("like");
+        }}
         type="button"
         className={`btn btn-sm btn-outline-success ${userLikeValue}`}
       >
-        <span role="img" aria-label="like">
-          &#128077;
-        </span>
+        <i className="fa fa-thumbs-up" aria-hidden="true"></i>
       </button>
       <button
-        disabled={!user.avatar}
-        onClick={() => handleRateChange("dislike")}
+        disabled={!user.avatar || isBlocked || !likerAvatar || isLoading}
+        onClick={(e) => {
+          e.preventDefault();
+          handleRateChange("dislike");
+        }}
         type="button"
         className={`btn btn-sm btn-outline-danger ${userDislikeValue}`}
       >
-        <span role="img" aria-label="dislike">
-          &#128078;
-        </span>
+        <i className="fa fa-thumbs-down" aria-hidden="true"></i>
       </button>
     </div>
   );

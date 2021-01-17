@@ -7,6 +7,7 @@ const FileInput = ({
   onUploadButtonClick,
   className = "form-control-file",
   divClassName = "form-group",
+  isLoading,
 }) => {
   return (
     <div className={divClassName}>
@@ -20,6 +21,7 @@ const FileInput = ({
       />
       <label htmlFor={name}>{label}</label>
       <button
+        disabled={isLoading}
         onClick={(e) => onUploadButtonClick(e)}
         className="btn btn-secondary my-2"
       >

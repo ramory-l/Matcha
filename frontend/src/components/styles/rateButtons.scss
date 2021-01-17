@@ -5,8 +5,8 @@
   margin-bottom: 15px;
 }
 
-%rate-button {
-  border-radius: 5px;
-  padding: 3px;
-  cursor: pointer;
+@media (max-width: 450px) {
+  .RateButtons {
+    width: 100px;
+  }
 }

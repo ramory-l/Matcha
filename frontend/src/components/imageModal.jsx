@@ -10,23 +10,27 @@ const ImageModal = ({ images, modalTitle, modalTarget, carouselTarget }) => {
     <Modal
       modalTarget={modalTarget}
       modalTitle={modalTitle}
-      buttonsArray={[
-        <button
-          key={0}
-          className="btn btn-primary"
-          onClick={(e) => {
-            e.preventDefault();
-            const item = document.querySelector(".carousel-item.active");
-            const newAvatar = {
-              id: +item.firstChild.alt.slice(-1),
-              link: item.firstChild.src,
-            };
-            userContext.handleUserAvatarUpdate(newAvatar);
-          }}
-        >
-          Make as avatar
-        </button>,
-      ]}
+      buttonsArray={
+        userContext.isMe
+          ? [
+              <button
+                key={0}
+                className="btn btn-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const item = document.querySelector(".carousel-item.active");
+                  const newAvatar = {
+                    id: +item.firstChild.alt.match(/\d+/).slice(-1)[0],
+                    link: item.firstChild.src,
+                  };
+                  userContext.handleUserAvatarUpdate(newAvatar);
+                }}
+              >
+                Make as avatar
+              </button>,
+            ]
+          : []
+      }
     >
       <div
         id={carouselTarget}

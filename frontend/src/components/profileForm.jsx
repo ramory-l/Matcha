@@ -4,13 +4,16 @@ import Form from "./common/form";
 import * as userService from "../services/userService";
 import moment from "moment";
 import { toast } from "react-toastify";
-import TagForm from "./tagForm";
 import ProfileImages from "./profileImages";
+import jquery from "jquery";
+import httpService from "../services/httpService";
 import "./styles/profileForm.scss";
+import TagsInput from "./tagsInput";
 
 class ProfileForm extends Form {
   state = {
     data: {
+      id: "",
       firstName: "",
       lastName: "",
       gender: "",
@@ -41,6 +44,7 @@ class ProfileForm extends Form {
 
   mapToViewModel(user) {
     return {
+      id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       gender: user.gender || "",
@@ -53,10 +57,16 @@ class ProfileForm extends Form {
   }
 
   schema = Joi.object({
-    firstName: Joi.string().required().label("First Name"),
-    lastName: Joi.string().required().label("Last Name"),
-    gender: Joi.string().optional(),
-    birthday: Joi.any().optional(),
+    id: Joi.number().required(),
+    firstName: Joi.string().max(250).required().label("First Name"),
+    lastName: Joi.string().max(250).required().label("Last Name"),
+    gender: Joi.string().required(),
+    birthday: Joi.date()
+      .iso()
+      .min("1920-01-01")
+      .max("2002-12-31")
+      .required()
+      .label("Birthday"),
     description: Joi.any().optional(),
     latitude: Joi.number().required().label("Latitude"),
     longitude: Joi.number().required().label("Longitude"),
@@ -71,14 +81,26 @@ class ProfileForm extends Form {
 
   handleGetCoordsButton = (e) => {
     e.preventDefault();
-    navigator.geolocation.getCurrentPosition((position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      const user = { ...this.state.data };
-      user.latitude = latitude;
-      user.longitude = longitude;
-      this.setState({ data: user });
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const user = { ...this.state.data };
+        user.latitude = latitude;
+        user.longitude = longitude;
+        this.setState({ data: user });
+      },
+      (error) => {
+        jquery.getJSON("https://api.ipify.org?format=json", (data) => {
+          httpService.get(`http://ip-api.com/json/${data.ip}`).then((res) => {
+            const user = { ...this.state.data };
+            user.latitude = res.data.lat;
+            user.longitude = res.data.lon;
+            this.setState({ data: user });
+          });
+        });
+      }
+    );
   };
 
   render() {
@@ -87,7 +109,9 @@ class ProfileForm extends Form {
     const { firstName, lastName } = this.state.data;
     return (
       <form className="ProfileForm" onSubmit={this.handleSubmit}>
-        <h2>{editMode ? "Editing profile" : firstName + " " + lastName}</h2>
+        <h2 className="ProfileForm-FullName">
+          {editMode ? "Editing profile" : firstName + " " + lastName}
+        </h2>
         <ProfileImages
           userId={user.id}
           modalTitle={`${firstName}'s photos`}
@@ -104,7 +128,7 @@ class ProfileForm extends Form {
         {this.renderTextArea("description", "Description", readonly)}
         {this.renderInput("latitude", "Latitude", readonly)}
         {this.renderInput("longitude", "Longitude", readonly)}
-        <TagForm userId={user.id} editMode={editMode} />
+        <TagsInput userId={user.id} editMode={editMode} />
         {readonly ? null : this.renderButton("Save")}
         {readonly ? null : (
           <button

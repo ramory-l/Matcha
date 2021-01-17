@@ -2,6 +2,7 @@ import React from "react";
 import Form from "./common/form";
 import Joi from "joi";
 import { resetPassword } from "../services/userService";
+import { toast } from "react-toastify";
 
 class ResetPasswordForm extends Form {
   state = {
@@ -17,8 +18,12 @@ class ResetPasswordForm extends Form {
     email: Joi.string()
       .email({ tlds: false })
       .required()
+      .pattern(new RegExp("[A-Za-z0-9_]{1,40}@[a-z]{2,15}.[a-z0-9]{2,10}"))
       .label("Email address"),
-    to_new_password: Joi.string().required().label("New Password"),
+    to_new_password: Joi.string()
+      .required()
+      .pattern(new RegExp("^[a-zA-Z0-9]{4,30}$"))
+      .label("New Password"),
     new_password_confirm: Joi.any()
       .equal(Joi.ref("to_new_password"))
       .required()
@@ -36,6 +41,7 @@ class ResetPasswordForm extends Form {
       delete user.new_password_confirm;
       await resetPassword(user);
       this.props.history.push("/auth/login");
+      toast.info("Check your email to change your password");
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
         const errors = { ...this.state.errors };
@@ -48,7 +54,7 @@ class ResetPasswordForm extends Form {
   render() {
     return (
       <form className="RegisterForm" onSubmit={this.handleSubmit}>
-        <h1>Reset Password Form</h1>
+        <span className="RegisterForm-Title">Reset Password Form</span>
         {this.renderInput("email", "Email address")}
         {this.renderInput("to_new_password", "New Password", false, "password")}
         {this.renderInput(

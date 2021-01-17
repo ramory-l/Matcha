@@ -1,20 +1,27 @@
-import http from "./httpService";
-import { apiUrl } from "../config.json";
-import auth from "./authService";
+import { tagsToArray, tagsToString } from "../utils/tagsUtils";
 
-const apiEndpoint = apiUrl + "/forms";
+const formKey = "form";
 
 export function getUserForm() {
-  let userId = auth.getCurrentUser().id;
-  return http.get(`${apiEndpoint}/${userId}`, {
-    headers: { "x-auth-token": `T_${auth.getJwt()}` },
-  });
+  const formString = localStorage.getItem(formKey);
+  const form = formString
+    ? JSON.parse(formString)
+    : {
+        man: false,
+        woman: false,
+        to_rate: "",
+        rate_confirm: "",
+        to_age: 18,
+        age_confirm: 80,
+        radius: "",
+        tags: "",
+      };
+  form.tags = tagsToArray(form.tags);
+  return form;
 }
 
-export function updateUserForm(userForm) {
-  const tempForm = { ...userForm };
-  delete tempForm.likesDislikes;
-  return http.put(`${apiEndpoint}/`, tempForm, {
-    headers: { "x-auth-token": `T_${auth.getJwt()}` },
-  });
+export function saveForm(form) {
+  const newForm = JSON.parse(JSON.stringify(form));
+  newForm.tags = tagsToString(form.tags);
+  localStorage.setItem(formKey, JSON.stringify(newForm));
 }

@@ -2,7 +2,9 @@ package ru.school.matcha.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import ru.school.matcha.domain.Form;
 import ru.school.matcha.domain.User;
+import ru.school.matcha.domain.UserFullForBatch;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +13,12 @@ import java.util.Optional;
 public interface UserMapper {
 
     List<User> getAllUsers(Long userId);
+
+    List<User> search(
+            @Param("userId") long userId,
+            @Param("form") Form form,
+            @Param("tags") List<String> tags
+    );
 
     Optional<User> getUserById(Long id);
 
@@ -24,7 +32,9 @@ public interface UserMapper {
 
     void createUser(@Param("user") User user, @Param("formId") Long formId);
 
-    void createFullUser(User users);
+    void createFullUser(UserFullForBatch user);
+
+    void createImageForFullUser(UserFullForBatch user);
 
     void updateUserById(User user);
 

@@ -7,6 +7,8 @@ import java.util.Date;
 
 @Data
 public class User {
+
+    private Long id;
     private String username;
     private String firstName;
     private String lastName;
@@ -16,4 +18,8 @@ public class User {
     private Date birthday;
     private String description;
     private Form form;
+    private Image image;
+    private Double latitude;
+    private Double longitude;
+
 }

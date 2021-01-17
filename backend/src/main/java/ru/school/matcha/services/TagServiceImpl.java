@@ -50,7 +50,7 @@ public class TagServiceImpl implements TagService {
             Tag tag;
             if (!tagOptional.isPresent()) {
                 tag = new Tag();
-                tag.setTag(tagName);
+                tag.setName(tagName);
                 createTag(tag);
             } else {
                 tag = tagOptional.get();
@@ -127,6 +127,22 @@ public class TagServiceImpl implements TagService {
             if (nonNull(sqlSession)) {
                 sqlSession.close();
             }
+        }
+    }
+
+    @Override
+    public List<Tag> getTopTags() {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
+            return tagMapper.getTopTags();
+        }
+    }
+
+    @Override
+    public List<Tag> getMutualTags(Long firstUserId, Long secondUserId) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            TagMapper tagMapper = sqlSession.getMapper(TagMapper.class);
+            return tagMapper.getMutualTags(firstUserId, secondUserId);
         }
     }
 

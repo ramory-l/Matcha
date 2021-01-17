@@ -10,7 +10,7 @@ import java.util.Date;
 public class Tag {
 
     private Long id;
-    private String tag;
+    private String name;
     private Date createTs;
 
 }
