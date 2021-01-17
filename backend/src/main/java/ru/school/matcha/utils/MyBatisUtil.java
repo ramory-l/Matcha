@@ -10,7 +10,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 @Slf4j
 public class MyBatisUtil {
-
     private static final SqlSessionFactory factory;
 
     private MyBatisUtil() {
@@ -20,14 +19,14 @@ public class MyBatisUtil {
         Reader reader;
         try {
             reader = Resources.getResourceAsReader("db/mybatis-config.xml");
+            factory = new SqlSessionFactoryBuilder().build(reader);
         } catch (IOException e) {
+            log.error("Failed to read properties for MyBatisUtil");
             throw new RuntimeException(e.getMessage());
         }
-        factory = new SqlSessionFactoryBuilder().build(reader);
     }
 
     public static SqlSessionFactory getSqlSessionFactory() {
         return factory;
     }
-
 }

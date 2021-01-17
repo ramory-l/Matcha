@@ -9,10 +9,13 @@ import ru.school.matcha.exceptions.NotFoundException;
 import ru.school.matcha.services.interfaces.ImageService;
 import ru.school.matcha.services.interfaces.UserService;
 import ru.school.matcha.utils.CloudinaryAPI;
-import ru.school.matcha.utils.ImageCoder;
+import ru.school.matcha.utils.ImageUtil;
 import ru.school.matcha.utils.MyBatisUtil;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -20,7 +23,6 @@ import static java.util.Objects.nonNull;
 
 @Slf4j
 public class ImageServiceImpl implements ImageService {
-
     private static final UserService userService = new UserServiceImpl();
 
     private static final int LIMIT = 5;
@@ -32,7 +34,7 @@ public class ImageServiceImpl implements ImageService {
         }
         SqlSession sqlSession = null;
         try {
-            ImageCoder.decodeImage(base64, fileName);
+            ImageUtil.decodeImage(base64, fileName);
             Image image = CloudinaryAPI.createFile(fileName);
             if (isNull(image)) {
                 throw new MatchaException("Failed to create image in Cloudinary");
@@ -64,9 +66,21 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Override
+    public Image getImageByExternalId(String externalId) {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession()) {
+            ImageMapper imageMapper = sqlSession.getMapper(ImageMapper.class);
+            return imageMapper.getImageByExternalId(externalId).orElseThrow(NotFoundException::new);
+        }
+    }
+
     private void deleteImageFromServer(String fileName) {
-        final String FILE_PATH = "backend/images/";
-        File file = new File(FILE_PATH + fileName);
+        Path filepath = Paths.get("backend/images/" + fileName);
+        try {
+           Files.deleteIfExists(filepath);
+        } catch (IOException ex) {
+            log.debug(ex.getMessage());
+        }
     }
 
     @Override
@@ -117,5 +131,4 @@ public class ImageServiceImpl implements ImageService {
             }
         }
     }
-
 }
