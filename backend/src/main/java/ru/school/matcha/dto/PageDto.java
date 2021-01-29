@@ -11,12 +11,10 @@ import java.util.List;
 @JsonAutoDetect
 @AllArgsConstructor
 public class PageDto<T> {
-
     @NonNull
     private List<T> data;
     @NonNull
     private long total;
     @NonNull
     private int offset;
-
 }

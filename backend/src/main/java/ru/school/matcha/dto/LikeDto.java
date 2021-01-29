@@ -6,9 +6,7 @@ import lombok.Data;
 @Data
 @JsonAutoDetect
 public class LikeDto {
-
     private ImageDto avatar;
     private String username;
     private Long id;
-
 }

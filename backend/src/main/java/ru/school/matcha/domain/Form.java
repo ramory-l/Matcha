@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Form {
-
     private Long id;
     private boolean man;
     private boolean woman;
@@ -15,5 +14,4 @@ public class Form {
     private Integer rateFrom;
     private Integer rateTo;
     private Integer radius;
-
 }

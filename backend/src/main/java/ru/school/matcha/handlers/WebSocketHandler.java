@@ -33,14 +33,14 @@ import static java.util.Objects.nonNull;
 @WebSocket
 public class WebSocketHandler {
 
-    private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
+    private static final Converter<MessageDto, Message> messageConverter = new MessageConverter();
 
-    private final static UserService userService = new UserServiceImpl();
-    private final static MessageService messageService = new MessageServiceImpl();
+    private static final UserService userService = new UserServiceImpl();
+    private static final MessageService messageService = new MessageServiceImpl();
 
-    private final static Serializer<MessageDto> messageDtoSerializer = new Serializer<>();
+    private static final Serializer<MessageDto> messageDtoSerializer = new Serializer<>();
 
-    private final static Map<Session, User> sessionUsernameMap = new ConcurrentHashMap<>();
+    private static final Map<Session, User> sessionUsernameMap = new ConcurrentHashMap<>();
 
     @OnWebSocketConnect
     public void onConnect(Session session) {

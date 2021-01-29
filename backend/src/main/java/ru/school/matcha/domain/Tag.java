@@ -8,9 +8,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class Tag {
-
     private Long id;
     private String name;
     private Date createTs;
-
 }

@@ -9,7 +9,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class User {
-
     private Long id;
     private String username;
     private String firstName;
@@ -32,5 +31,4 @@ public class User {
     private Date createTs;
     private Date updateTs;
     private Date deleteTs;
-
 }

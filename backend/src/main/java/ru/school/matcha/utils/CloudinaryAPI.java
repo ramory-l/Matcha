@@ -13,8 +13,10 @@ import java.util.Properties;
 
 @Slf4j
 public class CloudinaryAPI {
-
     private static Cloudinary cloudinary;
+
+    private CloudinaryAPI(){
+    }
 
     public static void init() {
         Properties properties;
@@ -54,5 +56,4 @@ public class CloudinaryAPI {
             log.debug("Failed to delete file with name: {} in Cloudinary", image.getName(), ex);
         }
     }
-
 }

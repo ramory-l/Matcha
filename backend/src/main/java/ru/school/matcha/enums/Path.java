@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Path {
-
     SOCKET("/socket"),
     API("/api"),
     AUTH("/auth"),
@@ -19,5 +18,4 @@ public enum Path {
     FORMS("/forms");
 
     private final String url;
-
 }

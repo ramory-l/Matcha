@@ -16,7 +16,6 @@ import static java.lang.Long.parseLong;
 
 @Slf4j
 public class JwtTokenProvider {
-
     private final String secret;
     private final long validityInMilliseconds;
     private final long validityInMillisecondsForPasswordToken;
@@ -123,5 +122,4 @@ public class JwtTokenProvider {
         }
         return null;
     }
-
 }

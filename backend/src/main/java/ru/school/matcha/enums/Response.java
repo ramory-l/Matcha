@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Response {
-
     POST(org.eclipse.jetty.server.Response.SC_CREATED, null),
     GET(org.eclipse.jetty.server.Response.SC_OK, null),
     PUT(org.eclipse.jetty.server.Response.SC_NO_CONTENT, null),
@@ -20,5 +19,4 @@ public enum Response {
 
     private final int status;
     private final String body;
-
 }

@@ -12,6 +12,9 @@ import java.security.spec.InvalidKeySpecException;
 @Slf4j
 public class PasswordCipher {
 
+    private PasswordCipher(){
+    }
+
     public static String generateStrongPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;
         char[] chars = password.toCharArray();

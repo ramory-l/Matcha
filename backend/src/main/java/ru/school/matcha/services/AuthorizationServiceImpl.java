@@ -14,7 +14,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private static final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
 
     @Override
-    public Role authorize(String token) throws JwtAuthenticationException {
+    public Role authorize(String token) {
         token = jwtTokenProvider.resolveToken(token);
         if (isNull(token)) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");

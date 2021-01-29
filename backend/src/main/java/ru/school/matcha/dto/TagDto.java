@@ -6,8 +6,6 @@ import lombok.Data;
 @Data
 @JsonAutoDetect
 public class TagDto {
-
     private Long id;
     private String name;
-
 }

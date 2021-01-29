@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Data
 public class UserFullForBatch {
-
     private Long id;
     private String username;
     private String firstName;
@@ -31,5 +30,4 @@ public class UserFullForBatch {
     private Date updateTs;
     private Date deleteTs;
     private Image image;
-
 }

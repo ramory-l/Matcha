@@ -29,20 +29,20 @@ import static spark.Spark.halt;
 @Slf4j
 public class UserController {
 
-    private final static Converter<UserFullDto, User> userFullConverter = new UserFullConverter();
-    private final static Converter<UserDto, User> userConverter = new UserConverter();
-    private final static Converter<MessageDto, Message> messageConverter = new MessageConverter();
-    private final static Converter<UserFullForBatchDto, UserFullForBatch> userFullForBatchConverter = new UserFullForBatchConverter();
-    private final static Converter<UserWithTagsDto, User> userWithTagsConverter = new UserWithTagsConverter();
-    private final static Converter<TagDto, Tag> tagConverter = new TagConverter();
-    private final static Converter<FormDto, Form> formConverter = new FormConverter();
+    private static final Converter<UserFullDto, User> userFullConverter = new UserFullConverter();
+    private static final Converter<UserDto, User> userConverter = new UserConverter();
+    private static final Converter<MessageDto, Message> messageConverter = new MessageConverter();
+    private static final Converter<UserFullForBatchDto, UserFullForBatch> userFullForBatchConverter = new UserFullForBatchConverter();
+    private static final Converter<UserWithTagsDto, User> userWithTagsConverter = new UserWithTagsConverter();
+    private static final Converter<TagDto, Tag> tagConverter = new TagConverter();
+    private static final Converter<FormDto, Form> formConverter = new FormConverter();
 
-    private final static UserService userService = new UserServiceImpl();
-    private final static MessageService messageService = new MessageServiceImpl();
-    private final static TagService tagService = new TagServiceImpl();
+    private static final UserService userService = new UserServiceImpl();
+    private static final MessageService messageService = new MessageServiceImpl();
+    private static final TagService tagService = new TagServiceImpl();
 
-    private final static Serializer<UserFullDto> userFullDtoSerializer = new Serializer<>();
-    private final static Serializer<PassResetDto> passResetSerializer = new Serializer<>();
+    private static final Serializer<UserFullDto> userFullDtoSerializer = new Serializer<>();
+    private static final Serializer<PassResetDto> passResetSerializer = new Serializer<>();
 
     public static Route createUser = (request, response) -> {
         UserFullDto userFullDto = userFullDtoSerializer.deserialize(request.body(), UserFullDto.class);

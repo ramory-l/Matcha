@@ -8,7 +8,6 @@ import java.util.Date;
 @Data
 @JsonAutoDetect
 public class MessageDto {
-
     private Long from;
     private Long to;
     private String message;
@@ -16,5 +15,4 @@ public class MessageDto {
     private String type;
     private String username;
     private ImageDto avatar;
-
 }

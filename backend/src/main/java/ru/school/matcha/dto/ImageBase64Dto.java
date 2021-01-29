@@ -6,9 +6,7 @@ import lombok.Data;
 @Data
 @JsonAutoDetect
 public class ImageBase64Dto {
-
     private String name;
     private String base64;
     private Long userId;
-
 }

@@ -8,7 +8,5 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserWithTagsDto extends UserDto {
-
     private List<TagDto> tags;
-
 }

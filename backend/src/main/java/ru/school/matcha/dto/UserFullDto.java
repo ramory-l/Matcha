@@ -9,7 +9,6 @@ import java.util.Date;
 @Data
 @JsonAutoDetect
 public class UserFullDto {
-
     private Long id;
     private String username;
     private String firstName;
@@ -32,5 +31,4 @@ public class UserFullDto {
     private Date createTs;
     private Date updateTs;
     private Date deleteTs;
-
 }

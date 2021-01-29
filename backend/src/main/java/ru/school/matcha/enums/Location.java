@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Location {
-
     USERS(String.format("%s%s/", Path.API.getUrl(), Path.USERS.getUrl())),
     LIKES(String.format("%s%s/", Path.API.getUrl(), Path.USERS.getUrl())),
     DISLIKES(String.format("%s%s/", Path.API.getUrl(), Path.USERS.getUrl())),
@@ -18,5 +17,4 @@ public enum Location {
     private final String url;
 
     public static final String HEADER = "Location";
-
 }

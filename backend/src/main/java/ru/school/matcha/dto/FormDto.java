@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonAutoDetect
 public class FormDto {
-
     private Long id;
     private boolean man;
     private boolean woman;
@@ -19,5 +18,4 @@ public class FormDto {
     private Integer rateFrom;
     private Integer rateTo;
     private Integer radius;
-
 }

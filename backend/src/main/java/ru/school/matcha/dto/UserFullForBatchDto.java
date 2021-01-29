@@ -9,7 +9,6 @@ import java.util.Date;
 @Data
 @JsonAutoDetect
 public class UserFullForBatchDto {
-
     private Long id;
     private String username;
     private String firstName;
@@ -27,5 +26,4 @@ public class UserFullForBatchDto {
     private Double longitude;
     private ImageDto image;
     private Date lastLoginDate;
-
 }

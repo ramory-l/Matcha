@@ -6,9 +6,7 @@ import java.util.Date;
 
 @Data
 public class Guest {
-
     private Image avatar;
     private String username;
     private Date date;
-
 }

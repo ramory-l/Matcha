@@ -11,6 +11,9 @@ import java.util.Base64;
 public class ImageUtil {
     private static final String IMAGE_PATH = "backend/images/";
 
+    private ImageUtil() {
+    }
+
     public static void decodeImage(String encodedString, String fileName) throws IOException {
         byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
         FileUtils.writeByteArrayToFile(new File(IMAGE_PATH + fileName), decodedBytes);

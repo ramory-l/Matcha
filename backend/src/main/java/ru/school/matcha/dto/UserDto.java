@@ -8,7 +8,6 @@ import java.util.Date;
 @Data
 @JsonAutoDetect
 public class UserDto {
-
     private Long id;
     private String username;
     private String firstName;
@@ -24,5 +23,4 @@ public class UserDto {
     private Double longitude;
     private Boolean isOnline;
     private Date lastLoginDate;
-
 }

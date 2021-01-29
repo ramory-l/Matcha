@@ -6,7 +6,6 @@ import java.util.Date;
 
 @Data
 public class Message {
-
     private Long id;
     private Long from;
     private Long to;
@@ -15,5 +14,4 @@ public class Message {
     private String type;
     private String username;
     private Image avatar;
-
 }

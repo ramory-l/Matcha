@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Cors {
-
     ALLOW_ORIGIN("Access-Control-Allow-Origin", "*"),
     ALLOW_METHODS("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"),
     ALLOW_HEADERS("Access-Control-Allow-Headers", "Content-Type, x-auth-token"),
@@ -18,5 +17,4 @@ public enum Cors {
 
     private final String header;
     private final String content;
-
 }

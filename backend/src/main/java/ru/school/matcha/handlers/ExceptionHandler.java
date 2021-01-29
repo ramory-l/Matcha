@@ -15,6 +15,9 @@ import static spark.Spark.exception;
 @Slf4j
 public class ExceptionHandler {
 
+    private ExceptionHandler(){
+    }
+
     public static void enable() {
         exception(UnrecognizedPropertyException.class, badProperty);
         exception(NotFoundException.class, notFound);

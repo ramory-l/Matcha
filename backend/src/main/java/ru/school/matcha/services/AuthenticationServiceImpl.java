@@ -26,7 +26,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (isNull(user)) {
             throw new AuthenticationException(String.format("User with username: %s not found", username));
         }
-        if (!user.getIsVerified()) {
+        if (user.getIsVerified().equals(false)) {
             throw new AuthenticationException(String.format("User with username: %s not verified", username));
         }
         checkPassword(username, password, user);
