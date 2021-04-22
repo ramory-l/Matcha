@@ -16,7 +16,7 @@
         <junit.version>4.13.1</junit.version>
         <slf4japi.version>1.7.5</slf4japi.version>
         <slf4jsimple.version>1.6.4</slf4jsimple.version>
-        <mybatis.version>3.5.5</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <flywaymavenplugin.version>6.5.5</flywaymavenplugin.version>
         <jjwt.version>0.9.1</jjwt.version>
         <jakartaxml.version>2.3.2</jakartaxml.version>
