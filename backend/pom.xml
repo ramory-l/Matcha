@@ -26,7 +26,7 @@
         <flywaycore.version>7.0.3</flywaycore.version>
         <mavenassemblyplugin.version>3.3.0</mavenassemblyplugin.version>
         <javaxmail.version>1.4</javaxmail.version>
-        <commonsio.version>2.6</commonsio.version>
+        <commonsio.version>2.7</commonsio.version>
         <cloudinary.version>1.27.0</cloudinary.version>
         <java.encoding>UTF-8</java.encoding>
     </properties>
