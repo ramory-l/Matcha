@@ -42,7 +42,7 @@
         <projectlombok.version>1.18.16</projectlombok.version>
         <mavenassemblyplugin.version>3.3.0</mavenassemblyplugin.version>
         <httpclient.version>4.5.13</httpclient.version>
-        <commonsio.version>2.6</commonsio.version>
+        <commonsio.version>2.7</commonsio.version>
     </properties>
 
     <dependencies>
